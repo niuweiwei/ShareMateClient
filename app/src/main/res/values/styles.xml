@@ -17,6 +17,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!--每一个fragment title 栏的 more 样式-->
+    <style name="more">
+        <item name="android:layout_width">25dp</item>
+        <item name="android:layout_height">25dp</item>
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">@drawable/more</item>
+    </style>
     <!--日期选择器的样式-->
     <style name="datePickerStyle" parent="@android:style/Widget.Holo.DatePicker">
         <item name="android:textSize">16sp</item>

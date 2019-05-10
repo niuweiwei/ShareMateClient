@@ -1,10 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-  <TextView
-      android:text="这是首页"
-      android:textColor="@color/warmRed"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content" />
+  <android.support.v4.app.FragmentTabHost
+      android:id="@android:id/tabhost"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="center_horizontal">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/warmRed">
+      <LinearLayout
+          android:id="@+id/tag"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignParentTop="true"
+          android:layout_gravity="center"
+          android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+          <Button
+              android:layout_marginTop="10dp"
+              android:layout_alignParentLeft="true"
+              android:id="@+id/more"
+              style="@style/more" />
+            <TabWidget
+                android:layout_toRightOf="@id/more"
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingHorizontal="100dp"
+                android:layout_gravity="center">
+            </TabWidget>
+        </RelativeLayout>
+        <Button
+            android:id="@+id/search_btn"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/search_button_style"
+            android:text="大家都在搜“冬季旅行地”"
+            android:textColor="@color/textcolor" />
+      </LinearLayout>
+      <FrameLayout
+          android:layout_marginTop="10dp"
+          android:id="@android:id/tabcontent"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_alignParentBottom="true"
+          android:layout_below="@+id/tag"
+          android:background="@color/grayishBlue">
+      </FrameLayout>
+    </RelativeLayout>
+  </android.support.v4.app.FragmentTabHost>
 </LinearLayout>
