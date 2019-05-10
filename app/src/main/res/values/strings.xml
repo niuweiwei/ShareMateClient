@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ShareMate</string>
+    <string name="server_path">http://10.7.85.215:8080/ShareMateServer</string>
+</resources>
