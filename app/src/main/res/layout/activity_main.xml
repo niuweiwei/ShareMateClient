@@ -1,18 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".Activity.MainActivity"
+    android:id="@+id/root">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+        <TextView
+            android:id="@+id/tv_index"
+            android:text="首页"
+            style="@style/Tabs" />
+        <TextView
+            android:id="@+id/tv_follow"
+            android:layout_marginRight="10dp"
+            android:text="关注"
+            style="@style/Tabs"/>
+        <Button
+            android:id="@+id/btn_share"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/plus"
+            android:layout_gravity="center_vertical"/>
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_marginLeft="10dp"
+            android:text="消息"
+            style="@style/Tabs"/>
+        <TextView
+            android:id="@+id/tv_my"
+            android:gravity="fill"
+            android:paddingLeft="20dp"
+            android:text="我"
+            style="@style/Tabs"/>
+    </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"/>
+</RelativeLayout>
