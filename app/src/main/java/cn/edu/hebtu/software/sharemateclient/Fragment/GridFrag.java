@@ -9,12 +9,12 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -40,9 +40,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class NearbyFragment extends Fragment {
+public class GridFrag extends Fragment {
     private GridViewAdapter gridViewAdapter=null;
-    private List<Goods> goods = new ArrayList<Goods>();
+    private List<Goods>goods = new ArrayList<Goods>();
     private GridView gridView;
     private SmartRefreshLayout srl;
     private OkHttpClient okHttpClient;
@@ -53,13 +53,14 @@ public class NearbyFragment extends Fragment {
     private ListMoreTask listMoreTask;
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.nearby_frag,null);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_layout,null);
         findViews();
         listTask.execute(index);
         return view;
-
     }
+
     //   初始化控件
     public void findViews(){
         okHttpClient = new OkHttpClient();
