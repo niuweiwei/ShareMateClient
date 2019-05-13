@@ -10,10 +10,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+
 import java.io.IOException;
 import java.util.List;
 
 import cn.edu.hebtu.software.sharemateclient.Entity.Goods;
+import cn.edu.hebtu.software.sharemateclient.Entity.Note;
 import cn.edu.hebtu.software.sharemateclient.R;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -24,21 +28,21 @@ public class GridViewAdapter extends BaseAdapter {
     private Context context;
     private int itemLayout;
     private OkHttpClient okHttpClient = new OkHttpClient();
-    private List<Goods> goods;
-    private String U ="http://10.7.89.23:8080";
-    public GridViewAdapter(Context context, int itemLayout, List<Goods>goods){
+    private List<Note> notes;
+    private String U ="http://10.7.89.23:8080/ShareMateServer/";
+    public GridViewAdapter(Context context, int itemLayout, List<Note> notes){
         this.context=context;
         this.itemLayout=itemLayout;
-        this.goods=goods;
+        this.notes=notes;
     }
     @Override
     public int getCount() {
-        return goods.size();
+        return notes.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return goods.get(position);
+        return notes.get(position);
     }
 
     @Override
@@ -62,21 +66,15 @@ public class GridViewAdapter extends BaseAdapter {
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.goodImg.setImageBitmap(goods.get(position).getBitmap());
-        viewHolder.goodName.setText(goods.get(position).getCakeName());
-        viewHolder.goodPrice.setText("￥"+goods.get(position).getCakePrice());
-        viewHolder.goodDetail.setText(goods.get(position).getCakeDetail());
+//        viewHolder.goodImg.setImageBitmap(goods.get(position).getBitmap());
+        String imageUrl = U+notes.get(position).getNoteImage();
+        Glide.with(context)
+                .load(imageUrl)
+                .into(viewHolder.goodImg);
+        viewHolder.goodName.setText(notes.get(position).getNoteTitle());
+        viewHolder.goodPrice.setText(notes.get(position).getNoteDate());
+        viewHolder.goodDetail.setText(notes.get(position).getNoteDetail());
         viewHolder.shopCart.setBackgroundResource(R.mipmap.shopcart);
-        final ViewHolder finalViewHolder = viewHolder;
-        viewHolder.shopCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addCart(goods.get(position).getCakeId());
-                Toast.makeText(context,
-                        "加入购物车成功！",Toast.LENGTH_SHORT).show();
-                finalViewHolder.shopCart.setBackgroundResource(R.mipmap.shopcart2);
-            }
-        });
         return convertView;
     }
     //定义为内部类VIewHolder
@@ -86,26 +84,5 @@ public class GridViewAdapter extends BaseAdapter {
         TextView goodPrice;
         Button shopCart;
         TextView goodDetail;
-    }
-
-    public void addCart(final int cakeId){
-        new Thread(){
-            @Override
-            public void run() {
-                String url =U+"/cakeshop/order/addCart/"+cakeId;
-                Request request2 = new Request.Builder()
-                        .url(url)
-                        .build();
-                // 3.创建Call对象
-                Call call = okHttpClient.newCall(request2);
-                Response response1 = null;
-                try {
-                    response1 = call.execute();
-                    Log.e("cart","加购成功！"+response1.body().string());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
     }
 }

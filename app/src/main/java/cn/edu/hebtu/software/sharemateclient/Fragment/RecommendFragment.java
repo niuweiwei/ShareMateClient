@@ -21,10 +21,6 @@ import cn.edu.hebtu.software.sharemateclient.Entity.Goods;
 import cn.edu.hebtu.software.sharemateclient.R;
 
 public class RecommendFragment extends Fragment {
-    private GridViewAdapter gridViewAdapter = null;
-    private List<Goods> goods;
-    private GridView gridView;
-    private SmartRefreshLayout srl;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private ViewPagerAdpter pagerAdapter;
@@ -32,7 +28,7 @@ public class RecommendFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.recommend_frag,null);
+        view = inflater.inflate(R.layout.frag_recommend,null);
         pagerAdapter = new ViewPagerAdpter(getChildFragmentManager(),getActivity());
         viewPager = view.findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);

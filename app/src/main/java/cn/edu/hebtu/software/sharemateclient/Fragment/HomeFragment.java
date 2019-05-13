@@ -8,11 +8,6 @@ import android.support.v4.app.FragmentTabHost;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -32,7 +27,7 @@ public class HomeFragment extends Fragment {
     private FragmentTabHost tabHost;
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.home_fragment,null);
+        view = inflater.inflate(R.layout.frag_home,null);
         initTabHost();
         setTabHostChanged();
         return view;

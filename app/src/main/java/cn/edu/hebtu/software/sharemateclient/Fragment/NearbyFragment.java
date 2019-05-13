@@ -1,8 +1,6 @@
 package cn.edu.hebtu.software.sharemateclient.Fragment;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,7 +23,6 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -34,6 +31,7 @@ import java.util.List;
 import cn.edu.hebtu.software.sharemateclient.Activity.MainActivity;
 import cn.edu.hebtu.software.sharemateclient.Adapter.GridViewAdapter;
 import cn.edu.hebtu.software.sharemateclient.Entity.Goods;
+import cn.edu.hebtu.software.sharemateclient.Entity.Note;
 import cn.edu.hebtu.software.sharemateclient.R;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -42,7 +40,7 @@ import okhttp3.Response;
 
 public class NearbyFragment extends Fragment {
     private GridViewAdapter gridViewAdapter=null;
-    private List<Goods> goods = new ArrayList<Goods>();
+    private List<Note> notes = new ArrayList<Note>();
     private GridView gridView;
     private SmartRefreshLayout srl;
     private OkHttpClient okHttpClient;
@@ -54,7 +52,7 @@ public class NearbyFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.nearby_frag,null);
+        view = inflater.inflate(R.layout.frag_nearby,null);
         findViews();
         listTask.execute(index);
         return view;
@@ -71,14 +69,14 @@ public class NearbyFragment extends Fragment {
 
     //    刷新
     private void refreshData(){
-        goods.clear();
+        notes.clear();
         if(index<=7){
             index++;
         }else {
             index=1;
         }
         listTask = new ListTask();
-        listTask.execute(index);
+        listTask.execute();
         gridViewAdapter.notifyDataSetChanged();
     }
 
@@ -90,7 +88,7 @@ public class NearbyFragment extends Fragment {
         }else {
             index=1;
         }
-        listMoreTask.execute(index);
+        listMoreTask.execute();
         gridViewAdapter.notifyDataSetChanged();
     }
 
@@ -101,8 +99,7 @@ public class NearbyFragment extends Fragment {
         protected Object doInBackground(Object[] objects) {
             //1.创建OKHttpClient对象(已创建)
             // 2.创建Request对象
-            int id = (int) objects[0];
-            String url = U+"/cakeshop/cake/index1/"+id;
+            String url = U+"/note/recommend/"+index;
             Request request = new Request.Builder()
                     .url(url)
                     .build();
@@ -114,24 +111,10 @@ public class NearbyFragment extends Fragment {
                 String rel = response.body().string();
                 JSONObject jsonObject = null;
                 jsonObject = new JSONObject(rel);
-                String array = jsonObject.getJSONArray("cake").toString();
+                String array = jsonObject.getJSONArray("note").toString();
                 Gson gson = new Gson();
-                Type goodListType = new TypeToken<ArrayList<Goods>>(){}.getType();
-                goods = gson.fromJson(array, goodListType);
-                for (Goods g: goods){
-                    //开启新的数据访问图片
-                    String img = g.getCakeImageUrl();
-                    String url1 =U+img;
-                    Request request2 = new Request.Builder()
-                            .url(url1)
-                            .build();
-                    // 3.创建Call对象
-                    Call call2 = okHttpClient.newCall(request2);
-                    Response response1 = call2.execute();
-                    BufferedInputStream ins = new BufferedInputStream(response1.body().byteStream());
-                    Bitmap a= BitmapFactory.decodeStream(ins);
-                    g.setBitmap(a);
-                }
+                Type noteListType = new TypeToken<ArrayList<Note>>(){}.getType();
+                notes = gson.fromJson(array, noteListType);
             } catch (IOException e) {
                 e.printStackTrace();
             }catch (JSONException e) {
@@ -150,7 +133,7 @@ public class NearbyFragment extends Fragment {
     //    gridView事件
     private void setGrid(){
         // 创建Adapter对象
-        gridViewAdapter = new GridViewAdapter(getActivity(),R.layout.grid_item,goods);
+        gridViewAdapter = new GridViewAdapter(getActivity(),R.layout.grid_item,notes);
         // 设置Adapter
         gridView.setAdapter(gridViewAdapter);
         srl.setOnRefreshListener(new OnRefreshListener() {
@@ -172,27 +155,14 @@ public class NearbyFragment extends Fragment {
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 loadMoreData();
                 srl.finishLoadMore();//结束加载
-                if(goods.size()>20){//表示加载完所有数据
+                if(notes.size()>30){//表示加载完所有数据
                     srl.finishLoadMoreWithNoMoreData();
                 }else {
                     srl.setNoMoreData(false);
                 }
             }
         });
-        //item点击事件
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent();
-                Goods good = goods.get(position);
-                intent.setClass(getContext(), MainActivity.class);
-                intent.putExtra("cakeId",good.getCakeId());
-                intent.putExtra("name",good.getCakeName());
-                intent.putExtra("price",good.getCakePrice());
-                intent.putExtra("img",good.getCakeImageUrl());
-                startActivity(intent);
-            }
-        });
+
     }
 
     //请求数据并初始化数组
@@ -201,8 +171,7 @@ public class NearbyFragment extends Fragment {
         protected Object doInBackground(Object[] objects) {
             //1.创建OKHttpClient对象(已创建)
             // 2.创建Request对象
-            int id = (int) objects[0];
-            String url = U+"/cakeshop/cake/index1/"+id;
+            String url = U+"/note/recommend/"+index;
             Request request = new Request.Builder()
                     .url(url)
                     .build();
@@ -214,25 +183,13 @@ public class NearbyFragment extends Fragment {
                 String rel = response.body().string();
                 JSONObject jsonObject = null;
                 jsonObject = new JSONObject(rel);
-                String array = jsonObject.getJSONArray("cake").toString();
+                String array = jsonObject.getJSONArray("note").toString();
                 Gson gson = new Gson();
-                Type goodListType = new TypeToken<ArrayList<Goods>>(){}.getType();
-                List<Goods> goo = new ArrayList<Goods>();
-                goo = gson.fromJson(array, goodListType);
-                for (Goods g: goo){
-                    //开启新的数据访问图片
-                    String img = g.getCakeImageUrl();
-                    String url1 =U+img;
-                    Request request2 = new Request.Builder()
-                            .url(url1)
-                            .build();
-                    // 3.创建Call对象
-                    Call call2 = okHttpClient.newCall(request2);
-                    Response response1 = call2.execute();
-                    BufferedInputStream ins = new BufferedInputStream(response1.body().byteStream());
-                    Bitmap a= BitmapFactory.decodeStream(ins);
-                    g.setBitmap(a);
-                    goods.add(g);
+                Type noteListType = new TypeToken<ArrayList<Note>>(){}.getType();
+                List<Note> noo = new ArrayList<Note>();
+                noo = gson.fromJson(array, noteListType);
+                for (Note n:noo ){
+                    noo.add(n);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
