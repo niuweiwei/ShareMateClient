@@ -34,6 +34,7 @@
 
     <!--每一个fragment的 title 样式-->
     <style name="title">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/white</item>
@@ -85,7 +86,7 @@
         <item name="android:background">@color/transparent</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/colorButton</item>
-        <item name="android:textSize">30dp</item>
+        <item name="android:textSize">30sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
