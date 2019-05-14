@@ -31,6 +31,7 @@ import java.util.List;
 import cn.edu.hebtu.software.sharemateclient.Activity.NoteDetailActivity;
 import cn.edu.hebtu.software.sharemateclient.Adapter.GridViewAdapter;
 import cn.edu.hebtu.software.sharemateclient.Entity.Note;
+import cn.edu.hebtu.software.sharemateclient.Entity.User;
 import cn.edu.hebtu.software.sharemateclient.R;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -50,6 +51,7 @@ public class RecommendIndexFrag extends Fragment {
     private int currentPage;
     private int pages;
     private ListMoreTask listMoreTask;
+    private User contentUser;
 
     //RecommendIndexFrag的new（）方法 id用来fragment传递和保存typeId
     public static RecommendIndexFrag newInstance(int id){
@@ -83,6 +85,10 @@ public class RecommendIndexFrag extends Fragment {
         gridView = view.findViewById(R.id.root);
         listTask = new ListTask();
         srl=view.findViewById(R.id.srl);
+        //待修改
+        contentUser = contentUser = new User(17,"狗蛋","gou",
+                "images/userPhotos/17.jpg","女","15852160982",
+                "上海市", "1985-09-04","做梦都想发家致富");
     }
 
     //    刷新
@@ -160,6 +166,7 @@ public class RecommendIndexFrag extends Fragment {
                 intent.setClass(getActivity(), NoteDetailActivity.class);
                 Note note = notes.get(position);
                 intent.putExtra("note",note);
+                intent.putExtra("contentUser",contentUser);
                 Log.e("noteinfo",note.getNoteImage());
                 startActivity(intent);
             }

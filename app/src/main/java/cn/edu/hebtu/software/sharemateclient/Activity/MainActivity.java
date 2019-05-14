@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.edu.hebtu.software.sharemateclient.Entity.User;
 import cn.edu.hebtu.software.sharemateclient.Fragment.FollowFragment;
 import cn.edu.hebtu.software.sharemateclient.Fragment.HomeFragment;
 import cn.edu.hebtu.software.sharemateclient.Fragment.MessageFragment;
@@ -31,23 +32,29 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager manager ;
     private Fragment currentFragment = new Fragment();
     private List<TextView> views = new ArrayList<>();
+    private User contentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        indexView = findViewById(R.id.tv_index);
-        followView = findViewById(R.id.tv_follow);
-        messageView = findViewById(R.id.tv_message);
-        myView = findViewById(R.id.tv_my);
-
-        manager = getSupportFragmentManager();
+        findViews();
         //默认显示首页
         showFragment(indexFragment);
         //调用为每个选项绑定事件监听器的方法
         setClickListener();
 
+    }
+
+    private void findViews(){
+        indexView = findViewById(R.id.tv_index);
+        followView = findViewById(R.id.tv_follow);
+        messageView = findViewById(R.id.tv_message);
+        myView = findViewById(R.id.tv_my);
+        manager = getSupportFragmentManager();
+        contentUser = new User(17,"狗蛋","gou",
+                "images/userPhotos/17.jpg","女","15852160982",
+                "上海市", "1985-09-04","做梦都想发家致富");
     }
 
     //显示出指定的页面

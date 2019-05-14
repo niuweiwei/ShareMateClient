@@ -18,6 +18,20 @@ public class User implements Serializable {
 		super();
 	}
 
+	public User(int userId, String userName, String userPassword,
+				String userPhoto, String userSex, String userPhone,
+				String userAddress, String userBirth, String userIntro) {
+		this.userId = userId;
+		this.userName = userName;
+		this.userPassword = userPassword;
+		this.userPhoto = userPhoto;
+		this.userSex = userSex;
+		this.userPhone = userPhone;
+		this.userAddress = userAddress;
+		this.userBirth = userBirth;
+		this.userIntro = userIntro;
+	}
+
 	public int getUserId() {
 		return userId;
 	}

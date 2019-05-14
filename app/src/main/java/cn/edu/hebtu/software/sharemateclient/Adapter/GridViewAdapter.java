@@ -20,7 +20,7 @@ public class GridViewAdapter extends BaseAdapter {
     private Context context;
     private int itemLayout;
     private List<Note> notes;
-    private String U ="http://10.7.89.23:8080/ShareMateServer/";
+    private String U ="http://192.168.0.108:8080/ShareMateServer/";
     public GridViewAdapter(Context context, int itemLayout, List<Note> notes){
         this.context=context;
         this.itemLayout=itemLayout;
