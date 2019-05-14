@@ -18,28 +18,16 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_alignParentTop="true"
-          android:layout_gravity="center"
+          android:gravity="center"
           android:orientation="vertical">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
-          <Button
-              android:layout_marginTop="10dp"
-              android:layout_alignParentLeft="true"
-              android:id="@+id/more"
-              style="@style/more" />
             <TabWidget
-                android:layout_toRightOf="@id/more"
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:paddingHorizontal="120dp"
                 android:gravity="center"
-                android:paddingHorizontal="100dp"
                 android:layout_gravity="center">
             </TabWidget>
-        </RelativeLayout>
         <Button
             android:id="@+id/search_btn"
             android:layout_width="match_parent"
@@ -47,6 +35,7 @@
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/search_button_style"
             android:text="大家都在搜“冬季旅行地”"
             android:textColor="@color/textcolor" />

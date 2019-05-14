@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment {
         View view = layoutInflater.inflate(R.layout.tabspesc_homefrag,null);
         TextView textView = view.findViewById(R.id.text);
         textView.setText(name);
-        textView.setTextSize(20);
+        textView.setTextSize(22);
         textView.setTextColor(getResources().
                 getColor(R.color.top1));
         textViews.put(tag,textView);

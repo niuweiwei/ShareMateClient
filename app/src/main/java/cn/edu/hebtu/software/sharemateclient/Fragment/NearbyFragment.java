@@ -1,6 +1,5 @@
 package cn.edu.hebtu.software.sharemateclient.Fragment;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.google.gson.Gson;
@@ -28,9 +26,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.edu.hebtu.software.sharemateclient.Activity.MainActivity;
 import cn.edu.hebtu.software.sharemateclient.Adapter.GridViewAdapter;
-import cn.edu.hebtu.software.sharemateclient.Entity.Goods;
 import cn.edu.hebtu.software.sharemateclient.Entity.Note;
 import cn.edu.hebtu.software.sharemateclient.R;
 import okhttp3.Call;
@@ -51,10 +47,11 @@ public class NearbyFragment extends Fragment {
     private ListMoreTask listMoreTask;
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_nearby,null);
         findViews();
-        listTask.execute(index);
+        listTask.execute();
         return view;
 
     }
@@ -99,7 +96,7 @@ public class NearbyFragment extends Fragment {
         protected Object doInBackground(Object[] objects) {
             //1.创建OKHttpClient对象(已创建)
             // 2.创建Request对象
-            String url = U+"/note/recommend/"+index;
+            String url = U+"/note/recommend/"+index+"?typeId=0";
             Request request = new Request.Builder()
                     .url(url)
                     .build();
@@ -133,7 +130,7 @@ public class NearbyFragment extends Fragment {
     //    gridView事件
     private void setGrid(){
         // 创建Adapter对象
-        gridViewAdapter = new GridViewAdapter(getActivity(),R.layout.grid_item,notes);
+        gridViewAdapter = new GridViewAdapter(getActivity(),R.layout.item_recomgrid,notes);
         // 设置Adapter
         gridView.setAdapter(gridViewAdapter);
         srl.setOnRefreshListener(new OnRefreshListener() {
@@ -171,7 +168,7 @@ public class NearbyFragment extends Fragment {
         protected Object doInBackground(Object[] objects) {
             //1.创建OKHttpClient对象(已创建)
             // 2.创建Request对象
-            String url = U+"/note/recommend/"+index;
+            String url = U+"/note/recommend/"+index+"?typeId=0";
             Request request = new Request.Builder()
                     .url(url)
                     .build();

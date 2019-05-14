@@ -54,10 +54,15 @@
     <!--选择地区-->
     <color name="blue">#0066FF</color>
     <color name="no_color">#00000000</color>
-    <color name="bg_color">#F4F3F3</color>
     <color name="bg_color_deep">#E5E5E5</color>
     <color name="text_color">#434343</color>
     <color name="black_half">#50000000</color>
     <color name="single_searcg_bg">#8B8682</color>
     <color name="common_top_bar_blue">#22292c</color>
+
+
+    <color name="bg_color">#F4F3F3</color>
+    <color name="noteText">#b422292c</color>
+    <color name="noteTitle">#e022292c</color>
+    <color name="userName">#c022292c</color>
 </resources>

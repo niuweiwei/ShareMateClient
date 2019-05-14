@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color">
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:background="@color/warmRed"
+        android:layout_height="50dp">
+        <Button
+            android:id="@+id/backBtn"
+            android:background="@mipmap/backbtn"
+            android:layout_marginTop="5dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+        <ImageView
+            android:id="@+id/userIcon"
+            android:layout_toRightOf="@id/backBtn"
+            android:layout_marginLeft="5dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+        <TextView
+            android:id="@+id/userName"
+            android:layout_toRightOf="@id/userIcon"
+            android:text="userName"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/followBtn"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@mipmap/followbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp" />
+    </RelativeLayout>
+    <ScrollView
+        android:layout_below="@id/top"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/noteImage"
+        android:src="@drawable/dm15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:layout_below="@id/noteImage"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/noteTitle"
+        android:text="noteTitle"
+        android:textColor="@color/noteTitle"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/noteText"
+        android:layout_below="@id/noteTitle"
+        android:text="noteText"
+        android:textColor="@color/noteText"
+        android:textSize="19sp"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    </RelativeLayout>
+    </RelativeLayout>
+    </ScrollView>
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <EditText
+            android:id="@+id/editText"
+            android:hint="说点什么吧..."
+            android:padding="5dp"
+            android:background="@drawable/edittext_bg"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content" />
+        <Button
+            android:layout_toRightOf="@id/editText"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+        <Button
+            android:layout_toRightOf="@id/editText"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+        <Button
+            android:layout_toRightOf="@id/editText"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+    </RelativeLayout>
+</RelativeLayout>

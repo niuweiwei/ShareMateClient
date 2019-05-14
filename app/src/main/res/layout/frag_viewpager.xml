@@ -16,6 +16,8 @@
             android:id="@+id/root"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="5dp"
             android:numColumns="2"/>
         <com.scwang.smartrefresh.layout.footer.BallPulseFooter
          android:layout_width="match_parent"

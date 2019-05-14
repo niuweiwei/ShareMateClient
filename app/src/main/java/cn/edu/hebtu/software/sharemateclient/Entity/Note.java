@@ -1,7 +1,9 @@
 package cn.edu.hebtu.software.sharemateclient.Entity;
 
 
-public class Note {
+import java.io.Serializable;
+
+public class Note implements Serializable{
 
 	private int NoteId;
 	private String noteVideo;
@@ -11,6 +13,7 @@ public class Note {
 	private String noteDate;
 	private int typeId;
 	private User user;
+	private int likeCount;
 
 	public Note() {
 		super();
@@ -64,6 +67,15 @@ public class Note {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	public int getLikeCount() {
+		return likeCount;
+	}
+
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
+
 	@Override
 	public String toString() {
 		return "Note [NoteId=" + NoteId + ", noteVideo=" + noteVideo + ", noteTitle=" + noteTitle + ", noteDetail="

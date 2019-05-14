@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
     <TextView
         android:layout_gravity="center"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:text="综合"
         android:gravity="center"
         android:id="@+id/text"

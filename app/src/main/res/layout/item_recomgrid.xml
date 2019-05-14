@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:background="@drawable/yuanjiao"
+    android:descendantFocusability="blocksDescendants"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:id="@+id/noteImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/noteImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_gravity="center_vertical">
+        <TextView
+            android:id="@+id/noteTitle"
+            style="@style/noteTitle"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="noteTitle"
+            android:maxLines="1"
+            android:ellipsize="end" />
+        <RelativeLayout
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/noteTitle"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/userIcon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true" />
+            <TextView
+                android:id="@+id/userName"
+                android:layout_toRightOf="@id/userIcon"
+                style="@style/userName"
+                android:text="userName" />
+            <Button
+                android:id="@+id/pick"
+                android:layout_toLeftOf="@id/likeCount"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:clickable="true"
+                android:focusable="false" />
+            <TextView
+                android:id="@+id/likeCount"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:maxEms="3"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="likeCount"
+                android:textColor="@color/userName"
+                android:textSize="15sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

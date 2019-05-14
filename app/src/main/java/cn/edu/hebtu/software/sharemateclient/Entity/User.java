@@ -1,6 +1,8 @@
 package cn.edu.hebtu.software.sharemateclient.Entity;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
 	private int userId;
 	private String userName;
