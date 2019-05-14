@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cn.edu.hebtu.software.sharemateclient.Activity.PersonalActivity;
+import cn.edu.hebtu.software.sharemateclient.Activity.SettingActivity;
 import cn.edu.hebtu.software.sharemateclient.R;
 
 /**
@@ -35,7 +36,7 @@ public class MyFragment extends Fragment {
     private ImageView headImg;//头像
     private ImageView settingView;
     private Button btnPersonal;//个人资料
-    private OnClickListener listener = new OnClickListener();
+    private OnClickListener listener;
 
 
     @Nullable
@@ -44,6 +45,7 @@ public class MyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my,container,false);
         //获取控件
         findView(view);
+        //监听器绑定
         setListener();
         return view;
     }
@@ -67,21 +69,30 @@ public class MyFragment extends Fragment {
         fanCount = view.findViewById(R.id.fanCount);
         likeCount = view.findViewById(R.id.likeCount);
     }
-
+    /**
+     * 监听器绑定
+     */
     public void setListener(){
+        listener = new OnClickListener();
         btnPersonal.setOnClickListener(listener);
+        settingView.setOnClickListener(listener);
     }
     /**
-     * 监听器
+     * 监听器类
      */
     public class OnClickListener implements View.OnClickListener{
 
         @Override
         public void onClick(View v) {
             switch (v.getId()){
-                case R.id.personal:
-                    Intent perIntent = new Intent(getContext(), PersonalActivity.class);
+                case R.id.personal://个人资料
+                    Intent perIntent = new Intent(getActivity(), PersonalActivity.class);
+                    perIntent.putExtra("person","my");
                     startActivity(perIntent);
+                    break;
+                case R.id.setting://设置
+                    Intent setIntent = new Intent(getActivity(), SettingActivity.class);
+                    startActivity(setIntent);
                     break;
             }
         }

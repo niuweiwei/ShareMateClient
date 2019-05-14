@@ -48,6 +48,24 @@ public class MainActivity extends AppCompatActivity {
         //调用为每个选项绑定事件监听器的方法
         setClickListener();
 
+        //判断点击返回按钮到哪个fragment
+        if ("main".equals(getIntent().getStringExtra("back"))){
+            indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,24);
+            indexView.setTextColor(getResources().getColor(R.color.inkGray));
+            showFragment(indexFragment);
+        }
+        if ("my".equals(getIntent().getStringExtra("back"))){
+            showFragment(myFragment);
+            myView.setTextSize(TypedValue.COMPLEX_UNIT_SP,24);
+            myView.setTextColor(getResources().getColor(R.color.inkGray));
+            indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
+            indexView.setTextColor(getResources().getColor(R.color.darkGray));
+        }
+        //把每个选项卡添加到list里
+        views.add(indexView);
+        views.add(followView);
+        views.add(messageView);
+        views.add(myView);
     }
 
     //显示出指定的页面

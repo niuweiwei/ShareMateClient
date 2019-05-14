@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -23,8 +24,14 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 
+import cn.edu.hebtu.software.sharemateclient.Fragment.MyFragment;
 import cn.edu.hebtu.software.sharemateclient.R;
 
+/**
+ * 个人资料页
+ * @author fengjiaxing
+ * @date 2019/5/13
+ */
 public class PersonalActivity extends AppCompatActivity {
     //相机拍摄的头像文件(本次演示存放在SD卡根目录下)
     private static final File USER_ICON = new File(Environment.getExternalStorageDirectory() + "/CoolImage/", System.currentTimeMillis()+".jpg");
@@ -40,6 +47,7 @@ public class PersonalActivity extends AppCompatActivity {
     private TextView tv_introduce;
     private ImageView iv_back;
     private ImageView iv_head;//头像
+    private LinearLayout layoutHead;
     private LinearLayout layoutName;
     private LinearLayout layoutSex;
     private LinearLayout layoutBirth;
@@ -66,6 +74,7 @@ public class PersonalActivity extends AppCompatActivity {
         tv_birth = findViewById(R.id.birth);
         tv_address = findViewById(R.id.address);
         tv_introduce = findViewById(R.id.introduction);
+        layoutHead = findViewById(R.id.ly_head);
         layoutName = findViewById(R.id.ly_name);
         layoutAddress = findViewById(R.id.ly_address);
         layoutBirth = findViewById(R.id.ly_birth);
@@ -77,6 +86,8 @@ public class PersonalActivity extends AppCompatActivity {
     public void setListener() {
         PerOnClickListener listener = new PerOnClickListener();
         iv_head.setOnClickListener(listener);
+        layoutHead.setOnClickListener(listener);
+        iv_back.setOnClickListener(listener);
     }
 
     public class PerOnClickListener implements View.OnClickListener {
@@ -86,6 +97,19 @@ public class PersonalActivity extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.head://修改头像
                     showPopupWindow();
+                    break;
+                case R.id.ly_head://修改头像
+                    showPopupWindow();
+                    break;
+                case R.id.back://返回
+                    if("my".equals(getIntent().getStringExtra("person"))){
+                        Intent myIntent = new Intent(PersonalActivity.this,MainActivity.class);
+                        myIntent.putExtra("back","my");
+                        startActivity(myIntent);
+                    }else if("set".equals(getIntent().getStringExtra("person"))){
+                        Intent myIntent = new Intent(PersonalActivity.this,SettingActivity.class);
+                        startActivity(myIntent);
+                    }
                     break;
             }
         }
