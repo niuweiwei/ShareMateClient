@@ -38,6 +38,8 @@ android {
 }
 
 dependencies {
+    //添加okhttp的框架依赖
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     //添加SmartRefreshLayout依赖
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-12'
     //添加SmartRefreshLayout依赖
