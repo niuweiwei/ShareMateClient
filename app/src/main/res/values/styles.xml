@@ -16,7 +16,6 @@
         <item name="colorPrimaryDark">@color/deepRed</item>
         <item name="windowNoTitle">true</item>
     </style>
-
     <!--日期选择器的样式-->
     <style name="datePickerStyle" parent="@android:style/Widget.Holo.DatePicker">
         <item name="android:textSize">16sp</item>
@@ -87,6 +86,14 @@
         <item name="android:textColor">@color/colorButton</item>
         <item name="android:textSize">30dp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+    <!--弹出框样式-->
+    <style name="popupwindowButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/brightBlue</item>
     </style>
 
 </resources>

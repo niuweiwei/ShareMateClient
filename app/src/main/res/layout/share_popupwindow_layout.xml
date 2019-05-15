@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_camera"
+        style="@style/popupwindowButtonStyle"
+        android:text="拍摄照片" />
+    <Button
+        android:id="@+id/btn_radio"
+        style="@style/popupwindowButtonStyle"
+        android:text="拍摄视频" />
+
+    <Button
+        android:id="@+id/btn_photos"
+        style="@style/popupwindowButtonStyle"
+        android:layout_marginTop="1dp"
+        android:text="从手机相册中选择" />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        style="@style/popupwindowButtonStyle"
+        android:layout_marginTop="10dp"
+        android:text="取消" />
+</LinearLayout>

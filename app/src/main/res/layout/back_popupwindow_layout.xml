@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="您将退出发布，是否保存草稿"
+        android:background="@color/white"
+        android:textColor="@color/black"/>
+    <Button
+        android:id="@+id/btn_save"
+        android:text="保存"
+        style="@style/popupwindowButtonStyle"/>
+    <Button
+        android:id="@+id/btn_dissave"
+        android:text="不保存"
+        android:layout_marginTop="1dp"
+        style="@style/popupwindowButtonStyle"
+        android:textColor="@color/warmRed"/>
+    <Button
+        android:id="@+id/btn_cancel1"
+        android:text="取消"
+        android:layout_marginTop="10dp"
+        style="@style/popupwindowButtonStyle"/>
+</LinearLayout>

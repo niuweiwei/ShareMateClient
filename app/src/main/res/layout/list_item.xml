@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/user"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/user_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/a1" />
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="35dp"
+                android:text="小明先森"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+
+            <Button
+                android:layout_alignParentRight="true"
+                android:id="@+id/guannzhu"
+                android:layout_marginRight="10dp"
+                android:layout_width="65dp"
+                android:layout_height="30dp"
+                android:background="@drawable/cancelfollowedbutton_style"
+                android:text="已关注"
+                android:textSize="16sp"
+                />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_marginTop="10dp"
+            android:id="@+id/iv_photo"
+            android:layout_width="412dp"
+            android:layout_height="0dp"
+            android:layout_below="@+id/user"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <LinearLayout
+            android:id="@+id/iv_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/iv_photo"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/note_alltext"
+                style="@style/notetext"
+                android:layout_marginTop="10dp" />
+
+
+<RelativeLayout
+    android:layout_marginTop="10dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/title"
+        android:layout_width="150dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="20dp"
+        android:maxEms="6"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_centerVertical="true"
+        android:background="@drawable/titleback"
+        android:text="#  英语学习哈哈"
+        android:textColor="#FF3885DE"
+        android:textSize="14sp" />
+            <LinearLayout
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="10dp"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/dianzan"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@drawable/xin"
+                        />
+
+                    <TextView
+                        android:id="@+id/z_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="-8dp"
+                        android:text="8"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/shoucang"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/xingxing" />
+
+                    <TextView
+                        android:id="@+id/c_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="-8dp"
+                        android:text="8"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/pinglun"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/pinglun" />
+
+                    <TextView
+                        android:id="@+id/p_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="-8dp"
+                        android:text="8"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+</RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/backstyle"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/pinglun1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="小明：这么难吗" />
+                <TextView
+                    android:id="@+id/pinglun2"
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/all_count"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="共3条评论"
+                    android:textColor="@color/textcolor" />
+            </LinearLayout>
+
+            <RelativeLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_centerVertical="true"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/user_icon2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/a1"/>
+                <EditText
+                    android:id="@+id/fb"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:background="@null"
+                    android:hint="添加评论..." />
+</LinearLayout>
+                <Button
+                    android:id="@+id/fabu"
+                    android:text="发送"
+                    android:textSize="20sp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/brightBlue"
+                    android:background="@color/white"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="昨天18:16"
+                android:textColor="@color/textcolor" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
