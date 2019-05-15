@@ -17,6 +17,7 @@ import cn.edu.hebtu.software.sharemateclient.R;
 
 public class ZanActivity extends AppCompatActivity {
 
+    private String path;
     private GridView gridView;
     private ZanAdapter zanAdapter;
     private ImageView ivBack;
@@ -29,11 +30,11 @@ public class ZanActivity extends AppCompatActivity {
         setContentView(R.layout.activity_zan);
         findView();
         setListener();
-
+        path = getResources().getString(R.string.server_path);
         if(noteList.size()==0){
             gridView.setEmptyView((findViewById(R.id.empty_view)));
         }else{
-            zanAdapter= new ZanAdapter(ZanActivity.this, R.layout.item_zan,noteList);
+            zanAdapter= new ZanAdapter(ZanActivity.this, R.layout.item_zan,noteList,path);
             gridView.setAdapter(zanAdapter);
         }
     }

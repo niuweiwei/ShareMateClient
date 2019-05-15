@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -20,11 +21,25 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import cn.edu.hebtu.software.sharemateclient.Activity.NoteDetailActivity;
 import cn.edu.hebtu.software.sharemateclient.Activity.PersonalActivity;
 import cn.edu.hebtu.software.sharemateclient.Activity.SettingActivity;
+import cn.edu.hebtu.software.sharemateclient.Adapter.NoteAdapter;
+import cn.edu.hebtu.software.sharemateclient.Bean.NoteBean;
 import cn.edu.hebtu.software.sharemateclient.Bean.UserBean;
 import cn.edu.hebtu.software.sharemateclient.R;
 import okhttp3.Call;
@@ -38,10 +53,10 @@ import okhttp3.Request;
  * */
 public class MyFragment extends Fragment {
 
+    private OkHttpClient okHttpClient;
     private String path = null;
     private int userId = 1;
-    private int typeId = 1;
-    private String url;
+    private ArrayList<Integer> type = new ArrayList<>();
     private GridView gridView;
     private TextView nameText;
     private TextView idText;
@@ -56,7 +71,9 @@ public class MyFragment extends Fragment {
     private Button btnPersonal;//个人资料
     private OnClickListener listener;
     private UserBean user = new UserBean();
-
+    private NoteAdapter noteAdapter;
+    private List<NoteBean> collectionList = new ArrayList<>();
+    private List<NoteBean> noteList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -67,9 +84,26 @@ public class MyFragment extends Fragment {
         //监听器绑定
         setListener();
         path = getResources().getString(R.string.server_path);
+        type.add(1);
+        type.add(2);
         //得到user的详情
         GetUserDetail getUserDetail = new GetUserDetail();
         getUserDetail.execute(userId);
+        //取出Note笔记
+        GetNote getNote = new GetNote();
+        getNote.execute(user);
+        //取出收藏
+        GetCollection getCollection = new GetCollection();
+        getCollection.execute(user);
+        //查询关注数量
+        GetFollowCount getFollowCount = new GetFollowCount();
+        getFollowCount.execute(user);
+        //查询粉丝数量
+        GetFanCount getFanCount = new GetFanCount();
+        getFanCount.execute(user);
+        //查询收获的赞的数量
+        GetLikeCount getLikeCount = new GetLikeCount();
+        getLikeCount.execute(user);
         return view;
     }
 
@@ -99,6 +133,11 @@ public class MyFragment extends Fragment {
         listener = new OnClickListener();
         btnPersonal.setOnClickListener(listener);
         settingView.setOnClickListener(listener);
+        note.setOnClickListener(listener);
+        collection.setOnClickListener(listener);
+        followCount.setOnClickListener(listener);
+        fanCount.setOnClickListener(listener);
+        likeCount.setOnClickListener(listener);
     }
     /**
      * 监听器类
@@ -111,25 +150,68 @@ public class MyFragment extends Fragment {
                 case R.id.personal://个人资料
                     Intent perIntent = new Intent(getActivity(), PersonalActivity.class);
                     perIntent.putExtra("person","my");
-                    startActivity(perIntent);
+                    perIntent.putExtra("user",user);
+                    perIntent.putIntegerArrayListExtra("type",type);
+                    startActivityForResult(perIntent,1);
                     break;
                 case R.id.setting://设置
                     Intent setIntent = new Intent(getActivity(), SettingActivity.class);
-                    startActivity(setIntent);
+                    setIntent.putExtra("user",user);
+                    setIntent.putIntegerArrayListExtra("type",type);
+                    startActivityForResult(setIntent,2);
+                    break;
+                case R.id.note://笔记
+                    note.setTextColor(getResources().getColor(R.color.warmRed));
+                    collection.setTextColor(getResources().getColor(R.color.darkGray));
+                    noteAdapter = new NoteAdapter(getActivity(), R.layout.item_note,noteList,user,path);
+                    gridView.setAdapter(noteAdapter);
+                    setNoteGridView(gridView);
+                    break;
+                case R.id.collection://收藏
+                    collection.setTextColor(getResources().getColor(R.color.warmRed));
+                    note.setTextColor(getResources().getColor(R.color.darkGray));
+                    noteAdapter = new NoteAdapter(getActivity(), R.layout.item_note,collectionList,user,path);
+                    gridView.setAdapter(noteAdapter);
+                    setCollectGridView(gridView);
                     break;
             }
         }
     }
+    public void setNoteGridView(GridView gridView){
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), NoteDetailActivity.class);
+                intent.putExtra("noteId",noteList.get(position).getNoteId());
+                Log.e("noteId",noteList.get(position).getNoteId()+"");
+                intent.putExtra("userId",user.getUserId());
+                intent.putIntegerArrayListExtra("type",type);
+                startActivity(intent);
+            }
+        });
+    }
+    public void setCollectGridView(GridView gridView){
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), NoteDetailActivity.class);
+                intent.putExtra("noteId",collectionList.get(position).getNoteId());
+                intent.putExtra("userId",user.getUserId());
+                intent.putIntegerArrayListExtra("type",type);
+                startActivity(intent);
+            }
+        });
+    }
     /**
      * 异步任务——获取UserBean对象
      */
-    class GetUserDetail extends AsyncTask{
+    public class GetUserDetail extends AsyncTask{
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            url = path + "/user/findUserByUserId?userId="+objects[0];
+            String url = path + "/user/findUserByUserId?userId="+objects[0];
             //1.创建OKHttpClient对象
-            OkHttpClient okHttpClient = new OkHttpClient();
+            okHttpClient = new OkHttpClient();
             //2.创建Request对象
             Request request = new Request.Builder().url(url).build();
             //3.创建Call对象
@@ -149,9 +231,6 @@ public class MyFragment extends Fragment {
                 user.setUserAddress(userJson.getUserAddress());
                 user.setUserBirth(userJson.getUserBirth());
                 user.setUserIntroduce(userJson.getUserIntroduce());
-//                user.setFollowCount(userJson.getInt("followCount"));
-//                user.setFanCount(userJson.getInt("fanCount"));
-//                user.setLikeCount(userJson.getInt("likeCount"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -175,10 +254,202 @@ public class MyFragment extends Fragment {
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true);
             Glide.with(getActivity()).load(photoPath).apply(mRequestOptions).into(headImg);
-//            followCount.setText(""+user.getFollowCount());
-//            fanCount.setText(""+user.getFanCount());
-//            likeCount.setText(""+user.getLikeCount());
         }
     }
 
+    /**
+     * 异步任务——从数据库取笔记
+     */
+    public class GetNote extends AsyncTask{
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            UserBean user = (UserBean) objects[0];
+            int uId = user.getUserId();
+            String url = path + "/note/findNoteByUserId?userId="+uId;
+            okHttpClient = new OkHttpClient();
+            Request request = new Request.Builder().url(url).build();
+            Call call = okHttpClient.newCall(request);
+            try {
+                String result = call.execute().body().string();
+                Log.e("NoteResult---",result);
+                JSONObject noteObject = new JSONObject(result);
+                JSONArray noteArray = noteObject.getJSONArray("noteList");
+                String noteStr = noteArray.toString();
+                Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+                Type type = new TypeToken<List<NoteBean>>(){}.getType();
+                List<NoteBean> notes = gson.fromJson(noteStr,type);
+                Log.e("notes---",notes.toString());
+                for (int i = 0; i < notes.size(); i++){
+                    NoteBean n = new NoteBean();
+                    n.setNoteId(notes.get(i).getNoteId());
+                    n.setNoteTitle(notes.get(i).getNoteTitle());
+                    n.setNoteDetail(notes.get(i).getNoteDetail());
+                    n.setNoteImage(notes.get(i).getNoteImage());
+                    n.setNoteDate(notes.get(i).getNoteDate());
+                    n.setUser(user);
+                    noteList.add(n);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            note.setTextColor(getResources().getColor(R.color.warmRed));
+            collection.setTextColor(getResources().getColor(R.color.darkGray));
+            noteAdapter = new NoteAdapter(getActivity(), R.layout.item_note,noteList,user,path);
+            gridView.setAdapter(noteAdapter);
+            setNoteGridView(gridView);
+        }
+    }
+    /**
+     * 异步任务——从数据库中取收藏
+     */
+    public class GetCollection extends AsyncTask{
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            UserBean user = (UserBean) objects[0];
+            int uId = user.getUserId();
+            String url = path + "/collect/findCollectNote?userId="+uId;
+            okHttpClient = new OkHttpClient();
+            Request request = new Request.Builder().url(url).build();
+            Call call = okHttpClient.newCall(request);
+            try {
+                String result = call.execute().body().string();
+                Log.e("CollectResult---",result);
+                JSONObject collectJson = new JSONObject(result);
+                JSONArray collectArray = collectJson.getJSONArray("collectList");
+                String collectStr = collectArray.toString();
+                Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
+                Type type = new TypeToken<List<NoteBean>>(){}.getType();
+                List<NoteBean> notes = gson.fromJson(collectStr,type);
+                for (int i = 0; i < notes.size(); i++){
+                    NoteBean n = new NoteBean();
+                    n.setNoteId(notes.get(i).getNoteId());
+                    n.setNoteTitle(notes.get(i).getNoteTitle());
+                    n.setNoteDetail(notes.get(i).getNoteDetail());
+                    n.setNoteImage(notes.get(i).getNoteImage());
+                    n.setNoteDate(notes.get(i).getNoteDate());
+                    n.setUser(user);
+                    collectionList.add(n);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+    /**
+     * 异步任务——查询关注数量
+     */
+    public class GetFollowCount extends AsyncTask{
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            UserBean u = (UserBean) objects[0];
+            int uid = u.getUserId();
+            String url = path + "/follow/getFollowCount?userId="+uid;
+            okHttpClient = new OkHttpClient();
+            Request request = new Request.Builder().url(url).build();
+            Call call = okHttpClient.newCall(request);
+            try {
+                String result = call.execute().body().string();
+                Log.e("FollowCount---",result);
+                JSONObject jsonObject = new JSONObject(result);
+                int followCount = jsonObject.getInt("followCount");
+//                Gson gson = new Gson();
+//                int followCount = gson.fromJson(result,int.class);
+                Log.e("followCount",followCount+"");
+                user.setFollowCount(followCount);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            followCount.setText(""+user.getFollowCount());
+        }
+    }
+    /**
+     * 异步任务——查询粉丝数量
+     */
+    public class GetFanCount extends AsyncTask{
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            UserBean u = (UserBean) objects[0];
+            int uid = u.getUserId();
+            String url = path + "/follow/getFanCount?userId="+uid;
+            okHttpClient = new OkHttpClient();
+            Request request = new Request.Builder().url(url).build();
+            Call call = okHttpClient.newCall(request);
+            try {
+                String result = call.execute().body().string();
+                Log.e("FanCount---",result);
+                JSONObject jsonObject = new JSONObject(result);
+                int fanCount = jsonObject.getInt("fanCount");
+                Log.e("fanCount",fanCount+"");
+                user.setFanCount(fanCount);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            fanCount.setText(""+user.getFanCount());
+        }
+    }
+    /**
+     * 异步任务——查询收获的赞的数量
+     */
+    public class GetLikeCount extends AsyncTask{
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            UserBean u = (UserBean) objects[0];
+            int uid = u.getUserId();
+            String url = path + "/likes/getLikesCount?userId="+uid;
+            okHttpClient = new OkHttpClient();
+            Request request = new Request.Builder().url(url).build();
+            Call call = okHttpClient.newCall(request);
+            try {
+                String result = call.execute().body().string();
+                Log.e("LikesCount---",result);
+                JSONObject jsonObject = new JSONObject(result);
+                int LikesCount = jsonObject.getInt("likesCount");
+                Log.e("LikesCount",LikesCount+"");
+                user.setLikeCount(LikesCount);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            likeCount.setText(""+user.getLikeCount());
+        }
+    }
 }

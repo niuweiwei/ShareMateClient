@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,11 +22,13 @@ public class ZanAdapter extends BaseAdapter {
     private Context context;
     private int itemLayout;
     private List<NoteBean> list = new ArrayList();
+    private String path;
 
-    public ZanAdapter(Context context, int itemLayout, List<NoteBean> list) {
+    public ZanAdapter(Context context, int itemLayout, List<NoteBean> list,String path) {
         this.context = context;
         this.itemLayout = itemLayout;
         this.list = list;
+        this.path = path;
     }
 
     @Override
@@ -50,7 +53,8 @@ public class ZanAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(itemLayout,null);
         }
         ImageView view = convertView.findViewById(R.id.zan);
-        Glide.with(context).load(list.get(position).getNoteImagePath()).into(view);
+        String imagePath = path + "/" +list.get(position).getNoteImage();
+        Glide.with(context).load(imagePath).into(view);
         TextView textView = convertView.findViewById(R.id.note);
         if(list.get(position).getNoteTitle() != null && list.get(position).getNoteTitle().length()<6){
             textView.setText(list.get(position).getNoteTitle());

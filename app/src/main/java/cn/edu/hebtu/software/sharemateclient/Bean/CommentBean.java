@@ -1,6 +1,8 @@
 package cn.edu.hebtu.software.sharemateclient.Bean;
 
-public class CommentBean {
+import java.io.Serializable;
+
+public class CommentBean implements Serializable{
 
     public static final int COMMENT = 0;
     public static final int REPLYCOMMENT = 1;

@@ -25,7 +25,8 @@
         <activity android:name=".Activity.SettingActivity" />
         <activity android:name=".Activity.ZanActivity" />
         <activity android:name=".Activity.ShareMateActivity" />
-        <activity android:name=".Activity.FollowActivity"></activity>
+        <activity android:name=".Activity.FollowActivity" />
+        <activity android:name=".Activity.NoteDetailActivity"></activity>
     </application>
 
 </manifest>

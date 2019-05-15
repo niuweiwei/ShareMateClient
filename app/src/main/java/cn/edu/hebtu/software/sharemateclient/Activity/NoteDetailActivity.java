@@ -9,12 +9,12 @@ import cn.edu.hebtu.software.sharemateclient.R;
  * @author fengjiaxing
  * @date 2019/5/15
  */
-public class FollowActivity extends AppCompatActivity {
+public class NoteDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_follow);
+        setContentView(R.layout.activity_note_detail);
 
     }
 }
