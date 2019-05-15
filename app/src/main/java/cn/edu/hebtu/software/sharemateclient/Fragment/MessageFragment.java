@@ -9,13 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.edu.hebtu.software.sharemateclient.Activity.LikeActivity;
+import cn.edu.hebtu.software.sharemateclient.Activity.MLikeActivity;
+import cn.edu.hebtu.software.sharemateclient.Activity.MFanActivity;
 import cn.edu.hebtu.software.sharemateclient.Adapter.MessageListAdapter;
 import cn.edu.hebtu.software.sharemateclient.Bean.MessageFragmentTitle;
 import cn.edu.hebtu.software.sharemateclient.R;
@@ -32,10 +32,10 @@ public class MessageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frament_message,container,false);
         //准备数据源
-        titles.add(new MessageFragmentTitle(R.drawable.like,"收到的赞"));
-        titles.add(new MessageFragmentTitle(R.drawable.comment,"收到的评论"));
-        titles.add(new MessageFragmentTitle(R.drawable.followed,"新增关注"));
-        titles.add(new MessageFragmentTitle(R.drawable.message,"收到的私信"));
+        titles.add(new MessageFragmentTitle(R.mipmap.like,"收到的赞"));
+        titles.add(new MessageFragmentTitle(R.mipmap.comment,"收到的评论"));
+        titles.add(new MessageFragmentTitle(R.mipmap.followed,"新增关注"));
+        titles.add(new MessageFragmentTitle(R.mipmap.message,"收到的私信"));
         //初始化监听器
         MessageListAdapter listAdapter = new MessageListAdapter(titles,getActivity(),R.layout.message_list_item_layout);
         ListView listView = view.findViewById(R.id.lv_message);
@@ -48,9 +48,16 @@ public class MessageFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position){
                     case 0:
-                        Intent likeIntent = new Intent(getActivity(),LikeActivity.class);
+                        //点击了收到的赞
+                        Intent likeIntent = new Intent(getActivity(),MLikeActivity.class);
                         startActivity(likeIntent);
                         break;
+                    case 2:
+                        //点击了新增关注
+                        Intent fanIntent = new Intent(getActivity(),MFanActivity.class);
+                        startActivity(fanIntent);
+                        break;
+
                 }
             }
         });

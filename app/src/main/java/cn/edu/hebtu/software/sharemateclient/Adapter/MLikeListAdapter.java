@@ -21,14 +21,14 @@ import java.util.List;
 import cn.edu.hebtu.software.sharemateclient.Bean.Like;
 import cn.edu.hebtu.software.sharemateclient.R;
 
-public class LikeListAdapter extends BaseAdapter {
+public class MLikeListAdapter extends BaseAdapter {
 
     private Context context;
     private  int itemLayout;
     private List<Like> likeList;
     private String serverPath;
 
-    public LikeListAdapter(Context context, int itemLayout, List<Like> likeList,String serverPath) {
+    public MLikeListAdapter(Context context, int itemLayout, List<Like> likeList, String serverPath) {
         this.context = context;
         this.itemLayout = itemLayout;
         this.likeList = likeList;
@@ -78,7 +78,7 @@ public class LikeListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 //点击用户的头像跳转到该用户的个人页面
-                Log.e("LikeListAdapter","点击了用户的头像");
+                Log.e("MLikeListAdapter","点击了用户的头像");
             }
         });
         viewHolder.nameText.setText(like.getUser().getUserName());
@@ -109,7 +109,7 @@ public class LikeListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 //点击笔记图片跳转到笔记详情页面
-                Log.e("LikeListAdapter","点击了笔记的图片");
+                Log.e("MLikeListAdapter","点击了笔记的图片");
             }
         });
         viewHolder.dateText.setText(like.getLikeDate());

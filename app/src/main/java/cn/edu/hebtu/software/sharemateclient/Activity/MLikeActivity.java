@@ -22,7 +22,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.edu.hebtu.software.sharemateclient.Adapter.LikeListAdapter;
+import cn.edu.hebtu.software.sharemateclient.Adapter.MLikeListAdapter;
 import cn.edu.hebtu.software.sharemateclient.Bean.Like;
 import cn.edu.hebtu.software.sharemateclient.R;
 import okhttp3.Call;
@@ -31,12 +31,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class LikeActivity extends AppCompatActivity {
+public class MLikeActivity extends AppCompatActivity {
 
     //数据源 当前登录用户获得的所有赞
     private List<Like> likeList = new ArrayList<>();
     private ListView likeListView;
-    private LikeListAdapter adapter ;
+    private MLikeListAdapter adapter ;
     private Button backButton;
     //当前用户的用户id
     private int currentUserId=3;
@@ -74,7 +74,7 @@ public class LikeActivity extends AppCompatActivity {
         likeListCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e("LikeActivity","无法连接服务器端");
+                Log.e("MLikeActivity","无法连接服务器端");
             }
 
             @Override
@@ -108,7 +108,7 @@ public class LikeActivity extends AppCompatActivity {
             super.handleMessage(msg);
             if (msg.what == 0){
                 //初始化adapter
-                adapter = new LikeListAdapter(LikeActivity.this,R.layout.like_list_item_layout,likeList,serverPath);
+                adapter = new MLikeListAdapter(MLikeActivity.this,R.layout.like_list_item_layout,likeList,serverPath);
                 likeListView.setAdapter(adapter);
                 //点击每一项绑定事件监听器
                 likeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -116,11 +116,11 @@ public class LikeActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if(likeList.get(position).getLikeType() == Like.NOTE){
                             //如果点赞的是某一条笔记 则跳转到该笔记的详情页
-                            Log.e("LikeActivity","为笔记点赞哟!");
+                            Log.e("MLikeActivity","为笔记点赞哟!");
                     }
                         else if(likeList.get(position).getLikeType() == Like.COMMENT || likeList.get(position).getLikeType() == Like.REPLY){
                             //如果点赞的是某一条评论 则跳转到评论列表
-                            Log.e("LikeActivity","为评论点赞哟!");
+                            Log.e("MLikeActivity","为评论点赞哟!");
                         }
                     }
                 });
