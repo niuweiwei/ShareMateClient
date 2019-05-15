@@ -1,6 +1,7 @@
 package cn.edu.hebtu.software.sharemateclient.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Option;
 import com.bumptech.glide.request.RequestOptions;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -49,7 +52,7 @@ public class LikeListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
+        Like like = likeList.get(position);
         ViewHolder viewHolder = null;
         if( null == convertView){
             viewHolder = new ViewHolder();
@@ -58,6 +61,8 @@ public class LikeListAdapter extends BaseAdapter {
             viewHolder.nameText = convertView.findViewById(R.id.tv_name);
             viewHolder.dateText = convertView.findViewById(R.id.tv_date);
             viewHolder.noteImage = convertView.findViewById(R.id.iv_note);
+            viewHolder.commentContent = convertView.findViewById(R.id.tv_commentContent);
+            viewHolder.likeType = convertView.findViewById(R.id.tv_likeType);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
@@ -65,14 +70,50 @@ public class LikeListAdapter extends BaseAdapter {
         //填充点赞的用户头像
         RequestOptions requestOptions = new RequestOptions().circleCrop();
         Glide.with(context)
-                .load(serverPath+likeList.get(position).getUser().getUserPhoto())
+                .load(serverPath+like.getUser().getUserPhoto())
                 .apply(requestOptions)
                 .into(viewHolder.portraitImage);
-        viewHolder.nameText.setText(likeList.get(position).getUser().getUserName());
-        viewHolder.dateText.setText(likeList.get(position).getLikeDate());
-        Glide.with(context)
-                .load(serverPath+likeList.get(position).getNote().getNoteImage())
-                .into(viewHolder.noteImage);
+        //为用户头像绑定点击事件监听器
+        viewHolder.portraitImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //点击用户的头像跳转到该用户的个人页面
+                Log.e("LikeListAdapter","点击了用户的头像");
+            }
+        });
+        viewHolder.nameText.setText(like.getUser().getUserName());
+        //判断点赞的笔记还是评论
+        if(like.getLikeType() == Like.NOTE) {
+            viewHolder.likeType.setText("笔记");
+            viewHolder.commentContent.setVisibility(View.GONE);
+            Glide.with(context)
+                    .load(serverPath+like.getNote().getNoteImage())
+                    .into(viewHolder.noteImage);
+        } else {
+            viewHolder.likeType.setText("评论");
+            viewHolder.commentContent.setVisibility(View.VISIBLE);
+            if(like.getLikeType() == Like.COMMENT){
+                viewHolder.commentContent.setText(like.getComment().getCommentDetail());
+                Glide.with(context)
+                        .load(serverPath+like.getComment().getNote().getNoteImage())
+                        .into(viewHolder.noteImage);
+            } else{
+                viewHolder.commentContent.setText(like.getReply().getReplyDetail());
+                Glide.with(context)
+                        .load(serverPath+like.getReply().getComment().getNote().getNoteImage())
+                        .into(viewHolder.noteImage);
+            }
+        }
+        //为笔记图片绑定点击事件监听器
+        viewHolder.noteImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //点击笔记图片跳转到笔记详情页面
+                Log.e("LikeListAdapter","点击了笔记的图片");
+            }
+        });
+        viewHolder.dateText.setText(like.getLikeDate());
+
         return convertView;
     }
 
@@ -81,5 +122,7 @@ public class LikeListAdapter extends BaseAdapter {
         private TextView nameText;
         private TextView dateText;
         private ImageView noteImage;
+        private TextView likeType;
+        private TextView commentContent;
     }
 }

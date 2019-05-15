@@ -11,6 +11,10 @@ public class Like implements Serializable {
     private Comment comment;
     private Reply reply;
     private String likeDate;
+    private int likeType;
+    public static final int NOTE = 0;
+    public static final  int COMMENT = 1;
+    public static final  int REPLY = 2;
 
     public Like() { }
 
@@ -69,6 +73,14 @@ public class Like implements Serializable {
 
     public void setLikeDate(String likeDate) {
         this.likeDate = likeDate;
+    }
+
+    public int getLikeType() {
+        return likeType;
+    }
+
+    public void setLikeType(int likeType) {
+        this.likeType = likeType;
     }
 
     @Override

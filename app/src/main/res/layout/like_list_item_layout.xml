@@ -6,17 +6,17 @@
     android:layout_height="wrap_content">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="120dp">
         <ImageView
             android:id="@+id/iv_portrait"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:scaleType="centerCrop"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"/>
 
         <LinearLayout
-            android:layout_width="195dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="10dp"
@@ -33,7 +33,7 @@
                     android:id="@+id/tv_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     android:textFontWeight="bolder"
                     android:textColor="@color/inkGray"/>
                 <TextView
@@ -41,16 +41,31 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:textColor="@color/inkGray"
-                    android:textSize="16sp"
-                    android:text="赞了你的笔记"/>
+                    android:textSize="20sp"
+                    android:text="赞了你的"/>
+                <TextView
+                    android:id="@+id/tv_likeType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/inkGray"
+                    android:textSize="20sp"/>
             </LinearLayout>
             <TextView
                 android:id="@+id/tv_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textColor="@color/gray"/>
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/tv_commentContent"
+                android:textSize="20sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/grayishBlue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
         <ImageView
             android:id="@+id/iv_note"
