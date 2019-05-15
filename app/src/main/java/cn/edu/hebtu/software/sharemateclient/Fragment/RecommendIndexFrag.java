@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -38,7 +40,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class RecommendIndexFrag extends Fragment {
+public class RecommendIndexFrag extends Fragment{
     private int typeId;
     private GridViewAdapter gridViewAdapter=null;
     private List<Note> notes = new ArrayList<Note>();
@@ -52,6 +54,7 @@ public class RecommendIndexFrag extends Fragment {
     private int pages;
     private ListMoreTask listMoreTask;
     private User contentUser;
+    private int userId;
 
     //RecommendIndexFrag的new（）方法 id用来fragment传递和保存typeId
     public static RecommendIndexFrag newInstance(int id){
@@ -89,6 +92,7 @@ public class RecommendIndexFrag extends Fragment {
         contentUser = contentUser = new User(17,"狗蛋","gou",
                 "images/userPhotos/17.jpg","女","15852160982",
                 "上海市", "1985-09-04","做梦都想发家致富");
+        userId = contentUser.getUserId();
     }
 
     //    刷新
@@ -113,6 +117,7 @@ public class RecommendIndexFrag extends Fragment {
         gridViewAdapter.notifyDataSetChanged();
     }
 
+
     //请求数据并初始化数组
     private class ListTask extends AsyncTask {
 
@@ -120,7 +125,7 @@ public class RecommendIndexFrag extends Fragment {
         protected Object doInBackground(Object[] objects) {
             //1.创建OKHttpClient对象(已创建)
             // 2.创建Request对象
-            String url = U+"/note/recommend/"+currentPage+"?typeId="+typeId;
+            String url = U+"/note/recommend/"+currentPage+"?typeId="+typeId+"&userId="+userId;
             Request request = new Request.Builder()
                     .url(url)
                     .build();
@@ -209,7 +214,7 @@ public class RecommendIndexFrag extends Fragment {
         protected Object doInBackground(Object[] objects) {
             //1.创建OKHttpClient对象(已创建)
             // 2.创建Request对象
-            String url = U+"/note/recommend/"+currentPage+"?typeId="+typeId;
+            String url = U+"/note/recommend/"+currentPage+"?typeId="+typeId+"&userId="+userId;
 
             Request request = new Request.Builder()
                     .url(url)
@@ -249,5 +254,12 @@ public class RecommendIndexFrag extends Fragment {
             listMoreTask.cancel(true);
             listMoreTask = null;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        listTask = new ListTask();
+//        listTask.execute();
     }
 }

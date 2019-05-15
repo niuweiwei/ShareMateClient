@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 public class Note implements Serializable{
 
-	private int NoteId;
+	private int noteId;
 	private String noteVideo;
 	private String noteTitle;
 	private String noteDetail;
@@ -13,16 +13,19 @@ public class Note implements Serializable{
 	private String noteDate;
 	private int typeId;
 	private User user;
-	private int likeCount;
+	private int likeCount,collectCount,commentCount;
+	private boolean like;
+	private boolean collect;
+	private boolean follow;
 
 	public Note() {
 		super();
 	}
 	public int getNoteId() {
-		return NoteId;
+		return noteId;
 	}
 	public void setNoteId(int noteId) {
-		NoteId = noteId;
+		noteId = noteId;
 	}
 	public String getNoteVideo() {
 		return noteVideo;
@@ -78,12 +81,49 @@ public class Note implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Note [NoteId=" + NoteId + ", noteVideo=" + noteVideo + ", noteTitle=" + noteTitle + ", noteDetail="
+		return "Note [NoteId=" + noteId + ", noteVideo=" + noteVideo + ", noteTitle=" + noteTitle + ", noteDetail="
 				+ noteDetail + ", noteImage=" + noteImage + ", noteDate=" + noteDate + ", typeId=" + typeId + ", user="
 				+ user + "]";
 	}
 
+	public boolean isLike() {
+		return like;
+	}
 
+	public void setLike(boolean like) {
+		this.like = like;
+	}
 
+	public boolean isCollect() {
+		return collect;
+	}
+
+	public void setCollect(boolean collect) {
+		this.collect = collect;
+	}
+
+	public boolean isFollow() {
+		return follow;
+	}
+
+	public void setFollow(boolean follow) {
+		this.follow = follow;
+	}
+
+	public int getCollectCount() {
+		return collectCount;
+	}
+
+	public void setCollectCount(int collectCount) {
+		this.collectCount = collectCount;
+	}
+
+	public int getCommentCount() {
+		return commentCount;
+	}
+
+	public void setCommentCount(int commentCount) {
+		this.commentCount = commentCount;
+	}
 
 }

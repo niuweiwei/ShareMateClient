@@ -37,10 +37,10 @@
             android:id="@+id/followBtn"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="0dp"
             android:background="@mipmap/followbtn"
             android:layout_width="wrap_content"
-            android:layout_height="30dp" />
+            android:layout_height="40dp" />
     </RelativeLayout>
     <ScrollView
         android:layout_below="@id/top"
@@ -145,7 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         <Button
-            android:id="@+id/pick"
+            android:id="@+id/pickBtn"
             android:background="@mipmap/pick"
             android:layout_width="30dp"
             android:layout_height="30dp" />
@@ -153,6 +153,7 @@
             android:text="66"
             android:id="@+id/pickCount"
             android:textSize="16sp"
+            android:layout_marginLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         </LinearLayout>
@@ -165,13 +166,14 @@
             android:layout_height="wrap_content">
             <Button
                 android:id="@+id/collectBtn"
-                android:background="@mipmap/pick"
+                android:background="@mipmap/collectbtn"
                 android:layout_width="30dp"
                 android:layout_height="30dp" />
             <TextView
                 android:text="666"
                 android:id="@+id/collectCount"
                 android:textSize="16sp"
+                android:layout_marginLeft="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -184,13 +186,14 @@
             android:layout_height="wrap_content">
             <Button
                 android:id="@+id/commentBtn"
-                android:background="@mipmap/pick"
+                android:background="@mipmap/commentbtn"
                 android:layout_width="30dp"
                 android:layout_height="30dp" />
             <TextView
                 android:text="6666"
                 android:id="@+id/comCount"
                 android:textSize="16sp"
+                android:layout_marginLeft="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
