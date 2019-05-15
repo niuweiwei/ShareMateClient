@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.hebtu.software.sharemateclient.Activity.MLikeActivity;
-import cn.edu.hebtu.software.sharemateclient.Activity.MFanActivity;
+import cn.edu.hebtu.software.sharemateclient.Activity.MFollowActivity;
 import cn.edu.hebtu.software.sharemateclient.Adapter.MessageListAdapter;
 import cn.edu.hebtu.software.sharemateclient.Bean.MessageFragmentTitle;
 import cn.edu.hebtu.software.sharemateclient.R;
@@ -54,7 +54,7 @@ public class MessageFragment extends Fragment {
                         break;
                     case 2:
                         //点击了新增关注
-                        Intent fanIntent = new Intent(getActivity(),MFanActivity.class);
+                        Intent fanIntent = new Intent(getActivity(),MFollowActivity.class);
                         startActivity(fanIntent);
                         break;
 

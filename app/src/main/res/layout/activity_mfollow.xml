@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.MFanActivity">
+    tools:context=".Activity.MFollowActivity">
 
         <LinearLayout
             style="@style/topStyle">
@@ -13,7 +13,6 @@
                 style="@style/returnButtonStyle"/>
             <TextView
                 style="@style/title"
-                android:layout_width="290dp"
                 android:text="新增关注"/>
         </LinearLayout>
 

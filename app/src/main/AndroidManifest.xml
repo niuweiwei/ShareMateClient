@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activity.MLikeActivity" />
-        <activity android:name=".Activity.MFanActivity"></activity>
+        <activity android:name=".Activity.MFollowActivity"></activity>
     </application>
 
 </manifest>

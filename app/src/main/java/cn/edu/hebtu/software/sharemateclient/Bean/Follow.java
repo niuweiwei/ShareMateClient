@@ -1,12 +1,15 @@
 package cn.edu.hebtu.software.sharemateclient.Bean;
 
-public class Follow {
+import java.io.Serializable;
+
+public class Follow implements Serializable {
     private int id;
     //主动方 关注人的人
     private User followUser;
     //被动方 被关注的人
     private User followedUser;
     private String followDate;
+    private boolean isFollow;
 
     public Follow() { }
 
@@ -49,6 +52,15 @@ public class Follow {
         this.followDate = followDate;
     }
 
+    public boolean isFollow() {
+        return isFollow;
+    }
+
+    public void setFollow(boolean follow) {
+        isFollow = follow;
+    }
+
+
     @Override
     public String toString() {
         return "Follow{" +
@@ -56,6 +68,7 @@ public class Follow {
                 ", followUser=" + followUser +
                 ", followedUser=" + followedUser +
                 ", followDate='" + followDate + '\'' +
+                ", isFollow=" + isFollow +
                 '}';
     }
 }
