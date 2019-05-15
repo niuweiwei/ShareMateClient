@@ -1,9 +1,10 @@
 package cn.edu.hebtu.software.sharemateclient.Bean;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Note {
+public class Note implements Serializable {
 
     private int noteId;
     private String noteTitle;

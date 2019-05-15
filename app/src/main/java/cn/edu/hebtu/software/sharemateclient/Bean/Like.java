@@ -1,21 +1,26 @@
 package cn.edu.hebtu.software.sharemateclient.Bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Like {
+public class Like implements Serializable {
 
     private int likeId;
     private User user;
     private Note note;
+    private Comment comment;
+    private Reply reply;
     private String likeDate;
 
     public Like() { }
 
-    public Like(int likeId, User user, Note note,String date) {
+    public Like(int likeId, User user, Note note, Comment comment, Reply reply, String likeDate) {
         this.likeId = likeId;
         this.user = user;
         this.note = note;
-        this.likeDate = date;
+        this.comment = comment;
+        this.reply = reply;
+        this.likeDate = likeDate;
     }
 
     public int getLikeId() {
@@ -42,12 +47,28 @@ public class Like {
         this.note = note;
     }
 
-    public String getDate() {
+    public Comment getComment() {
+        return comment;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
+
+    public Reply getReply() {
+        return reply;
+    }
+
+    public void setReply(Reply reply) {
+        this.reply = reply;
+    }
+
+    public String getLikeDate() {
         return likeDate;
     }
 
-    public void setLikeDate(String date) {
-        this.likeDate = date;
+    public void setLikeDate(String likeDate) {
+        this.likeDate = likeDate;
     }
 
     @Override
@@ -56,6 +77,8 @@ public class Like {
                 "likeId=" + likeId +
                 ", user=" + user +
                 ", note=" + note +
+                ", comment=" + comment +
+                ", reply=" + reply +
                 ", likeDate=" + likeDate +
                 '}';
     }

@@ -1,5 +1,6 @@
 package cn.edu.hebtu.software.sharemateclient.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,12 +8,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.edu.hebtu.software.sharemateclient.Activity.LikeActivity;
 import cn.edu.hebtu.software.sharemateclient.Adapter.MessageListAdapter;
 import cn.edu.hebtu.software.sharemateclient.Bean.MessageFragmentTitle;
 import cn.edu.hebtu.software.sharemateclient.R;
@@ -38,6 +41,20 @@ public class MessageFragment extends Fragment {
         ListView listView = view.findViewById(R.id.lv_message);
         //绑定监听器
         listView.setAdapter(listAdapter);
+
+        //为listView的每一个item绑定点击事件监听器
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0:
+                        Intent likeIntent = new Intent(getActivity(),LikeActivity.class);
+                        startActivity(likeIntent);
+                        break;
+                }
+            }
+        });
+
         return view;
     }
 }
