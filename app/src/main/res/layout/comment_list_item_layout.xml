@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:layout_marginTop="5dp"
+    android:descendantFocusability="blocksDescendants">
+
+    <ImageView
+        android:id="@+id/iv_userPhoto"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="5dp"/>
+    <RelativeLayout
+        android:id="@+id/rl_comment"
+        android:layout_toRightOf="@id/iv_userPhoto"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_userName"
+            android:text="爱吃火锅的小可爱"
+            android:layout_alignTop="@id/iv_notePhoto"
+            android:textSize="16sp"
+            android:textColor="@color/inkGray"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_commentType"
+            android:layout_toRightOf="@id/tv_userName"
+            android:layout_alignTop="@id/tv_userName"
+            android:textSize="16sp"
+            android:layout_marginLeft="5dp"
+            android:text="回复了你的评论"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/iv_notePhoto"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+        <TextView
+            android:id="@+id/tv_commentContent"
+            android:layout_below="@id/tv_userName"
+            android:textSize="16sp"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/inkGray"
+            android:text="大哥，你不复习的么？"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_commented"
+        android:layout_below="@id/rl_comment"
+        android:layout_alignLeft="@id/rl_comment"
+        android:layout_marginTop="5dp"
+        android:background="@color/grayishBlue"
+        android:layout_marginRight="10dp"
+        android:padding="3dp"
+        android:text="爱吃火锅的小可爱的评论:"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tv_commentDate"
+        android:textSize="12sp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@id/tv_commented"
+        android:layout_alignLeft="@id/tv_commented"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

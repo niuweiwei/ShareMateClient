@@ -47,7 +47,7 @@ public class MLikeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_like);
+        setContentView(R.layout.activity_mlike);
 
         likeListView = findViewById(R.id.lv_like);
         backButton = findViewById(R.id.btn_back);
@@ -60,7 +60,7 @@ public class MLikeActivity extends AppCompatActivity {
         });
 
         //初识化GSON
-        GsonBuilder builder = new GsonBuilder();
+        GsonBuilder builder = new GsonBuilder().serializeNulls();
         gson = builder.serializeNulls().create();
         //获取服务端url
         serverPath = getResources().getString(R.string.server_path);
@@ -85,6 +85,7 @@ public class MLikeActivity extends AppCompatActivity {
                 //用gson将接收到的字符串转换为Like类的list
                 Type likeListType = new TypeToken<List<Like>>(){}.getType();
                 likeList = gson.fromJson(jsonLikeList,likeListType);
+                Log.e("MLikeActivity",likeList.toString());
                 for(Like like : likeList){
                     if(like.getNote()!=null && like.getComment()==null && like.getReply()==null)
                         like.setLikeType(Like.NOTE);

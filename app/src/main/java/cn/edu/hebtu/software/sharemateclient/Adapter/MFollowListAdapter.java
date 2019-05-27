@@ -89,9 +89,9 @@ public class MFollowListAdapter extends BaseAdapter {
         viewHolder.followName.setText(follow.getFollowUser().getUserName());
         viewHolder.followDate.setText(follow.getFollowDate());
 
-        final boolean isFollow = follow.isFollow();
+
         //判断二者是否互关
-        if(isFollow){
+        if(follow.isFollow()){
             viewHolder.followBtn.setText("已关注");
             viewHolder.followBtn.setTextColor(context.getResources().getColor(R.color.deepGray));
             viewHolder.followBtn.setBackground(context.getDrawable(R.drawable.cancelfollowedbutton_style));
@@ -105,7 +105,8 @@ public class MFollowListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 //判断当前是否为互关状态
-                if(isFollow){
+                if(follow.isFollow()){
+                    Log.e("MFollowListAdapter","取消关注");
                     //如果是互关状态 按钮的样式变为“回粉”状态 并开启线程服务器删除关注记录
                     viewHolder.followBtn.setText("回粉");
                     viewHolder.followBtn.setTextColor(context.getResources().getColor(R.color.brightRed));
@@ -131,6 +132,7 @@ public class MFollowListAdapter extends BaseAdapter {
 
                 }else{
                     //如果是未互相关注 则关注按钮变为 "已关注"状态  并开启线程向服务器端添加关注记录
+                    Log.e("MFollowListAdapter","关注");
                     viewHolder.followBtn.setText("已关注");
                     viewHolder.followBtn.setTextColor(context.getResources().getColor(R.color.deepGray));
                     viewHolder.followBtn.setBackground(context.getDrawable(R.drawable.cancelfollowedbutton_style));

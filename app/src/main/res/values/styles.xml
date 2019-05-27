@@ -60,7 +60,7 @@
     <style name="returnButtonStyle">
         <item name="android:layout_height">30dp</item>
         <item name="android:layout_width">30dp</item>
-        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:background">@mipmap/back3</item>
     </style>
@@ -89,5 +89,12 @@
         <item name="android:textSize">30sp</item>
         <item name="android:textStyle">bold</item>
     </style>
-
+    <!--popupwindow 按钮的样式-->
+    <style name="popupwindowButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/brightBlue</item>
+    </style>
 </resources>

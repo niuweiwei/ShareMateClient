@@ -82,6 +82,9 @@ public class MLikeListAdapter extends BaseAdapter {
             }
         });
         viewHolder.nameText.setText(like.getUser().getUserName());
+        Glide.with(context)
+                .load(like.getNote().getNoteImage())
+                .into(viewHolder.noteImage);
         //判断点赞的笔记还是评论
         if(like.getLikeType() == Like.NOTE) {
             viewHolder.likeType.setText("笔记");
@@ -99,9 +102,6 @@ public class MLikeListAdapter extends BaseAdapter {
                         .into(viewHolder.noteImage);
             } else{
                 viewHolder.commentContent.setText(like.getReply().getReplyDetail());
-                Glide.with(context)
-                        .load(serverPath+like.getReply().getComment().getNote().getNoteImage())
-                        .into(viewHolder.noteImage);
             }
         }
         //为笔记图片绑定点击事件监听器
