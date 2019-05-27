@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,7 +29,7 @@ public class GridViewAdapter extends BaseAdapter{
     private Context context;
     private int itemLayout;
     private List<Note> notes;
-    private String U ="http://10.7.89.23:8080/ShareMateServer/";
+    private String U;
     private int userId = 17;
     private OkHttpClient okHttpClient = new OkHttpClient();
     private PickTask pickTask;
@@ -71,13 +72,16 @@ public class GridViewAdapter extends BaseAdapter{
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
+        U = context.getResources().getString(R.string.url);
         String noteImgUrl = U+notes.get(position).getNoteImage();
         String userIconUrl = U+notes.get(position).getUser().getUserPhoto();
+        RequestOptions options = new RequestOptions().circleCrop();
         Glide.with(context)
                 .load(noteImgUrl)
                 .into(viewHolder.noteImg);
         Glide.with(context)
                 .load(userIconUrl)
+                .apply(options)
                 .into(viewHolder.userIcon);
         viewHolder.noteTitle.setText(notes.get(position).getNoteTitle());
         viewHolder.userName.setText(notes.get(position).getUser().getUserName());

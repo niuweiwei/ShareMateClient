@@ -6,14 +6,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
+import cn.edu.hebtu.software.sharemateclient.Adapter.NoteCommentListAdapter;
+import cn.edu.hebtu.software.sharemateclient.Entity.Comment;
 import cn.edu.hebtu.software.sharemateclient.Entity.Note;
 import cn.edu.hebtu.software.sharemateclient.Entity.User;
 import cn.edu.hebtu.software.sharemateclient.R;
@@ -33,8 +46,12 @@ public class NoteDetailActivity extends AppCompatActivity {
     private Note note;
     private String U;
     private User contentUser;
-    private int userId;
+    private int userId,noteId;
     private OkHttpClient okHttpClient;
+    private ListView commentListView;
+    private NoteCommentListAdapter commentAdapter;
+    private List<Comment> comments;
+    private CommentListTask commentListTask;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +61,11 @@ public class NoteDetailActivity extends AppCompatActivity {
         note= (Note) intent.getSerializableExtra("note");
         contentUser = (User)intent.getSerializableExtra("contentUser");
         userId = contentUser.getUserId();
+        noteId = note.getNoteId();
         findViews();
         setViews();
+        commentListTask = new CommentListTask();
+        commentListTask.execute();
     }
 
 
@@ -67,6 +87,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         pickCount = findViewById(R.id.pickCount);
         comCount = findViewById(R.id.comCount);
         collectCount = findViewById(R.id.collectCount);
+        commentListView = findViewById(R.id.noteCommentList);
         listener = new ButtonOnclickListener();
         backBtn.setOnClickListener(listener);
         followBtn.setOnClickListener(listener);
@@ -86,7 +107,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         comCount.setText(note.getCommentCount()+"");
         pickCount.setText(note.getLikeCount()+"");
         commentCount.setText("共 "+note.getCommentCount()+" 条评论");
-
+        comments = new ArrayList<>();
         if(note.isLike()){
             pickBtn.setBackgroundResource(R.mipmap.picked);
         }else {
@@ -106,16 +127,79 @@ public class NoteDetailActivity extends AppCompatActivity {
         String noteImgUrl = U+note.getNoteImage();
         String userIconUrl = U+note.getUser().getUserPhoto();
         String contentUserUrl = U+contentUser.getUserPhoto();
+        RequestOptions options = new RequestOptions().circleCrop();
         Glide.with(this)
                 .load(noteImgUrl)
                 .into(noteImage);
         Glide.with(this)
                 .load(userIconUrl)
+                .apply(options)
                 .into(userIcon);
         Glide.with(this)
                 .load(contentUserUrl)
+                .apply(options)
                 .into(contentUserIcon);
     }
+
+    //请求数据并初始化数组
+    private class CommentListTask extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            //1.创建OKHttpClient对象(已创建)
+            // 2.创建Request对象
+            String url = U+"/comment/getComment/"+noteId;
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+            // 3.创建Call对象
+            Call call = okHttpClient.newCall(request);
+            // 4.提交请求，返回响应
+            try {
+                Response response = call.execute();
+                String rel = response.body().string();
+                JSONObject noteObject = new JSONObject(rel);
+
+                String array = noteObject.getJSONArray("commentList").toString();
+                Log.e("alist",array);
+                Gson gson = new Gson();
+                Type noteListType = new TypeToken<ArrayList<Comment>>(){}.getType();
+                comments = gson.fromJson(array, noteListType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            setList();
+        }
+    }
+
+    //设置commentListView
+    private void setList(){
+        commentAdapter = new NoteCommentListAdapter(this,
+                R.layout.item_note_comment,comments);
+        commentListView.setAdapter(commentAdapter);
+        int totalHeight = 0;
+        //listAdapter.getCount()返回数据项的数目
+        for (int i = 0,len = comments.size();i < len; i++) {
+            View listItem = commentAdapter.getView(i, null,commentListView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+        // listView.getDividerHeight()获取子项间分隔符占用的高度
+        // params.height最后得到整个ListView完整显示需要的高度
+        ViewGroup.LayoutParams params = commentListView.getLayoutParams();
+        params.height = totalHeight + (commentListView.getDividerHeight() *  (commentAdapter.getCount() - 1));
+        commentListView.setLayoutParams(params);
+        commentAdapter.notifyDataSetChanged();
+    }
+
 
     //设置按钮点击监听器
     private class ButtonOnclickListener implements View.OnClickListener{
@@ -131,12 +215,16 @@ public class NoteDetailActivity extends AppCompatActivity {
                     break;
                 //点击关注按钮关注
                 case R.id.followBtn:
+                    int followedId = note.getUser().getUserId();
+                    boolean follow = note.isFollow();
                     if(note.isFollow()){
                         followBtn.setBackgroundResource(R.mipmap.followbtn);
                         note.setFollow(false);
+                        followTask(followedId,follow);
                     }else {
                         followBtn.setBackgroundResource(R.mipmap.followedbtn);
                         note.setFollow(true);
+                        followTask(followedId,follow);
                     }
                     break;
                 //点赞
@@ -224,4 +312,25 @@ public class NoteDetailActivity extends AppCompatActivity {
                 }
             }.start();
     }
+
+    //关注和取消关注触发的进程
+    private void followTask(final int followedUserId, final boolean follow){
+        new Thread(){
+            @Override
+            public void run() {
+                String url = U+"/note/follow/"+followedUserId+"?userId="+userId+"&follow="+follow;
+                Request request = new Request.Builder()
+                        .url(url)
+                        .build();
+                Call call = okHttpClient.newCall(request);
+                try {
+                    call.execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+
+
 }
