@@ -3,6 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
     android:background="@color/bg_color">
     <RelativeLayout
         android:id="@+id/top"
@@ -57,7 +59,6 @@
         android:layout_height="wrap_content">
       <ImageView
           android:id="@+id/noteImage"
-          android:src="@drawable/dm15"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"/>
       <LinearLayout
@@ -105,22 +106,6 @@
             android:text="共 666 条评论"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <LinearLayout
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/contentUserIcon"
-                android:layout_width="40dp"
-                android:layout_height="40dp" />
-            <EditText
-                android:hint="说点什么..."
-                android:layout_marginLeft="10dp"
-                android:background="@color/bg_color"
-                android:layout_width="match_parent"
-                android:layout_height="40dp" />
-        </LinearLayout>
           <View
               android:background="@color/bg_color_deep"
               android:layout_marginTop="10dp"
@@ -137,6 +122,7 @@
     </LinearLayout>
     </ScrollView>
     <RelativeLayout
+        android:id="@+id/bottom"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:padding="10dp"
@@ -144,19 +130,31 @@
         android:layout_width="match_parent"
         android:layout_height="60dp">
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/editSay"
             android:hint="说点什么吧..."
             android:padding="6dp"
             android:background="@drawable/edittext_bg"
-            android:layout_width="150dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
+        <Button
+            android:text="发送"
+            android:layout_toLeftOf="@id/pick"
+            android:id="@+id/send"
+            android:textColor="@color/white"
+            android:background="@drawable/button_send"
+            android:textSize="15sp"
+            android:layout_marginRight="5dp"
+            android:visibility="invisible"
+            android:layout_width="60dp"
             android:layout_height="wrap_content" />
         <LinearLayout
+            android:id="@+id/pick"
             android:layout_toLeftOf="@id/collect"
             android:orientation="horizontal"
             android:padding="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-        <Button
+            <Button
             android:id="@+id/pickBtn"
             android:background="@mipmap/pick"
             android:layout_width="30dp"

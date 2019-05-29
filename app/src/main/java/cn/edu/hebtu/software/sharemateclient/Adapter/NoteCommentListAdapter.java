@@ -1,39 +1,40 @@
 package cn.edu.hebtu.software.sharemateclient.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import cn.edu.hebtu.software.sharemateclient.Entity.Comment;
-import cn.edu.hebtu.software.sharemateclient.Entity.Note;
 import cn.edu.hebtu.software.sharemateclient.Entity.Reply;
 import cn.edu.hebtu.software.sharemateclient.R;
 
-public class NoteCommentListAdapter extends BaseAdapter {
+
+public class NoteCommentListAdapter extends BaseAdapter implements View.OnClickListener,
+        AdapterView.OnItemClickListener{
     private Context context;
     private int itemLayout;
     private List<Comment> comments;
     private ReplyListAdapter replyListAdapter;
     private List<Reply> replys = new ArrayList<>();
     private String U;
-    public NoteCommentListAdapter(Context context, int itemLayout, List<Comment> comments) {
+    private Callback mCallback;
+
+    public NoteCommentListAdapter(Context context, int itemLayout,
+                                  List<Comment> comments, Callback mCallback) {
         this.context = context;
         this.itemLayout = itemLayout;
         this.comments = comments;
+        this.mCallback = mCallback;
     }
 
     @Override
@@ -64,13 +65,14 @@ public class NoteCommentListAdapter extends BaseAdapter {
             viewHolder.pick = convertView.findViewById(R.id.pick);
             viewHolder.noteCommentDate = convertView.findViewById(R.id.noteCommentDate);
             viewHolder.replyListView = convertView.findViewById(R.id.replyList);
-            convertView.setTag(viewHolder);//缓存数据
+            convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
         U=context.getResources().getString(R.string.url);
         String userIconUrl = U+comments.get(position).getUser().getUserPhoto();
         RequestOptions options = new RequestOptions().circleCrop();
+        //加载用户头像的图片
         Glide.with(context)
                 .load(userIconUrl)
                 .apply(options)
@@ -79,12 +81,31 @@ public class NoteCommentListAdapter extends BaseAdapter {
         viewHolder.userName.setText(comments.get(position).getUser().getUserName());
         viewHolder.noteComment.setText(comments.get(position).getCommentDetail());
         replys = comments.get(position).getReplyList();
-        Log.e("rerePly",replys.size()+"");
         replyListAdapter = new ReplyListAdapter(context,R.layout.item_reply,replys);
         viewHolder.replyListView.setAdapter(replyListAdapter);
         replyListAdapter.notifyDataSetChanged();
+        //设置ListView的自定义高度
         setListHeight(viewHolder.replyListView);
+        //ListView绑定监听器在Activity响应事件
+        viewHolder.replyListView.setOnItemClickListener(this);
+        viewHolder.replyListView.setTag(position);
         return convertView;
+    }
+
+    //ListView 的item点击事件
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mCallback.click(view,position,(int)parent.getTag());
+    }
+    //回调接口
+    public interface Callback {
+        void click(View v,int p,int c);
+        void click(View v);
+    }
+    //回调方法
+    @Override
+    public void onClick(View v) {
+        mCallback.click(v);
     }
 
     //定义为内部类VIewHolder
@@ -96,19 +117,10 @@ public class NoteCommentListAdapter extends BaseAdapter {
         TextView noteCommentDate;
         ListView replyListView;
     }
+
+    //设置自定义ListView高度
     private void setListHeight( ListView view) {
         int totalHeight = 0;
-        //listAdapter.getCount()返回数据项的数目
-//        for (int i = 0,len = replys.size();i < len; i++) {
-//            View listItem = replyListAdapter.getView(i, null,view);
-//            listItem.measure(0, 0);
-//            totalHeight += listItem.getMeasuredHeight();
-//        }
-//        ViewGroup.LayoutParams params = view.getLayoutParams();
-//        params.height = totalHeight-(view.getDividerHeight()*(replyListAdapter.getCount()-1));
-//        view.setLayoutParams(params);
-//        replyListAdapter.notifyDataSetChanged();
-
         //获取listView的宽度
         ViewGroup.LayoutParams params = view.getLayoutParams();
         int  listViewWidth  = context.getResources().getDisplayMetrics().widthPixels;

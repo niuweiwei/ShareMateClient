@@ -24,8 +24,6 @@ public class ReplyListAdapter extends BaseAdapter {
     private Context context;
     private int itemLayout;
     private List<Reply> replys;
-    private List<Reply> reReplys = new ArrayList<>();
-    private ReReplyListAdapter reReplyListAdapter;
     private String U;
     public ReplyListAdapter(Context context, int itemLayout, List<Reply> replys) {
         this.context = context;
@@ -55,13 +53,14 @@ public class ReplyListAdapter extends BaseAdapter {
             LayoutInflater layoutInflater=LayoutInflater.from(context);
             convertView=layoutInflater.inflate(itemLayout,null);
             viewHolder= new ViewHolder();
+            viewHolder.r = convertView.findViewById(R.id.r);
+            viewHolder.repliedName = convertView.findViewById(R.id.repliedName);
             viewHolder.replyDetail=convertView.findViewById(R.id.replyDetail);
             viewHolder.userIcon=convertView.findViewById(R.id.userIcon);
             viewHolder.userName = convertView.findViewById(R.id.userName);
             viewHolder.pick = convertView.findViewById(R.id.pick);
             viewHolder.replyTime = convertView.findViewById(R.id.replyTime);
-            viewHolder.reReplyListView = convertView.findViewById(R.id.reReplyList);
-            convertView.setTag(viewHolder);//缓存数据
+            convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
@@ -75,10 +74,11 @@ public class ReplyListAdapter extends BaseAdapter {
         viewHolder.replyTime.setText(replys.get(position).getReplyTime());
         viewHolder.userName.setText(replys.get(position).getUser().getUserName());
         viewHolder.replyDetail.setText(replys.get(position).getReplyDetail());
-        reReplys = replys.get(position).getReReplyList();
-        reReplyListAdapter = new ReReplyListAdapter(context,R.layout.item_re_reply,reReplys);
-        viewHolder.reReplyListView.setAdapter(reReplyListAdapter);
-        setListHeight(viewHolder.reReplyListView);
+        if(replys.get(position).getCommentId()==0){
+            viewHolder.r.setVisibility(View.VISIBLE);
+            viewHolder.repliedName.setText(replys.get(position).getReplyedUser().getUserName());
+            viewHolder.repliedName.setVisibility(View.VISIBLE);
+        }
         return convertView;
     }
 
@@ -88,22 +88,7 @@ public class ReplyListAdapter extends BaseAdapter {
         TextView replyDetail;
         TextView userName;
         Button pick;
-        TextView replyTime;
-        ListView reReplyListView;
-    }
-
-    private void setListHeight( ListView view){
-        int totalHeight = 0;
-        //listAdapter.getCount()返回数据项的数目
-        for (int i = 0,len = reReplys.size();i < len; i++) {
-            View listItem = reReplyListAdapter.getView(i, null,view);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams params = view.getLayoutParams();
-        params.height = totalHeight-(view.getDividerHeight()*(reReplyListAdapter.getCount()-1));
-        view.setLayoutParams(params);
-        reReplyListAdapter.notifyDataSetChanged();
+        TextView replyTime,repliedName,r;
     }
 }
 

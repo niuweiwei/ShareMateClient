@@ -1,5 +1,6 @@
 package cn.edu.hebtu.software.sharemateclient.Entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Reply {
@@ -12,7 +13,6 @@ public class Reply {
    private String replyTime;
    private User user;
    private User replyedUser ;
-   private List<Reply> reReplyList;
    public Reply() {
 	super();
    }
@@ -80,13 +80,5 @@ public int getUserId() {
 public void setUserId(int userId) {
 	this.userId = userId;
 }
-public List<Reply> getReReplyList() {
-		return reReplyList;
-	}
-public void setReReplyList(List<Reply> reReplyList) {
-		this.reReplyList = reReplyList;
-	}
-   
-   
-   
+
 }

@@ -1,5 +1,6 @@
 package cn.edu.hebtu.software.sharemateclient.Entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Comment {
@@ -9,7 +10,7 @@ public class Comment {
 	private String commentDate;
 	private User user;
 	private int noteId;
-	private List<Reply> replyList;
+	private List<Reply> replyList=new ArrayList<>();
 
 	public Comment() {
 		super();
