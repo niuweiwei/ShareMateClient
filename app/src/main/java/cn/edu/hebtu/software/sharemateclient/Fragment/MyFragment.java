@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -21,7 +20,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
@@ -30,14 +28,13 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import cn.edu.hebtu.software.sharemateclient.Activity.NoteDetailActivity;
-import cn.edu.hebtu.software.sharemateclient.Activity.PersonalActivity;
-import cn.edu.hebtu.software.sharemateclient.Activity.SettingActivity;
+import cn.edu.hebtu.software.sharemateclient.Activity.PerFanActivity;
+import cn.edu.hebtu.software.sharemateclient.Activity.PerFollowActivity;
+import cn.edu.hebtu.software.sharemateclient.Activity.MainActivity;
+import cn.edu.hebtu.software.sharemateclient.Activity.PerPersonalActivity;
 import cn.edu.hebtu.software.sharemateclient.Adapter.NoteAdapter;
 import cn.edu.hebtu.software.sharemateclient.Bean.NoteBean;
 import cn.edu.hebtu.software.sharemateclient.Bean.UserBean;
@@ -58,6 +55,8 @@ public class MyFragment extends Fragment {
     private int userId = 1;
     private ArrayList<Integer> type = new ArrayList<>();
     private GridView gridView;
+    private TextView tvFan;
+    private TextView tvFollow;
     private TextView nameText;
     private TextView idText;
     private TextView introText;
@@ -67,7 +66,7 @@ public class MyFragment extends Fragment {
     private TextView fanCount;
     private TextView likeCount;
     private ImageView headImg;//头像
-    private ImageView settingView;
+    private ImageView logout;//退出登录
     private Button btnPersonal;//个人资料
     private OnClickListener listener;
     private UserBean user = new UserBean();
@@ -112,6 +111,8 @@ public class MyFragment extends Fragment {
      * @param view
      */
     public void findView(View view){
+        tvFan = view.findViewById(R.id.tv_fan);
+        tvFollow = view.findViewById(R.id.tv_follow);
         nameText = view.findViewById(R.id.userName);
         idText = view.findViewById(R.id.userId);
         introText = view.findViewById(R.id.userIntro);
@@ -120,24 +121,27 @@ public class MyFragment extends Fragment {
         gridView.setEmptyView((view.findViewById(R.id.empty_view)));
         collection = view.findViewById(R.id.collection);
         note = view.findViewById(R.id.note);
-        settingView = view.findViewById(R.id.setting);
         btnPersonal = view.findViewById(R.id.personal);
         followCount = view.findViewById(R.id.followCount);
         fanCount = view.findViewById(R.id.fanCount);
         likeCount = view.findViewById(R.id.likeCount);
+        logout = view.findViewById(R.id.logout);
     }
     /**
      * 监听器绑定
      */
     public void setListener(){
         listener = new OnClickListener();
+        tvFan.setOnClickListener(listener);
+        tvFollow.setOnClickListener(listener);
         btnPersonal.setOnClickListener(listener);
-        settingView.setOnClickListener(listener);
         note.setOnClickListener(listener);
         collection.setOnClickListener(listener);
         followCount.setOnClickListener(listener);
         fanCount.setOnClickListener(listener);
         likeCount.setOnClickListener(listener);
+        logout.setOnClickListener(listener);
+        headImg.setOnClickListener(listener);
     }
     /**
      * 监听器类
@@ -148,60 +152,97 @@ public class MyFragment extends Fragment {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.personal://个人资料
-                    Intent perIntent = new Intent(getActivity(), PersonalActivity.class);
+                    Intent perIntent = new Intent(getActivity(), PerPersonalActivity.class);
                     perIntent.putExtra("person","my");
                     perIntent.putExtra("user",user);
                     perIntent.putIntegerArrayListExtra("type",type);
                     startActivityForResult(perIntent,1);
                     break;
-                case R.id.setting://设置
-                    Intent setIntent = new Intent(getActivity(), SettingActivity.class);
-                    setIntent.putExtra("user",user);
-                    setIntent.putIntegerArrayListExtra("type",type);
-                    startActivityForResult(setIntent,2);
+                case R.id.userPhoto://头像
+                    Intent imgIntent = new Intent(getActivity(), PerPersonalActivity.class);
+                    imgIntent.putExtra("person","my");
+                    imgIntent.putExtra("user",user);
+                    imgIntent.putIntegerArrayListExtra("type",type);
+                    startActivityForResult(imgIntent,1);
                     break;
                 case R.id.note://笔记
                     note.setTextColor(getResources().getColor(R.color.warmRed));
                     collection.setTextColor(getResources().getColor(R.color.darkGray));
                     noteAdapter = new NoteAdapter(getActivity(), R.layout.item_note,noteList,user,path);
                     gridView.setAdapter(noteAdapter);
-                    setNoteGridView(gridView);
+//                    setNoteGridView(gridView);
                     break;
                 case R.id.collection://收藏
                     collection.setTextColor(getResources().getColor(R.color.warmRed));
                     note.setTextColor(getResources().getColor(R.color.darkGray));
                     noteAdapter = new NoteAdapter(getActivity(), R.layout.item_note,collectionList,user,path);
                     gridView.setAdapter(noteAdapter);
-                    setCollectGridView(gridView);
+//                    setCollectGridView(gridView);
+                    break;
+                case R.id.followCount://关注
+                    Intent focusIntent = new Intent();
+                    focusIntent.setClass(getActivity(), PerFollowActivity.class);
+                    focusIntent.putExtra("user",user);
+                    focusIntent.putIntegerArrayListExtra("type",type);
+                    startActivity(focusIntent);
+                    break;
+                case R.id.tv_follow://关注
+                    Intent focusIntent2 = new Intent();
+                    focusIntent2.setClass(getActivity(), PerFollowActivity.class);
+                    focusIntent2.putExtra("user",user);
+                    focusIntent2.putIntegerArrayListExtra("type",type);
+                    startActivity(focusIntent2);
+                    break;
+                case R.id.fanCount://粉丝
+                    Intent fanIntent = new Intent();
+                    fanIntent.setClass(getActivity(), PerFanActivity.class);
+                    fanIntent.putExtra("user",user);
+                    fanIntent.putIntegerArrayListExtra("type",type);
+                    startActivity(fanIntent);
+                    break;
+                case R.id.tv_fan://粉丝
+                    Intent fanIntent2 = new Intent();
+                    fanIntent2.setClass(getActivity(), PerFanActivity.class);
+                    fanIntent2.putExtra("user",user);
+                    fanIntent2.putIntegerArrayListExtra("type",type);
+                    startActivity(fanIntent2);
+                    break;
+                case R.id.logout://退出登录
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), MainActivity.class);
+                    intent.putExtra("back","my");
+                    intent.putIntegerArrayListExtra("type",type);
+                    intent.putExtra("userId",user.getUserId());
+                    startActivity(intent);
                     break;
             }
         }
     }
-    public void setNoteGridView(GridView gridView){
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), NoteDetailActivity.class);
-                intent.putExtra("noteId",noteList.get(position).getNoteId());
-                Log.e("noteId",noteList.get(position).getNoteId()+"");
-                intent.putExtra("userId",user.getUserId());
-                intent.putIntegerArrayListExtra("type",type);
-                startActivity(intent);
-            }
-        });
-    }
-    public void setCollectGridView(GridView gridView){
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), NoteDetailActivity.class);
-                intent.putExtra("noteId",collectionList.get(position).getNoteId());
-                intent.putExtra("userId",user.getUserId());
-                intent.putIntegerArrayListExtra("type",type);
-                startActivity(intent);
-            }
-        });
-    }
+//    public void setNoteGridView(GridView gridView){
+//        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(getActivity(), NoteDetailActivity.class);
+//                intent.putExtra("noteId",noteList.get(position).getNoteId());
+//                Log.e("noteId",noteList.get(position).getNoteId()+"");
+//                intent.putExtra("userId",user.getUserId());
+//                intent.putIntegerArrayListExtra("type",type);
+//                startActivity(intent);
+//            }
+//        });
+//    }
+//    public void setCollectGridView(GridView gridView){
+//        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(getActivity(), NoteDetailActivity.class);
+//                intent.putExtra("noteId",collectionList.get(position).getNoteId());
+//                intent.putExtra("userId",user.getUserId());
+//                intent.putIntegerArrayListExtra("type",type);
+//                startActivity(intent);
+//            }
+//        });
+//    }
     /**
      * 异步任务——获取UserBean对象
      */
@@ -305,7 +346,7 @@ public class MyFragment extends Fragment {
             collection.setTextColor(getResources().getColor(R.color.darkGray));
             noteAdapter = new NoteAdapter(getActivity(), R.layout.item_note,noteList,user,path);
             gridView.setAdapter(noteAdapter);
-            setNoteGridView(gridView);
+//            setNoteGridView(gridView);
         }
     }
     /**

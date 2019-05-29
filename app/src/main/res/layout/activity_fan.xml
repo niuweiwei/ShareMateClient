@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/grayishBlue">
+    android:background="@color/grayishBlue"
+    android:orientation="vertical">
     <!--头部-->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
@@ -13,7 +13,7 @@
         <ImageView
             android:id="@+id/back"
             android:layout_width="25dp"
-            android:layout_height="30dp"
+            android:layout_height="25dp"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="10dp"
             android:src="@drawable/lt"/>
@@ -21,22 +21,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="110dp"
-            android:text="我赞过的"
+            android:layout_centerHorizontal="true"
+            android:text="我的粉丝"
             android:textStyle="bold"
             android:textSize="@dimen/text"
             android:textColor="@color/white"/>
-    </LinearLayout>
+    </RelativeLayout>
     <!--/头部-->
-    <GridView
+    <ListView
         android:id="@+id/root"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numColumns="3">
-    </GridView>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </ListView>
     <ImageView
         android:id="@+id/empty_view"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:src="@drawable/errors"/>
+        android:src="@drawable/error"/>
 </LinearLayout>

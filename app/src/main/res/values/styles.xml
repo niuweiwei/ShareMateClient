@@ -28,7 +28,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:textColor">@color/deepGray</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
 

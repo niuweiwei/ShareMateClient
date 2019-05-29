@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/relativelayout">
+
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:text="登录"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/TextSize_1" />
+
+    <LinearLayout
+        android:id="@+id/linear_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp">
+
+        <!--<Spinner-->
+        <!--android:id="@+id/spinner"-->
+        <!--android:layout_width="60dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:entries="@array/country_data"/>-->
+
+        <LinearLayout
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+86"
+                android:textSize="@dimen/TextSize_4"/>
+            <Button
+                android:id="@+id/btn_spinner"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/spinner"/>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/et_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textview"
+            android:layout_marginLeft="10dp"
+            android:background="@null"
+            android:hint="请输入手机号码"
+            android:textSize="@dimen/TextSize_4" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="250dp"
+        android:layout_height="0.15dp"
+        android:layout_below="@id/linear_phone"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorView" />
+
+    <Button
+        android:id="@+id/btn_true"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/linear_phone"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/button_style"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="@dimen/TextSize_4" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/pswd_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="密码登录"
+            android:textColor="@color/colorGoLogin"
+            android:textSize="@dimen/TextSize_5" />
+
+        <TextView
+            android:id="@+id/register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="120dp"
+            android:gravity="center"
+            android:text="注册"
+            android:textColor="@color/vividRed"
+            android:textSize="@dimen/TextSize_5" />
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="80dp"
+        android:text="— 第三方登录 —"
+        android:textSize="@dimen/TextSize_5" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp">
+
+        <LinearLayout
+            android:id="@+id/wechat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/wechat" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:text="微信"
+                android:textColor="@color/three"
+                android:textSize="@dimen/TextSize_5" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/qq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/qq" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:text="QQ"
+                android:textColor="@color/three"
+                android:textSize="@dimen/TextSize_5" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/weibo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/weibo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:text="微博"
+                android:textColor="@color/three"
+                android:textSize="@dimen/TextSize_5" />
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

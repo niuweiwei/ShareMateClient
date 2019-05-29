@@ -15,18 +15,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activity.MainActivity">
+
+        </activity>
+        <activity android:name=".Activity.PerPersonalActivity" />
+        <activity android:name=".Activity.PerFollowActivity" />
+        <activity android:name=".Activity.PerFanActivity" />
+        <activity android:name=".Activity.PerFriendActivity" />
+        <activity android:name=".Activity.PerNameActivity" />
+        <activity android:name=".Activity.PerAddressActivity" />
+        <activity android:name=".Activity.LRLoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.PersonalActivity" />
-        <activity android:name=".Activity.SettingActivity" />
-        <activity android:name=".Activity.ZanActivity" />
-        <activity android:name=".Activity.ShareMateActivity" />
-        <activity android:name=".Activity.FollowActivity" />
-        <activity android:name=".Activity.NoteDetailActivity"></activity>
+        <activity android:name=".Activity.LRCountryActivity" />
+        <activity android:name=".Activity.RegisterActivity" />
+        <activity android:name=".Activity.LRInputCodeActivity" />
+        <activity android:name=".Activity.LRPswdLoginActivity"></activity>
     </application>
 
 </manifest>

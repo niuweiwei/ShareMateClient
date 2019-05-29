@@ -29,7 +29,7 @@ public class NoteAdapter extends BaseAdapter {
     private int itemLayout;
     private List<NoteBean> noteList = new ArrayList<>();
 
-    public NoteAdapter(Context context, int itemLayout, List<NoteBean> noteList, UserBean userBean,String path) {
+    public NoteAdapter(Context context, int itemLayout, List<NoteBean> noteList, UserBean userBean, String path) {
         this.context = context;
         this.itemLayout = itemLayout;
         this.noteList = noteList;

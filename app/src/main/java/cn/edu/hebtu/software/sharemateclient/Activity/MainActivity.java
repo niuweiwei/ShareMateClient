@@ -50,15 +50,15 @@ public class MainActivity extends AppCompatActivity {
 
         //判断点击返回按钮到哪个fragment
         if ("main".equals(getIntent().getStringExtra("back"))){
-            indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,24);
+            indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
             indexView.setTextColor(getResources().getColor(R.color.inkGray));
             showFragment(indexFragment);
         }
         if ("my".equals(getIntent().getStringExtra("back"))){
             showFragment(myFragment);
-            myView.setTextSize(TypedValue.COMPLEX_UNIT_SP,24);
+            myView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
             myView.setTextColor(getResources().getColor(R.color.inkGray));
-            indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
+            indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
             indexView.setTextColor(getResources().getColor(R.color.darkGray));
         }
         //把每个选项卡添加到list里
@@ -109,10 +109,10 @@ public class MainActivity extends AppCompatActivity {
                     TextView tmp = findViewById(v.getId());
                     if(tmp == view){
                         view.setTextColor(getResources().getColor(R.color.inkGray));
-                        view.setTextSize(TypedValue.COMPLEX_UNIT_SP,24);
+                        view.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
                     }else{
                         view.setTextColor(getResources().getColor(R.color.deepGray));
-                        view.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
+                        view.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
                     }
                 }
             }

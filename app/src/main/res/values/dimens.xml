@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="textNoSize">16sp</dimen>
-    <dimen name="text">20sp</dimen>
+    <dimen name="textNoSize">14sp</dimen>
+    <dimen name="text">18sp</dimen>
     <dimen name="textSize">18sp</dimen>
     <dimen name="note">10sp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>

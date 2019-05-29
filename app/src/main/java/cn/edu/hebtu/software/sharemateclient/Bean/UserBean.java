@@ -15,10 +15,37 @@ public class UserBean implements Serializable {
     private String userSex;
     private String userAddress;
     private String userBirth;
-    private String userIntroduce;
+    private String userIntro;
     private int followCount;
     private int fanCount;
     private int likeCount;
+    private int noteCount;
+    private boolean status;
+    private String userPhotoPath;
+
+    public String getUserPhotoPath() {
+        return userPhotoPath;
+    }
+
+    public void setUserPhotoPath(String userPhotoPath) {
+        this.userPhotoPath = userPhotoPath;
+    }
+
+    public int getNoteCount() {
+        return noteCount;
+    }
+
+    public void setNoteCount(int noteCount) {
+        this.noteCount = noteCount;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
     public int getFanCount() {
         return fanCount;
@@ -57,14 +84,14 @@ public class UserBean implements Serializable {
         this.userPhoto = userPhoto;
     }
     public UserBean(int userId, String userPhoto, String userName, String userSex,
-                    String userAddress, String userBirth, String userIntroduce) {
+                    String userAddress, String userBirth, String userIntro) {
         this.userId = userId;
         this.userPhoto = userPhoto;
         this.userName = userName;
         this.userSex = userSex;
         this.userAddress = userAddress;
         this.userBirth = userBirth;
-        this.userIntroduce = userIntroduce;
+        this.userIntro = userIntro;
     }
 
 
@@ -117,8 +144,8 @@ public class UserBean implements Serializable {
 
     public void setUserBirth(String userBirth) {this.userBirth = userBirth;}
 
-    public String getUserIntroduce() {return userIntroduce;}
+    public String getUserIntroduce() {return userIntro;}
 
-    public void setUserIntroduce(String userIntroduce) {this.userIntroduce = userIntroduce;}
+    public void setUserIntroduce(String userIntroduce) {this.userIntro = userIntroduce;}
 
 }
