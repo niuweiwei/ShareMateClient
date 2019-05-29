@@ -14,6 +14,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.edu.hebtu.software.sharemateclient.Activity.MCommentActivity;
 import cn.edu.hebtu.software.sharemateclient.Activity.MLikeActivity;
 import cn.edu.hebtu.software.sharemateclient.Activity.MFollowActivity;
 import cn.edu.hebtu.software.sharemateclient.Adapter.MessageListAdapter;
@@ -51,6 +52,11 @@ public class MessageFragment extends Fragment {
                         //点击了收到的赞
                         Intent likeIntent = new Intent(getActivity(),MLikeActivity.class);
                         startActivity(likeIntent);
+                        break;
+                    case 1:
+                        //点击了收到的关注
+                        Intent commentIntent = new Intent(getActivity(),MCommentActivity.class);
+                        startActivity(commentIntent);
                         break;
                     case 2:
                         //点击了新增关注
