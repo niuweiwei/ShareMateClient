@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text="选择感兴趣的内容"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/TextSize_1" />
+
+    <LinearLayout
+        android:id="@+id/linear1"
+        android:layout_below="@id/textview"
+        android:layout_marginTop="80dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
+
+        <CheckBox
+            android:id="@+id/cb_beauty"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/beauty"
+            android:checked="false"/>
+        <CheckBox
+            android:id="@+id/cb_travel"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/travel"
+            android:checked="false"/>
+        <CheckBox
+            android:id="@+id/cb_sport"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/sport"
+            android:checked="false"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linear2"
+        android:layout_below="@id/linear1"
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
+
+        <CheckBox
+            android:id="@+id/cb_food"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/food"/>
+        <CheckBox
+            android:id="@+id/cb_science"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/science"/>
+        <CheckBox
+            android:id="@+id/cb_anime"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/anime"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/btn_next"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:text="下一步(至少选择3个兴趣)"
+        android:textSize="@dimen/TextSize_4"
+        android:textColor="@color/white"
+        android:background="@drawable/button_style"/>
+</RelativeLayout>

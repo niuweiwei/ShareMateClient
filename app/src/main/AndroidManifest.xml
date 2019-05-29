@@ -14,16 +14,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.MainActivity">
-
-        </activity>
+        <activity android:name=".Activity.MainActivity" />
         <activity android:name=".Activity.PerPersonalActivity" />
         <activity android:name=".Activity.PerFollowActivity" />
         <activity android:name=".Activity.PerFanActivity" />
         <activity android:name=".Activity.PerFriendActivity" />
         <activity android:name=".Activity.PerNameActivity" />
         <activity android:name=".Activity.PerAddressActivity" />
-        <activity android:name=".Activity.LRLoginActivity" >
+        <activity android:name=".Activity.LRLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,9 +29,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activity.LRCountryActivity" />
-        <activity android:name=".Activity.RegisterActivity" />
+        <activity android:name=".Activity.LRRegisterActivity" />
         <activity android:name=".Activity.LRInputCodeActivity" />
-        <activity android:name=".Activity.LRPswdLoginActivity"></activity>
+        <activity android:name=".Activity.LRPswdLoginActivity" />
+        <activity android:name=".Activity.LRStartActivity" />
+        <activity android:name=".Activity.LRSelectInterestActivity"></activity>
     </application>
 
 </manifest>

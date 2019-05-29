@@ -15,20 +15,14 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import cn.edu.hebtu.software.sharemateclient.Bean.UserBean;
 import cn.edu.hebtu.software.sharemateclient.R;
 import cn.edu.hebtu.software.sharemateclient.tools.TelephoneUtils;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 public class LRLoginActivity extends AppCompatActivity {
 
@@ -42,18 +36,16 @@ public class LRLoginActivity extends AppCompatActivity {
     private UserBean user = new UserBean();
     private boolean resultPhone;
     private LoginUtil loginUtil;
+    private String path;
+    private OkHttpClient okHttpClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         findViews();
-        pswdLogin.setOnClickListener(new pswdClickListener());
-        btnTrue.setOnClickListener(new trueClickListener());
-        register.setOnClickListener(new registerClickListener());
-        tvSpinner.setOnClickListener(new SpinnerClickListener());
-        btnSpinner.setOnClickListener(new SpinnerClickListener());
+        setListener();
+        path = getResources().getString(R.string.server_path);
 
-//        etPhone.setOnFocusChangeListener(new FocusChangeListener());
     }
     private void findViews(){
         pswdLogin = findViewById(R.id.pswd_login);
@@ -62,6 +54,14 @@ public class LRLoginActivity extends AppCompatActivity {
         tvSpinner = findViewById(R.id.tv_spinner);
         btnSpinner = findViewById(R.id.btn_spinner);
         etPhone = findViewById(R.id.et_phone);
+    }
+    private void setListener(){
+        pswdLogin.setOnClickListener(new pswdClickListener());
+        btnTrue.setOnClickListener(new trueClickListener());
+        register.setOnClickListener(new registerClickListener());
+        tvSpinner.setOnClickListener(new SpinnerClickListener());
+        btnSpinner.setOnClickListener(new SpinnerClickListener());
+//        etPhone.setOnFocusChangeListener(new FocusChangeListener());
     }
 
     /**
@@ -75,7 +75,6 @@ public class LRLoginActivity extends AppCompatActivity {
             startActivityForResult(intent, 12);
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
@@ -139,50 +138,24 @@ public class LRLoginActivity extends AppCompatActivity {
             Log.e("LoginUtil","异步任务");
             UserBean user = (UserBean) objects[0];
             String userPhone = user.getUserPhone();
-            JSONObject back = null;
+            String url = path +"/user/login?userPhone="+userPhone;
+            okHttpClient = new OkHttpClient();
+            Request request = new Request.Builder().url(url).build();
+            Call call = okHttpClient.newCall(request);
+            String result = null;
             try {
-                Log.e("LoginUtil",user.getUserPhone());
-                URL url = new URL(getResources().getString(R.string.server_path)+"LoginServlet");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-                connection.setRequestProperty("Charset","UTF-8");
-                OutputStream os = connection.getOutputStream();
-                OutputStreamWriter osw = new OutputStreamWriter(os);
-                BufferedWriter writer = new BufferedWriter(osw);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("userPhone",userPhone);
-                String str = jsonObject.toString();
-                writer.write(str);
-                writer.flush();
-                writer.close();
-                connection.connect();
-
-                InputStream is = connection.getInputStream();
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader reader = new BufferedReader(isr);
-                String str2 = reader.readLine();
-                back = new JSONObject(str2);
-                reader.close();
-                isr.close();
-                is.close();
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
+                result = call.execute().body().string();
+                Log.e("LoginResult---",result);
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
-            return back;
+            return result;
         }
 
         @Override
         protected void onPostExecute(Object o) {
             JSONObject back = (JSONObject) o;
-            String result = null;
+            String result;
             try {
                 result = back.getString("msg");
                 Log.e("result",result);
@@ -193,7 +166,7 @@ public class LRLoginActivity extends AppCompatActivity {
                     intent.putExtra("userId",userId);
                     intent.putExtra("userPhone",userPhone);
                     startActivity(intent);
-                }else if(result.equals("用户不存在")){
+                }else{
                     Toast.makeText(LRLoginActivity.this,"该用户不存在",Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
@@ -209,7 +182,7 @@ public class LRLoginActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(LRLoginActivity.this,RegisterActivity.class);
+            Intent intent = new Intent(LRLoginActivity.this,LRRegisterActivity.class);
             startActivity(intent);
         }
     }

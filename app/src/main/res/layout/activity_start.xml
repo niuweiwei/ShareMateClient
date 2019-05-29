@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/root"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/back" />
+
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginTop="30dp"-->
+        <!--android:text="个性化"-->
+        <!--android:textSize="@dimen/TextSize_1"-->
+        <!--android:textColor="@color/colorBlack"/>-->
+
+
+    <LinearLayout
+        android:layout_marginTop="60dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/tv_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="选择你的性别"
+            android:textSize="@dimen/TextSize_4"
+            android:textColor="@color/colorText"/>
+        <RadioGroup
+            android:id="@+id/radiogroup"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+            <RadioButton
+                android:id="@+id/male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="男"
+                android:textSize="@dimen/TextSize_5"
+                android:textColor="@color/colorSkip"/>
+            <RadioButton
+                android:id="@+id/female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="女"
+                android:textSize="@dimen/TextSize_5"
+                android:textColor="@color/colorSkip"/>
+        </RadioGroup>
+    </LinearLayout>
+
+    <View
+        android:layout_width="270dp"
+        android:layout_height="0.15dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorView" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="输入你的生日"
+            android:textSize="@dimen/TextSize_4"
+            android:textColor="@color/colorText"/>
+
+        <TextView
+            android:id="@+id/tv_birth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="22dp"
+            android:text="仅自己可见>"
+            android:textSize="@dimen/TextSize_5"
+            android:textColor="@color/colorText"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/btn_next"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:text="下一步"
+        android:textSize="@dimen/TextSize_4"
+        android:textColor="@color/white"
+        android:background="@drawable/button_style"/>
+
+</LinearLayout>
