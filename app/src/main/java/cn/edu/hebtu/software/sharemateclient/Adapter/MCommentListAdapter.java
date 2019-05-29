@@ -76,9 +76,23 @@ public class MCommentListAdapter extends BaseAdapter {
                 .load(serverPath+commentAndReply.getUser().getUserPhoto())
                 .apply(requestOptions)
                 .into(viewHolder.userPhoto);
+        //点击用户头像绑定事件监听器
+        viewHolder.userPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到个人主页
+            }
+        });
         Glide.with(context)
                 .load(serverPath+commentAndReply.getNote().getNoteImage())
                 .into(viewHolder.notePhoto);
+        //点击笔记的图片 绑定事件监听器
+        viewHolder.notePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到笔记详情页面
+            }
+        });
         viewHolder.userName.setText(commentAndReply.getUser().getUserName());
         viewHolder.commentContent.setText(commentAndReply.getCommentContent());
         viewHolder.commentDate.setText(commentAndReply.getCommentDate());

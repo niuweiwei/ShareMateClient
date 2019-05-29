@@ -20,11 +20,6 @@
         style="@style/popupwindowButtonStyle"
         android:text="查看笔记"/>
     <Button
-        android:id="@+id/btn_commentlist"
-        android:layout_marginTop="1dp"
-        style="@style/popupwindowButtonStyle"
-        android:text="评论列表"/>
-    <Button
         android:id="@+id/btn_delete"
         android:layout_marginTop="1dp"
         style="@style/popupwindowButtonStyle"

@@ -20,6 +20,7 @@ public class CommentAndReply {
     private Note note;//该评论或回复涉及到的笔记
     private int arguedId;//被回复的评论id或被回复的回复id
     private boolean isLike;//当前用户是否对该评论进行点赞
+    private int id;//当前评论的评论id或回复id
 
     public CommentAndReply() { }
 
@@ -117,5 +118,13 @@ public class CommentAndReply {
 
     public void setLike(boolean like) {
         isLike = like;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
