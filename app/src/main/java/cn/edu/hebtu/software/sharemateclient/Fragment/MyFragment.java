@@ -52,7 +52,7 @@ public class MyFragment extends Fragment {
 
     private OkHttpClient okHttpClient;
     private String path = null;
-    private int userId = 1;
+    private int userId;
     private ArrayList<Integer> type = new ArrayList<>();
     private GridView gridView;
     private TextView tvFan;
@@ -83,8 +83,8 @@ public class MyFragment extends Fragment {
         //监听器绑定
         setListener();
         path = getResources().getString(R.string.server_path);
-        type.add(1);
-        type.add(2);
+        userId=getActivity().getIntent().getIntExtra("userId",0);
+        type=getActivity().getIntent().getIntegerArrayListExtra("type");
         //得到user的详情
         GetUserDetail getUserDetail = new GetUserDetail();
         getUserDetail.execute(userId);

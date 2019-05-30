@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
@@ -31,12 +32,15 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager manager ;
     private Fragment currentFragment = new Fragment();
     private List<TextView> views = new ArrayList<>();
-
+    private int userId;
+    private ArrayList<Integer> type = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        userId=getIntent().getIntExtra("userId",0);
+        type=getIntent().getIntegerArrayListExtra("type");
+        Log.e("MainActivity",userId+"  "+type);
         indexView = findViewById(R.id.tv_index);
         followView = findViewById(R.id.tv_follow);
         messageView = findViewById(R.id.tv_message);
@@ -44,17 +48,17 @@ public class MainActivity extends AppCompatActivity {
 
         manager = getSupportFragmentManager();
         //默认显示首页
-        showFragment(indexFragment);
+//        showFragment(indexFragment);
         //调用为每个选项绑定事件监听器的方法
         setClickListener();
 
         //判断点击返回按钮到哪个fragment
-        if ("main".equals(getIntent().getStringExtra("back"))){
+        if ("main".equals(getIntent().getStringExtra("flag"))){
             indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
             indexView.setTextColor(getResources().getColor(R.color.inkGray));
             showFragment(indexFragment);
         }
-        if ("my".equals(getIntent().getStringExtra("back"))){
+        if ("my".equals(getIntent().getStringExtra("flag"))){
             showFragment(myFragment);
             myView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
             myView.setTextColor(getResources().getColor(R.color.inkGray));

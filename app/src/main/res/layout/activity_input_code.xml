@@ -21,7 +21,7 @@
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/TextSize_1" />
 
-    <cn.edu.hebtu.software.sharemate.tools.VerifyCodeView
+    <cn.edu.hebtu.software.sharemateclient.tools.VerifyCodeView
         android:id="@+id/verify_code_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

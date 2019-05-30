@@ -33,7 +33,8 @@
         <activity android:name=".Activity.LRInputCodeActivity" />
         <activity android:name=".Activity.LRPswdLoginActivity" />
         <activity android:name=".Activity.LRStartActivity" />
-        <activity android:name=".Activity.LRSelectInterestActivity"></activity>
+        <activity android:name=".Activity.LRSelectInterestActivity" />
+        <activity android:name=".Activity.LRForgetPwsdActivity"></activity>
     </application>
 
 </manifest>

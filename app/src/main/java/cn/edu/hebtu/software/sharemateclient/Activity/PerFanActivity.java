@@ -49,7 +49,7 @@ public class PerFanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PerFanActivity.this,MainActivity.class);
-                intent.putExtra("back","my");
+                intent.putExtra("flag","my");
                 intent.putIntegerArrayListExtra("type",type);
                 intent.putExtra("userId",user.getUserId());
                 startActivity(intent);

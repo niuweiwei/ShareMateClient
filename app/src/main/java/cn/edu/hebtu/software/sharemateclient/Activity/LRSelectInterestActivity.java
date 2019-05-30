@@ -10,9 +10,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import cn.edu.hebtu.software.sharemateclient.R;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 public class LRSelectInterestActivity extends AppCompatActivity {
     private Button button;
@@ -173,7 +177,20 @@ public class LRSelectInterestActivity extends AppCompatActivity {
 
         @Override
         protected Object doInBackground(Object[] objects) {
+            int userId = (int) objects[0];
+            int typeId = (int) objects[1];
+            String remark = (String) objects[2];
+            String url = path + "/title/type?userId="+userId+"&typeId="+typeId+"&remark="+remark;
+            OkHttpClient okHttpClient = new OkHttpClient();
+            Request request = new Request.Builder().url(url).build();
+            Call call = okHttpClient.newCall(request);
+            try {
+                String result = call.execute().body().string();
+                Log.e("SelectResult",result);
 
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return null;
         }
     }

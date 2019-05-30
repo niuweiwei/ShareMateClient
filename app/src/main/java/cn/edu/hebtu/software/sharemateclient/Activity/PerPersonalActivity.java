@@ -186,9 +186,9 @@ public class PerPersonalActivity extends AppCompatActivity {
                     startActivityForResult(introIntent,5);
                     break;
                 case R.id.back://返回
-                    if("my".equals(getIntent().getStringExtra("person"))){
+                    if("my".equals(getIntent().getStringExtra("flag"))){
                         Intent myIntent = new Intent(PerPersonalActivity.this,MainActivity.class);
-                        myIntent.putExtra("back","my");
+                        myIntent.putExtra("flag","my");
                         startActivity(myIntent);
                     }
                     break;

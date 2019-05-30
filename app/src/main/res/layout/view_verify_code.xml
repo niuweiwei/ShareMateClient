@@ -73,7 +73,7 @@
             android:layout_gravity="bottom"
             android:background="@color/colorSkip"/>
     </LinearLayout>
-    <cn.edu.hebtu.software.sharemate.tools.MyEditText
+    <cn.edu.hebtu.software.sharemateclient.tools.MyEditText
         android:layout_centerHorizontal="true"
         android:id="@+id/edit_text_view"
         android:layout_width="200dp"

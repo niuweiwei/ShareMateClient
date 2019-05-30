@@ -143,13 +143,17 @@ public class LRLoginActivity extends AppCompatActivity {
             Request request = new Request.Builder().url(url).build();
             Call call = okHttpClient.newCall(request);
             String result = null;
+            JSONObject jsonObject=null;
             try {
                 result = call.execute().body().string();
                 Log.e("LoginResult---",result);
+                jsonObject = new JSONObject(result);
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            return result;
+            return jsonObject;
         }
 
         @Override
