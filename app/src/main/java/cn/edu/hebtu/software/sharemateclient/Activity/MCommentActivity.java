@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -31,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,60 +116,6 @@ public class MCommentActivity extends AppCompatActivity {
         });
 
     }
-
-    private class MyHandler extends Handler{
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what){
-                case 0:
-                    adapter = new MCommentListAdapter(getApplicationContext(),
-                            commentAndReplyList,
-                            R.layout.comment_list_item_layout,
-                            serverPath,
-                            userId);
-                    listView.setAdapter(adapter);
-                    //为listView每一项绑定事件监听器
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            //点击后 弹出popupWindow 关闭软键盘
-                            methodManager.hideSoftInputFromWindow(MCommentActivity.this.getCurrentFocus().getWindowToken(), 0);
-                            //将回复框隐藏
-                            if(replyLayout.getVisibility()==View.VISIBLE) {
-                                replyLayout.setVisibility(View.GONE);
-                            }
-                            window = new PopupWindow(relativeLayout,RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-                            window.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                                @Override
-                                public void onDismiss() {
-                                    addBackgroundAlpha(1f);
-                                    window.dismiss();
-                                }
-                            });
-                            if(window.isShowing()){
-                                window.dismiss();
-                            }else{
-                                showPopupWindow(relativeLayout,position);
-                                addBackgroundAlpha(0.7f);
-                            }
-                        }
-                    });
-                    break;
-                case 1:
-                    adapter.notifyDataSetChanged();
-                    Toast likeToast = Toast.makeText(MCommentActivity.this,"点赞成功",Toast.LENGTH_SHORT);
-                    likeToast.setGravity(Gravity.TOP,0,300);
-                    likeToast.show();
-                    break;
-                case 2:
-                    adapter.notifyDataSetChanged();
-                    Toast cancelToast = Toast.makeText(MCommentActivity.this,"取消赞成功",Toast.LENGTH_SHORT);
-                    cancelToast.setGravity(Gravity.TOP,0,300);
-                    cancelToast.show();
-                    break;
-            }
-        }
 
         //显示 popupwindow
         private void showPopupWindow(RelativeLayout root, final int position){
@@ -262,19 +210,19 @@ public class MCommentActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     window.dismiss();
                     replyLayout.setVisibility(View.VISIBLE);
-                    EditText replyInput = findViewById(R.id.et_reply);
-                    replyInput.setHint("回复 "+commentAndReplyList.get(position).getUser().getUserName()+":");
+                    replyText.setText("");
+                    replyText.setHint("回复 "+commentAndReplyList.get(position).getUser().getUserName()+":");
 
                     //使得回复输入框自动获取焦点
-                    replyInput.setFocusable(true);
-                    replyInput.setFocusableInTouchMode(true);
-                    replyInput.requestFocus();
+                    replyText.setFocusable(true);
+                    replyText.setFocusableInTouchMode(true);
+                    replyText.requestFocus();
                     //自动弹出软键盘
                    methodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                 }
             });
 
-            //为发送按钮绑定监听器
+            //为发送回复按钮绑定监听器
             sendReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -282,16 +230,41 @@ public class MCommentActivity extends AppCompatActivity {
                     if(msg.trim().isEmpty()){
                         //nothing to do
                     }else{
+                        //获取回复的内容
+                        String replyContent = replyText.getText().toString();
                         //开启异步任务 添加回复
-                        //回复框隐藏 软键盘消失
-                        if(replyLayout.getVisibility()==View.VISIBLE) {
-                            replyLayout.setVisibility(View.GONE);
-                            methodManager.hideSoftInputFromWindow(MCommentActivity.this.getCurrentFocus().getWindowToken(), 0);
-                        }
-                        //弹出toast提示用户回复成功或失败
-                        Toast replySuccess = Toast.makeText(MCommentActivity.this,"发表评论成功",Toast.LENGTH_SHORT);
-                        replySuccess.setGravity(Gravity.TOP,0,300);
-                        replySuccess.show();
+                        CommentAndReply commentAndReply = commentAndReplyList.get(position);
+                        FormBody formBody = new FormBody.Builder()
+                                .add("tag",commentAndReply.getTag()+"")
+                                .add("userId",userId+"")
+                                .add("id",commentAndReply.getId()+"")
+                                .add("replyContent",replyContent)
+                                .build();
+                        Request replyRequest = new Request.Builder()
+                                .url(serverPath+"CommentAndReply/addReply")
+                                .post(formBody)
+                                .build();
+                        OkHttpClient replyClient = new OkHttpClient();
+                        final Call replyCall = replyClient.newCall(replyRequest);
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                super.run();
+                                try {
+                                    replyCall.execute();
+                                    Message message = new Message();
+                                    message.what = 3;
+                                    myHandler.sendMessage(message);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }.start();
+                    }
+                    //回复框隐藏 软键盘消失
+                    if(replyLayout.getVisibility()==View.VISIBLE) {
+                        replyLayout.setVisibility(View.GONE);
+                        methodManager.hideSoftInputFromWindow(MCommentActivity.this.getCurrentFocus().getWindowToken(), 0);
                     }
                 }
             });
@@ -316,6 +289,7 @@ public class MCommentActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //开启异步任务 数据库删除该评论
+
                         }
                     });
                     AlertDialog dialog = builder.create();
@@ -355,6 +329,68 @@ public class MCommentActivity extends AppCompatActivity {
             //设置参数
             getWindow().setAttributes(params);
         }
+
+        private class MyHandler extends Handler{
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what){
+                    case 0:
+                        adapter = new MCommentListAdapter(getApplicationContext(),
+                                commentAndReplyList,
+                                R.layout.comment_list_item_layout,
+                                serverPath,
+                                userId);
+                        listView.setAdapter(adapter);
+                        //为listView每一项绑定事件监听器
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                //点击后 弹出popupWindow 关闭软键盘
+                                methodManager.hideSoftInputFromWindow(MCommentActivity.this.getCurrentFocus().getWindowToken(), 0);
+                                //将回复框隐藏
+                                if(replyLayout.getVisibility()==View.VISIBLE) {
+                                    replyLayout.setVisibility(View.GONE);
+                                }
+                                window = new PopupWindow(relativeLayout,LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,true);
+                                window.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss() {
+                                        addBackgroundAlpha(1f);
+                                        window.dismiss();
+                                    }
+                                });
+                                if(window.isShowing()){
+                                    window.dismiss();
+                                }else{
+                                    showPopupWindow(relativeLayout,position);
+                                    addBackgroundAlpha(0.7f);
+                                }
+                            }
+                        });
+                        break;
+                    case 1:
+                        adapter.notifyDataSetChanged();
+                        Toast likeToast = Toast.makeText(MCommentActivity.this,"点赞成功",Toast.LENGTH_SHORT);
+                        likeToast.setGravity(Gravity.TOP,0,300);
+                        likeToast.show();
+                        break;
+                    case 2:
+                        adapter.notifyDataSetChanged();
+                        Toast cancelToast = Toast.makeText(MCommentActivity.this,"取消赞成功",Toast.LENGTH_SHORT);
+                        cancelToast.setGravity(Gravity.TOP,0,300);
+                        cancelToast.show();
+                        break;
+                    case 3:
+                        //弹出toast提示用户回复成功或失败
+                        Toast replySuccess = Toast.makeText(MCommentActivity.this,"发表评论成功",Toast.LENGTH_SHORT);
+                        replySuccess.setGravity(Gravity.TOP,0,300);
+                        replySuccess.show();
+                        break;
+                }
+            }
     }
+
+
 
 }
