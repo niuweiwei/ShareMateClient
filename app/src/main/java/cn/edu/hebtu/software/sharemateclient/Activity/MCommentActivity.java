@@ -289,7 +289,31 @@ public class MCommentActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //开启异步任务 数据库删除该评论
-
+                            FormBody formBody = new FormBody.Builder()
+                                    .add("tag",commentAndReplyList.get(position).getTag()+"")
+                                    .add("id",commentAndReplyList.get(position).getId()+"")
+                                    .build();
+                            Request deleteRequest = new Request.Builder()
+                                    .url(serverPath+"CommentAndReply/deleteCommentOrReply")
+                                    .post(formBody)
+                                    .build();
+                            OkHttpClient deleteClient = new OkHttpClient();
+                            final Call deleteCall = deleteClient.newCall(deleteRequest);
+                            new Thread(){
+                                @Override
+                                public void run() {
+                                    super.run();
+                                    try {
+                                        deleteCall.execute();
+                                        commentAndReplyList.remove(position);
+                                        Message message = new Message();
+                                        message.what = 4;
+                                        myHandler.sendMessage(message);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }.start();
                         }
                     });
                     AlertDialog dialog = builder.create();
@@ -387,6 +411,8 @@ public class MCommentActivity extends AppCompatActivity {
                         replySuccess.setGravity(Gravity.TOP,0,300);
                         replySuccess.show();
                         break;
+                    case 4:
+                        adapter.notifyDataSetChanged();
                 }
             }
     }
