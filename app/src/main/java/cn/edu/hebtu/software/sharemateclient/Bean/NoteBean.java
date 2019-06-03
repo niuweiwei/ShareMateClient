@@ -7,9 +7,9 @@ import cn.edu.hebtu.software.sharemateclient.R;
 
 public class NoteBean {
     private int noId;
-    private int noPhoto;
+    private String noPhoto;
     private String title;
-    private int noteImage;
+    private String noteImage;
     private String noteDetail,noteTitle;
     private UserBean user;
     private String noteTime;
@@ -40,7 +40,7 @@ public class NoteBean {
         this.typeid = typeid;
     }
 
-    public NoteBean(int noteImage, String noteDetail, String noteTitle, UserBean user, String noteTime, int zancount, int sharecount, int collectcount, int pingluncount) {
+    public NoteBean(String noteImage, String noteDetail, String noteTitle, UserBean user, String noteTime, int zancount, int sharecount, int collectcount, int pingluncount) {
         this.noteImage = noteImage;
         this.noteDetail = noteDetail;
         this.noteTitle = noteTitle;
@@ -51,7 +51,7 @@ public class NoteBean {
         this.collectcount = collectcount;
         this.pingluncount = pingluncount;
     }
-    public NoteBean(int noteImage, String noteDetail, String noteTitle,
+    public NoteBean(String noteImage, String noteDetail, String noteTitle,
                     UserBean user, String noteTime, List<CommentBean> comment,
                     int zancount, int sharecount, int collectcount, int pingluncount) {
         this.noteImage = noteImage;
@@ -65,7 +65,7 @@ public class NoteBean {
         this.collectcount = collectcount;
         this.pingluncount = pingluncount;
     }
-    public NoteBean(int noPhoto, String title) {
+    public NoteBean(String noPhoto, String title) {
         this.noPhoto = noPhoto;
         this.title = title;
     }
@@ -78,11 +78,11 @@ public class NoteBean {
         this.typeid = typeid;
     }
 
-    public int getNoPhoto() {
+    public String getNoPhoto() {
         return noPhoto;
     }
 
-    public void setNoPhoto(int noPhoto) {
+    public void setNoPhoto(String noPhoto) {
         this.noPhoto = noPhoto;
     }
 
@@ -102,11 +102,11 @@ public class NoteBean {
         this.noId = noId;
     }
 
-    public int getNoteImage() {
+    public String getNoteImage() {
         return noteImage;
     }
 
-    public void setNoteImage(int noteImage) {
+    public void setNoteImage(String noteImage) {
         this.noteImage = noteImage;
     }
 

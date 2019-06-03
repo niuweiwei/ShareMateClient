@@ -37,7 +37,14 @@ android {
     }
 }
 
+
 dependencies {
+
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
+    //Gson
+     implementation 'com.google.code.gson:gson:2.8.5'
     //添加okhttp的框架依赖
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     //添加SmartRefreshLayout依赖
