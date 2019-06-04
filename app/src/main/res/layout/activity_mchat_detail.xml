@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".Activity.MChatListActivity">
+
+    <LinearLayout
+        style="@style/topStyle">
+
+        <Button
+            android:id="@+id/btn_back"
+            style="@style/returnButtonStyle"/>
+        <TextView
+            android:id="@+id/tv_userName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/title"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_content"
+        android:layout_marginTop="40dp"
+        android:divider="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
+
+    <RelativeLayout
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@color/white"
+        android:id="@+id/rl_reply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <LinearLayout
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/btn_send"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/reply_input_style"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+            <EditText
+                android:id="@+id/et_reply"
+                android:paddingLeft="15dp"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="发消息......"
+                android:textSize="16sp" />
+        </LinearLayout>
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/brightBlue"
+            android:text="发送"
+            android:textSize="18sp"
+            android:background="@color/white"/>
+    </RelativeLayout>
+
+</RelativeLayout>
