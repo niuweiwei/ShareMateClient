@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.hyphenate.util.DateUtils;
 
+import java.util.Date;
 import java.util.List;
 
 import cn.edu.hebtu.software.sharemateclient.Bean.Chat;
@@ -59,6 +61,21 @@ public class MChatContentAdapter extends BaseAdapter {
             else
                 convertView = LayoutInflater.from(context).inflate(leftItemLayout,null);
             viewHolder = new ViewHolder();
+            //处理每条消息的时间是否显示
+            viewHolder.timestamp = convertView.findViewById(R.id.tv_timestamp);
+            if(position == 0){
+                viewHolder.timestamp.setText(DateUtils.getTimestampString(chatList.get(position).getDate()));
+                viewHolder.timestamp.setVisibility(View.VISIBLE);
+            }else{
+                Chat nowChat = chatList.get(position);
+                Chat preChat = chatList.get(position-1);
+                if (preChat != null && DateUtils.isCloseEnough(nowChat.getDate().getTime(), preChat.getDate().getTime())) {
+                    viewHolder.timestamp.setVisibility(View.GONE);
+                } else {
+                    viewHolder.timestamp.setText(DateUtils.getTimestampString(nowChat.getDate()));
+                    viewHolder.timestamp.setVisibility(View.VISIBLE);
+                }
+            }
             viewHolder.userPhoto = convertView.findViewById(R.id.iv_portrait);
             viewHolder.chatContent = convertView.findViewById(R.id.tv_content);
             convertView.setTag(viewHolder);
@@ -71,12 +88,20 @@ public class MChatContentAdapter extends BaseAdapter {
                 .load(serverPath+chatList.get(position).getUser().getUserPhoto())
                 .apply(requestOptions)
                 .into(viewHolder.userPhoto);
+        //点击用户头像 跳转到用户主页
+        viewHolder.userPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到指定用户的主页
+            }
+        });
         viewHolder.chatContent.setText(chatList.get(position).getContent());
 
         return convertView;
     }
 
     private class ViewHolder{
+        private TextView timestamp;
         private ImageView userPhoto;//发消息的用户的头像
         private TextView chatContent;//消息的具体内容
     }

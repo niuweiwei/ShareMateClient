@@ -13,7 +13,7 @@
             android:id="@+id/btn_back"
             style="@style/returnButtonStyle"/>
         <TextView
-            android:layout_width="320dp"
+            android:layout_width="380dp"
             android:layout_height="match_parent"
             android:text="收到的私信"
             style="@style/title"/>
@@ -22,13 +22,13 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="60dp"
+            android:layout_marginLeft="20dp"
             android:background="@mipmap/letter"/>
 
 
     </LinearLayout>
     <ListView
-        android:id="@+id/lv_contact"
+        android:id="@+id/lv_chat"
         android:background="@color/grayishBlue"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></ListView>

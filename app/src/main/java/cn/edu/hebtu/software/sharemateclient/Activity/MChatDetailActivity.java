@@ -2,9 +2,9 @@ package cn.edu.hebtu.software.sharemateclient.Activity;
 
 import android.content.Context;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.hyphenate.EMCallBack;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
@@ -22,6 +21,7 @@ import com.hyphenate.exceptions.HyphenateException;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import java.util.concurrent.ExecutorService;
@@ -77,26 +77,6 @@ public class MChatDetailActivity extends AppCompatActivity {
         //自动弹出软键盘
         inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 
-        //登录 试验代码
-        EMClient.getInstance().login("" + currentUser.getUserId(), "asdfg", new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                EMClient.getInstance().chatManager().loadAllConversations();
-                Log.e("MChatDetailActivity","登录成功");
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                Log.e("MChatDetailActivity","登录失败");
-                Log.e("ErrorCode "+i,s);
-            }
-
-            @Override
-            public void onProgress(int i, String s) {
-
-            }
-        });
-
         //获取与当前用户之前的聊天记录
         final EMConversation conversation = EMClient.getInstance().chatManager().getConversation(anotherUser.getUserId()+"",EMConversation.EMConversationType.Chat,true);
         if (!isRoaming) {
@@ -134,13 +114,14 @@ public class MChatDetailActivity extends AppCompatActivity {
         }
         List<EMMessage> messages = conversation.getAllMessages();
         for(EMMessage message : messages){
+            Date date = new Date(message.getMsgTime());
             EMTextMessageBody textMessage = (EMTextMessageBody) message.getBody();
             Chat chat;
             //判断每一条消息 是谁发的
             if(message.getFrom().equals(currentUser.getUserId()+"")){
-                chat = new Chat(currentUser,textMessage.getMessage());
+                chat = new Chat(currentUser,textMessage.getMessage(),date);
             }else{
-                chat = new Chat(anotherUser,textMessage.getMessage());
+                chat = new Chat(anotherUser,textMessage.getMessage(),date);
             }
             chatList.add(chat);
         }
@@ -169,7 +150,7 @@ public class MChatDetailActivity extends AppCompatActivity {
                     //发送消息
                     EMClient.getInstance().chatManager().sendMessage(message);
 
-                   Chat chat = new Chat(currentUser,msg);
+                   Chat chat = new Chat(currentUser,msg,new Date());
                     chatList.add(chat);
                     chatAdapter.notifyDataSetChanged();
                     //清除输入框的文字
@@ -187,7 +168,9 @@ public class MChatDetailActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(MChatDetailActivity.this,MChatListActivity.class);
+                intent.putExtra("currentUser",currentUser);
+                startActivity(intent);
             }
         });
 
