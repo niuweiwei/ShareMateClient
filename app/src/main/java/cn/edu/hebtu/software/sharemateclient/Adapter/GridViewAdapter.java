@@ -1,7 +1,10 @@
 package cn.edu.hebtu.software.sharemateclient.Adapter;
 
 import android.content.Context;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,19 +14,27 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.pili.pldroid.player.PLOnCompletionListener;
+import com.pili.pldroid.player.widget.PLVideoView;
+
 
 import java.io.IOException;
 import java.util.List;
 
 import cn.edu.hebtu.software.sharemateclient.Entity.Note;
 import cn.edu.hebtu.software.sharemateclient.R;
+import cn.edu.hebtu.software.sharemateclient.util.MediaController;
+import cn.edu.hebtu.software.sharemateclient.util.Utils;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import static android.support.constraint.Constraints.TAG;
 
 public class GridViewAdapter extends BaseAdapter{
     private Context context;
@@ -63,6 +74,8 @@ public class GridViewAdapter extends BaseAdapter{
             convertView=layoutInflater.inflate(itemLayout,null);
             viewHolder= new ViewHolder();
             viewHolder.noteImg=convertView.findViewById(R.id.noteImage);
+            viewHolder.startBtn =convertView.findViewById(R.id.startBtn);
+            viewHolder.noteVideo = convertView.findViewById(R.id.noteVideo);
             viewHolder.noteTitle=convertView.findViewById(R.id.noteTitle);
             viewHolder.userIcon=convertView.findViewById(R.id.userIcon);
             viewHolder.userName = convertView.findViewById(R.id.userName);
@@ -73,12 +86,34 @@ public class GridViewAdapter extends BaseAdapter{
             viewHolder = (ViewHolder) convertView.getTag();
         }
         U = context.getResources().getString(R.string.url);
+        if(notes.get(position).getNoteVideo()!=null){
+            String noteVideoUrl = notes.get(position).getNoteVideo();
+            final Uri videoUri = Uri.parse(noteVideoUrl);
+            Log.e("noteVedioUri",videoUri+"");
+            viewHolder.noteVideo.setLooping(false);
+            viewHolder.noteVideo.setVideoURI(videoUri);
+            final ViewHolder finalViewHolder1 = viewHolder;
+            viewHolder.noteVideo.setOnCompletionListener(new PLOnCompletionListener() {
+                @Override
+                public void onCompletion() {
+                    finalViewHolder1.startBtn.setVisibility(View.VISIBLE);
+                }
+            });
+            viewHolder.startBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finalViewHolder1.startBtn.setVisibility(View.INVISIBLE);
+                    finalViewHolder1.noteVideo.start();
+                }
+            });
+        }
         String noteImgUrl = U+notes.get(position).getNoteImage();
-        String userIconUrl = U+notes.get(position).getUser().getUserPhoto();
-        RequestOptions options = new RequestOptions().circleCrop();
+        Log.e("noteImgUri",noteImgUrl+"");
         Glide.with(context)
                 .load(noteImgUrl)
                 .into(viewHolder.noteImg);
+        String userIconUrl = U+notes.get(position).getUser().getUserPhoto();
+        RequestOptions options = new RequestOptions().circleCrop();
         Glide.with(context)
                 .load(userIconUrl)
                 .apply(options)
@@ -91,7 +126,7 @@ public class GridViewAdapter extends BaseAdapter{
         }else{
             viewHolder.pick.setBackgroundResource(R.mipmap.pick);
         }
-        final ViewHolder finalViewHolder = viewHolder;
+//        final ViewHolder finalViewHolder = viewHolder;
         viewHolder.pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,6 +152,9 @@ public class GridViewAdapter extends BaseAdapter{
                 }
             }
         });
+
+
+
         return convertView;
     }
 
@@ -128,7 +166,8 @@ public class GridViewAdapter extends BaseAdapter{
         ImageView userIcon;
         TextView noteTitle;
         TextView userName;
-        Button pick;
+        PLVideoView noteVideo;
+        Button pick,startBtn;
         TextView likeCount;
     }
 
@@ -164,4 +203,8 @@ public class GridViewAdapter extends BaseAdapter{
             notifyDataSetChanged();
         }
     }
+
+
+
+
 }

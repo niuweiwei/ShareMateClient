@@ -1,12 +1,16 @@
 package cn.edu.hebtu.software.sharemateclient.Activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+
+import android.graphics.Color;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +28,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.pili.pldroid.player.PLOnCompletionListener;
+import com.pili.pldroid.player.PLOnPreparedListener;
+import com.pili.pldroid.player.widget.PLVideoView;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.edu.hebtu.software.sharemateclient.Adapter.GridViewAdapter;
 import cn.edu.hebtu.software.sharemateclient.Adapter.NoteCommentListAdapter;
 import cn.edu.hebtu.software.sharemateclient.Adapter.ReplyListAdapter;
 import cn.edu.hebtu.software.sharemateclient.Entity.Comment;
@@ -44,6 +53,7 @@ import cn.edu.hebtu.software.sharemateclient.Entity.Note;
 import cn.edu.hebtu.software.sharemateclient.Entity.Reply;
 import cn.edu.hebtu.software.sharemateclient.Entity.User;
 import cn.edu.hebtu.software.sharemateclient.R;
+import cn.edu.hebtu.software.sharemateclient.util.MediaController;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -54,14 +64,17 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.BufferedSink;
 
+import static cn.edu.hebtu.software.sharemateclient.R.*;
+
 public class NoteDetailActivity extends AppCompatActivity implements NoteCommentListAdapter.Callback{
 
     private ImageView userIcon,noteImage;
-    private Button backBtn,followBtn,pickBtn,collectBtn,commentBtn;
-    private Button send;
+    private PLVideoView noteVideo;
+    private Button backBtn,followBtn,pickBtn,collectBtn;
+    private Button send,startBtn;
     private TextView userName;
     private TextView noteTitle,noteDetail,noteDate;
-    private TextView commentCount,pickCount,collectCount,comCount;
+    private TextView commentCount,pickCount,collectCount;
     private EditText commentEdit;
     private ButtonOnclickListener listener;
     private Note note;
@@ -75,10 +88,11 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
     private List<Comment> comments;
     private CommentListTask commentListTask;
     private int commentType,commentPosition,commentPosition2,replyPostion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_note_detail);
+        setContentView(layout.activity_note_detail);
         okHttpClient = new OkHttpClient();
         Intent intent  = getIntent();
         note= (Note) intent.getSerializableExtra("note");
@@ -91,33 +105,31 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
         commentListTask.execute();
     }
 
-
     //初始化控件
     private void findViews(){
-        userIcon = findViewById(R.id.userIcon);
-        userName = findViewById(R.id.userName);
-        backBtn = findViewById(R.id.backBtn);
-        followBtn = findViewById(R.id.followBtn);
-        pickBtn = findViewById(R.id.pickBtn);
-        collectBtn = findViewById(R.id.collectBtn);
-        commentBtn = findViewById(R.id.commentBtn);
-        send = findViewById(R.id.send);
-        noteImage = findViewById(R.id.noteImage);
-        noteTitle = findViewById(R.id.noteTitle);
-        noteDetail = findViewById(R.id.noteText);
-        noteDate = findViewById(R.id.noteDate);
-        commentCount = findViewById(R.id.commentCount);
-        pickCount = findViewById(R.id.pickCount);
-        comCount = findViewById(R.id.comCount);
-        collectCount = findViewById(R.id.collectCount);
-        commentEdit = findViewById(R.id.editSay);
-        commentListView = findViewById(R.id.noteCommentList);
+        startBtn = findViewById(id.startBtn);
+        noteVideo = findViewById(id.noteVideo);
+        userIcon = findViewById(id.userIcon);
+        userName = findViewById(id.userName);
+        backBtn = findViewById(id.backBtn);
+        followBtn = findViewById(id.followBtn);
+        pickBtn = findViewById(id.pickBtn);
+        collectBtn = findViewById(id.collectBtn);
+        send = findViewById(id.send);
+        noteImage = findViewById(id.noteImage);
+        noteTitle = findViewById(id.noteTitle);
+        noteDetail = findViewById(id.noteText);
+        noteDate = findViewById(id.noteDate);
+        commentCount = findViewById(id.commentCount);
+        pickCount = findViewById(id.pickCount);
+        collectCount = findViewById(id.collectCount);
+        commentEdit = findViewById(id.editSay);
+        commentListView = findViewById(id.noteCommentList);
         listener = new ButtonOnclickListener();
         backBtn.setOnClickListener(listener);
         followBtn.setOnClickListener(listener);
         pickBtn.setOnClickListener(listener);
         collectBtn.setOnClickListener(listener);
-        commentBtn.setOnClickListener(listener);
         send.setOnClickListener(listener);
         commentType = 0;
         commentEdit.setOnTouchListener(new View.OnTouchListener() {
@@ -125,7 +137,7 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
             public boolean onTouch(View v, MotionEvent event) {
                 commentType =0;
                 Log.e("点击了评论2","editText");
-                Button button = findViewById(R.id.send);
+                Button button = findViewById(id.send);
                 button.setVisibility(View.VISIBLE);
                 showSoftInputFromWindow(commentEdit);
                 Toast.makeText(getApplicationContext(),"点击评论",Toast.LENGTH_SHORT).show();
@@ -142,36 +154,72 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
         noteDetail.setText(note.getNoteDetail());
         noteDate.setText(note.getNoteDate());
         collectCount.setText(note.getCollectCount()+"");
-        comCount.setText(note.getCommentCount()+"");
         pickCount.setText(note.getLikeCount()+"");
         commentCount.setText("共 "+note.getCommentCount()+" 条评论");
         comments = new ArrayList<>();
         if(note.isLike()){
-            pickBtn.setBackgroundResource(R.mipmap.picked);
+            pickBtn.setBackgroundResource(mipmap.picked);
         }else {
-            pickBtn.setBackgroundResource(R.mipmap.pick);
+            pickBtn.setBackgroundResource(mipmap.pick);
         }
         if(note.isCollect()){
-            collectBtn.setBackgroundResource(R.mipmap.collectedbtn);
+            collectBtn.setBackgroundResource(mipmap.collectedbtn);
         }else {
-            collectBtn.setBackgroundResource(R.mipmap.collectbtn);
+            collectBtn.setBackgroundResource(mipmap.collectbtn);
         }
         if(note.isFollow()){
-            followBtn.setBackgroundResource(R.mipmap.followedbtn);
+            followBtn.setBackgroundResource(mipmap.followedbtn);
         }else {
-            followBtn.setBackgroundResource(R.mipmap.followbtn);
+            followBtn.setBackgroundResource(mipmap.followbtn);
         }
-
-        String noteImgUrl = U+note.getNoteImage();
+        if(note.getNoteImage()==null){
+            String noteVideoUrl =note.getNoteVideo();
+            final Uri videoUri = Uri.parse(noteVideoUrl);
+            noteVideo.setVideoURI(videoUri);
+            MediaController mediaController = new MediaController(this);
+            noteVideo.setMediaController(mediaController);
+            noteVideo.start();
+            noteVideo.setOnCompletionListener(new PLOnCompletionListener() {
+                @Override
+                public void onCompletion() {
+                    startBtn.setVisibility(View.VISIBLE);
+                }
+            });
+            startBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startBtn.setVisibility(View.INVISIBLE);
+                    noteVideo.start();
+                }
+            });
+        }else{
+            String noteImgUrl = U+note.getNoteImage();
+            Glide.with(this)
+                    .load(noteImgUrl)
+                    .into(noteImage);
+        }
         String userIconUrl = U+note.getUser().getUserPhoto();
         RequestOptions options = new RequestOptions().circleCrop();
-        Glide.with(this)
-                .load(noteImgUrl)
-                .into(noteImage);
         Glide.with(this)
                 .load(userIconUrl)
                 .apply(options)
                 .into(userIcon);
+        View view = findViewById(id.layout);
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.setFocusable(true);
+                v.setFocusableInTouchMode(true);
+                v.requestFocus();
+                //隐藏发送按钮，软键盘 ，清空editText
+                send.setVisibility(View.INVISIBLE);
+                commentEdit.setText("");
+                commentEdit.clearFocus();
+                InputMethodManager imm=(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+                return false;
+            }
+        });
     }
 
     public void showSoftInputFromWindow(EditText editText){
@@ -188,7 +236,7 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
     public void click(View v, int p,int c) {
         commentType=2;commentPosition2= c;replyPostion = p;
         reReplyId = comments.get(c).getReplyList().get(p).getReplyId();
-        Button button = findViewById(R.id.send);
+        Button button = findViewById(id.send);
         button.setVisibility(View.VISIBLE);
         showSoftInputFromWindow(commentEdit);
     }
@@ -203,16 +251,22 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            String url = U+"/comment/getComment/"+noteId;
+            Log.e("getComment",userId+""+noteId);
+            String url = U+"comment/getComment/"+noteId+"?userId="+userId;
             Request request = new Request.Builder()
                     .url(url)
                     .build();
             Call call = okHttpClient.newCall(request);
             try {
+                Log.e("getComment","1");
                 Response response = call.execute();
+                Log.e("getComment","2");
                 String rel = response.body().string();
+                Log.e("getComment","3");
                 JSONObject noteObject = new JSONObject(rel);
+                Log.e("getComment","4");
                 String array = noteObject.getJSONArray("commentList").toString();
+                Log.e("getComment",array+"");
                 Gson gson = new Gson();
                 Type noteListType = new TypeToken<ArrayList<Comment>>(){}.getType();
                 comments = gson.fromJson(array, noteListType);
@@ -234,7 +288,7 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
     //设置commentListView
     private void setList(){
         commentAdapter = new NoteCommentListAdapter(this,
-                R.layout.item_note_comment,comments,this);
+                layout.item_note_comment,comments,this);
         commentListView.setAdapter(commentAdapter);
         setListViewHeight();
         commentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -258,33 +312,33 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
         public void onClick(View v) {
             switch (v.getId()){
                 //点击返回按钮返回上一页
-                case R.id.backBtn:
+                case id.backBtn:
                     Intent intent = new Intent();
                     intent.setClass(getApplicationContext(),MainActivity.class);
                     startActivity(intent);
                     break;
                 //点击关注按钮关注
-                case R.id.followBtn:
+                case id.followBtn:
                     int followedId = note.getUser().getUserId();
                     boolean follow = note.isFollow();
                     if(note.isFollow()){
-                        followBtn.setBackgroundResource(R.mipmap.followbtn);
+                        followBtn.setBackgroundResource(mipmap.followbtn);
                         note.setFollow(false);
                         followTask(followedId,follow);
                     }else {
-                        followBtn.setBackgroundResource(R.mipmap.followedbtn);
+                        followBtn.setBackgroundResource(mipmap.followedbtn);
                         note.setFollow(true);
                         followTask(followedId,follow);
                     }
                     break;
                 //点赞
-                case R.id.pickBtn:
+                case id.pickBtn:
                     int lc = note.getLikeCount();
                     int noteId = note.getNoteId();
                     boolean like = note.isLike();
                     if(note.isLike()){
                         lc--;
-                        pickBtn.setBackgroundResource(R.mipmap.pick);
+                        pickBtn.setBackgroundResource(mipmap.pick);
                         pickCount.setText(lc+"");
                         note.setLike(false);
                         note.setLikeCount(lc);
@@ -292,34 +346,34 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
                     }else {
                         lc++;
                         pickCount.setText(lc+"");
-                        pickBtn.setBackgroundResource(R.mipmap.picked);
+                        pickBtn.setBackgroundResource(mipmap.picked);
                         note.setLike(true);
                         note.setLikeCount(lc);
                         pickTask(noteId,like);
                     }
                     break;
                 //点击收藏按钮
-                case R.id.collectBtn:
+                case id.collectBtn:
                     int cc=note.getCollectCount();
                     boolean collect = note.isCollect();
                     int nId = note.getNoteId();
                     if(note.isCollect()){
                         cc--;
                         collectCount.setText(cc+"");
-                        collectBtn.setBackgroundResource(R.mipmap.collectbtn);
+                        collectBtn.setBackgroundResource(mipmap.collectbtn);
                         note.setCollect(false);
                         note.setCollectCount(cc);
                         collectTask(nId,collect);
                     }else {
                         cc++;
                         collectCount.setText(cc+"");
-                        collectBtn.setBackgroundResource(R.mipmap.collectedbtn);
+                        collectBtn.setBackgroundResource(mipmap.collectedbtn);
                         note.setCollect(true);
                         note.setCollectCount(cc);
                         collectTask(nId,collect);
                     }
                     break;
-                case R.id.send:
+                case id.send:
                     //获取评论或回复的内容
                     String text = commentEdit.getText().toString().trim();
                     if(text.equals("")||text==null){
@@ -517,7 +571,6 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
         comment.setCommentDate(date+"");
         comment.setUser(contentUser);
         comments.add(comment);
-        comCount.setText(comments.size()+"");
         commentCount.setText("共 "+comments.size()+" 条评论");
         setList();
     }

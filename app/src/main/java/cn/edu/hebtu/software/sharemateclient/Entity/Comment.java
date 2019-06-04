@@ -11,7 +11,7 @@ public class Comment {
 	private User user;
 	private int noteId;
 	private List<Reply> replyList=new ArrayList<>();
-
+	private boolean like;
 	public Comment() {
 		super();
 	}
@@ -52,7 +52,12 @@ public class Comment {
 	public void setReplyList(List<Reply> replyList) {
 		this.replyList = replyList;
 	}
-
+	public boolean isLike() {
+		return like;
+	}
+	public void setLike(boolean like) {
+		this.like = like;
+	}
 	
 	
 }

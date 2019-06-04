@@ -172,7 +172,7 @@ public class RecommendIndexFrag extends Fragment{
                 Note note = notes.get(position);
                 intent.putExtra("note",note);
                 intent.putExtra("contentUser",contentUser);
-                Log.e("noteinfo",note.getNoteImage());
+//                Log.e("noteinfo",note.getNoteImage());
                 startActivity(intent);
             }
         });

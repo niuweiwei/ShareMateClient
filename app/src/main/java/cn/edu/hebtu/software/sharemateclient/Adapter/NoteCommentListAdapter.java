@@ -1,6 +1,8 @@
 package cn.edu.hebtu.software.sharemateclient.Adapter;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +12,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import cn.edu.hebtu.software.sharemateclient.Entity.Comment;
 import cn.edu.hebtu.software.sharemateclient.Entity.Reply;
 import cn.edu.hebtu.software.sharemateclient.R;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class NoteCommentListAdapter extends BaseAdapter implements View.OnClickListener,
@@ -28,6 +38,9 @@ public class NoteCommentListAdapter extends BaseAdapter implements View.OnClickL
     private List<Reply> replys = new ArrayList<>();
     private String U;
     private Callback mCallback;
+    private int userId = 17;
+    private OkHttpClient okHttpClient = new OkHttpClient();
+    private PickTask pickTask;
 
     public NoteCommentListAdapter(Context context, int itemLayout,
                                   List<Comment> comments, Callback mCallback) {
@@ -53,7 +66,7 @@ public class NoteCommentListAdapter extends BaseAdapter implements View.OnClickL
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
         if (convertView==null){
             LayoutInflater layoutInflater=LayoutInflater.from(context);
@@ -62,7 +75,7 @@ public class NoteCommentListAdapter extends BaseAdapter implements View.OnClickL
             viewHolder.noteComment=convertView.findViewById(R.id.noteComment);
             viewHolder.userIcon=convertView.findViewById(R.id.userIcon);
             viewHolder.userName = convertView.findViewById(R.id.userName);
-            viewHolder.pick = convertView.findViewById(R.id.pick);
+            viewHolder.pickBtn = convertView.findViewById(R.id.pickBtn);
             viewHolder.noteCommentDate = convertView.findViewById(R.id.noteCommentDate);
             viewHolder.replyListView = convertView.findViewById(R.id.replyList);
             convertView.setTag(viewHolder);
@@ -80,6 +93,11 @@ public class NoteCommentListAdapter extends BaseAdapter implements View.OnClickL
         viewHolder.noteCommentDate.setText(comments.get(position).getCommentDate());
         viewHolder.userName.setText(comments.get(position).getUser().getUserName());
         viewHolder.noteComment.setText(comments.get(position).getCommentDetail());
+        if(comments.get(position).isLike()){
+            viewHolder.pickBtn.setBackgroundResource(R.mipmap.picked);
+        }else{
+            viewHolder.pickBtn.setBackgroundResource(R.mipmap.pick);
+        }
         replys = comments.get(position).getReplyList();
         replyListAdapter = new ReplyListAdapter(context,R.layout.item_reply,replys);
         viewHolder.replyListView.setAdapter(replyListAdapter);
@@ -89,6 +107,28 @@ public class NoteCommentListAdapter extends BaseAdapter implements View.OnClickL
         //ListView绑定监听器在Activity响应事件
         viewHolder.replyListView.setOnItemClickListener(this);
         viewHolder.replyListView.setTag(position);
+
+        final ViewHolder finalViewHolder = viewHolder;
+        viewHolder.pickBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int commentId = comments.get(position).getCommentId();
+                boolean like = comments.get(position).isLike();
+                if(like){
+                    v.setBackgroundResource(R.mipmap.pick);
+                    comments.get(position).setLike(false);
+                    Toast.makeText(context,"取消赞啦",Toast.LENGTH_SHORT).show();
+                    pickTask = new PickTask();
+                    pickTask.execute(commentId,like);
+                }else{
+                    Toast.makeText(context,"赞啦",Toast.LENGTH_SHORT).show();
+                    comments.get(position).setLike(true);
+                    v.setBackgroundResource(R.mipmap.picked);
+                    pickTask = new PickTask();
+                    pickTask.execute(commentId,like);
+                }
+            }
+        });
         return convertView;
     }
 
@@ -113,7 +153,7 @@ public class NoteCommentListAdapter extends BaseAdapter implements View.OnClickL
         ImageView userIcon;
         TextView noteComment;
         TextView userName;
-        Button pick;
+        Button pickBtn;
         TextView noteCommentDate;
         ListView replyListView;
     }
@@ -136,5 +176,38 @@ public class NoteCommentListAdapter extends BaseAdapter implements View.OnClickL
                 (view.getDividerHeight() * (replyListAdapter.getCount() + 1));
         view.setLayoutParams(params);
         }
+
+    //点赞和取消赞触发的进程
+    private class PickTask extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            int commentId = (int)objects[0];
+            boolean like = (boolean)objects[1];
+            //1.创建OKHttpClient对象(已创建)
+            // 2.创建Request对象
+            Log.e("isLike",like+"");
+            String url = U+"/comment/pick/"+commentId+"?userId="+userId+"&like="+like;
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+            // 3.创建Call对象
+            Call call = okHttpClient.newCall(request);
+            // 4.提交请求，返回响应
+            try {
+                Response response = call.execute();
+                String rel = response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            notifyDataSetChanged();
+        }
+    }
 }
 

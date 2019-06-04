@@ -74,6 +74,7 @@ public class HomeFragment extends Fragment {
                             text2.setTextColor(getResources().
                                     getColor(R.color.top1));
                         }else{
+
                             text1.setTextColor(getResources().
                                     getColor(R.color.top1));
                             text2.setTextColor(getResources().

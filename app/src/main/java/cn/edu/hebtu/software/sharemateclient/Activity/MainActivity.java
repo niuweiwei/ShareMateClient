@@ -1,13 +1,22 @@
 package cn.edu.hebtu.software.sharemateclient.Activity;
 
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
+
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.pili.pldroid.player.widget.PLVideoTextureView;
+import com.pili.pldroid.player.widget.PLVideoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +26,9 @@ import cn.edu.hebtu.software.sharemateclient.Fragment.FollowFragment;
 import cn.edu.hebtu.software.sharemateclient.Fragment.HomeFragment;
 import cn.edu.hebtu.software.sharemateclient.Fragment.MessageFragment;
 import cn.edu.hebtu.software.sharemateclient.Fragment.MyFragment;
+import cn.edu.hebtu.software.sharemateclient.Fragment.NearbyFragment;
 import cn.edu.hebtu.software.sharemateclient.R;
+import cn.edu.hebtu.software.sharemateclient.util.MediaController;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private Fragment currentFragment = new Fragment();
     private List<TextView> views = new ArrayList<>();
     private User contentUser;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         showFragment(indexFragment);
         //调用为每个选项绑定事件监听器的方法
         setClickListener();
-
     }
 
     private void findViews(){
@@ -52,9 +61,8 @@ public class MainActivity extends AppCompatActivity {
         messageView = findViewById(R.id.tv_message);
         myView = findViewById(R.id.tv_my);
         manager = getSupportFragmentManager();
-        contentUser = new User(17,"狗蛋","gou",
-                "images/userPhotos/17.jpg","女","15852160982",
-                "上海市", "1985-09-04","做梦都想发家致富");
+        contentUser = (User)getIntent().getSerializableExtra("user");
+
     }
 
     //显示出指定的页面
@@ -113,4 +121,6 @@ public class MainActivity extends AppCompatActivity {
         messageView.setOnClickListener(listener);
         myView.setOnClickListener(listener);
     }
+
+
 }
