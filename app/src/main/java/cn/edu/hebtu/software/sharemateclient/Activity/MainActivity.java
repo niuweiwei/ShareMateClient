@@ -5,9 +5,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
+
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         showFragment(indexFragment);
         //调用为每个选项绑定事件监听器的方法
         setClickListener();
+
 
     }
 
@@ -105,5 +111,6 @@ public class MainActivity extends AppCompatActivity {
         followView.setOnClickListener(listener);
         messageView.setOnClickListener(listener);
         myView.setOnClickListener(listener);
+
     }
 }

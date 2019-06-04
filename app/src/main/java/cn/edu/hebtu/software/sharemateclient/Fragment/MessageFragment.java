@@ -19,6 +19,7 @@ import cn.edu.hebtu.software.sharemateclient.Activity.MLikeActivity;
 import cn.edu.hebtu.software.sharemateclient.Activity.MFollowActivity;
 import cn.edu.hebtu.software.sharemateclient.Adapter.MessageListAdapter;
 import cn.edu.hebtu.software.sharemateclient.Bean.MessageFragmentTitle;
+import cn.edu.hebtu.software.sharemateclient.Activity.MChatListActivity;
 import cn.edu.hebtu.software.sharemateclient.R;
 
 /**
@@ -38,7 +39,7 @@ public class MessageFragment extends Fragment {
         titles.add(new MessageFragmentTitle(R.mipmap.followed,"新增关注"));
         titles.add(new MessageFragmentTitle(R.mipmap.message,"收到的私信"));
         //初始化监听器
-        MessageListAdapter listAdapter = new MessageListAdapter(titles,getActivity(),R.layout.message_list_item_layout);
+        MessageListAdapter listAdapter = new MessageListAdapter(titles,getActivity(),R.layout.mmessage_list_item_layout);
         ListView listView = view.findViewById(R.id.lv_message);
         //绑定监听器
         listView.setAdapter(listAdapter);
@@ -63,7 +64,11 @@ public class MessageFragment extends Fragment {
                         Intent fanIntent = new Intent(getActivity(),MFollowActivity.class);
                         startActivity(fanIntent);
                         break;
-
+                    case 3:
+                        //点击了收到的消息页面
+                        Intent chatIntent = new Intent(getActivity(),MChatListActivity.class);
+                        startActivity(chatIntent);
+                        break;
                 }
             }
         });

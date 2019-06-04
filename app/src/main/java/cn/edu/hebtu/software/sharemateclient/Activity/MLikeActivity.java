@@ -109,7 +109,7 @@ public class MLikeActivity extends AppCompatActivity {
             super.handleMessage(msg);
             if (msg.what == 0){
                 //初始化adapter
-                adapter = new MLikeListAdapter(MLikeActivity.this,R.layout.like_list_item_layout,likeList,serverPath);
+                adapter = new MLikeListAdapter(MLikeActivity.this,R.layout.mlike_list_item_layout,likeList,serverPath);
                 likeListView.setAdapter(adapter);
                 //点击每一项绑定事件监听器
                 likeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

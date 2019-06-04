@@ -96,7 +96,7 @@ public class MFollowActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if(msg.what == 0){
-                followListAdapter = new MFollowListAdapter(MFollowActivity.this,followList,R.layout.follow_list_item_layout,serverPath);
+                followListAdapter = new MFollowListAdapter(MFollowActivity.this,followList,R.layout.mfollow_list_item_layout,serverPath);
                 followListView.setAdapter(followListAdapter);
             }
         }

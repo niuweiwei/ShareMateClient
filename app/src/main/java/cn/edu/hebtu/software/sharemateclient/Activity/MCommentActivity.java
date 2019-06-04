@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -20,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -32,7 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -362,7 +359,7 @@ public class MCommentActivity extends AppCompatActivity {
                     case 0:
                         adapter = new MCommentListAdapter(getApplicationContext(),
                                 commentAndReplyList,
-                                R.layout.comment_list_item_layout,
+                                R.layout.mcomment_list_item_layout,
                                 serverPath,
                                 userId);
                         listView.setAdapter(adapter);
