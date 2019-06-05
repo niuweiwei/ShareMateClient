@@ -1,6 +1,7 @@
 package cn.edu.hebtu.software.sharemateclient.Fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,9 +32,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.edu.hebtu.software.sharemateclient.Activity.LRLoginActivity;
 import cn.edu.hebtu.software.sharemateclient.Activity.PerFanActivity;
 import cn.edu.hebtu.software.sharemateclient.Activity.PerFollowActivity;
-import cn.edu.hebtu.software.sharemateclient.Activity.MainActivity;
 import cn.edu.hebtu.software.sharemateclient.Activity.PerPersonalActivity;
 import cn.edu.hebtu.software.sharemateclient.Adapter.NoteAdapter;
 import cn.edu.hebtu.software.sharemateclient.Bean.NoteBean;
@@ -42,6 +43,8 @@ import cn.edu.hebtu.software.sharemateclient.R;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+
+import static android.content.Context.MODE_MULTI_PROCESS;
 
 /**
  * 我 Fragment
@@ -153,14 +156,14 @@ public class MyFragment extends Fragment {
             switch (v.getId()){
                 case R.id.personal://个人资料
                     Intent perIntent = new Intent(getActivity(), PerPersonalActivity.class);
-                    perIntent.putExtra("person","my");
+                    perIntent.putExtra("flag","my");
                     perIntent.putExtra("user",user);
                     perIntent.putIntegerArrayListExtra("type",type);
                     startActivityForResult(perIntent,1);
                     break;
                 case R.id.userPhoto://头像
                     Intent imgIntent = new Intent(getActivity(), PerPersonalActivity.class);
-                    imgIntent.putExtra("person","my");
+                    imgIntent.putExtra("flag","my");
                     imgIntent.putExtra("user",user);
                     imgIntent.putIntegerArrayListExtra("type",type);
                     startActivityForResult(imgIntent,1);
@@ -208,8 +211,9 @@ public class MyFragment extends Fragment {
                     startActivity(fanIntent2);
                     break;
                 case R.id.logout://退出登录
+                    saveRegisterInfo("phoneStr", "");
                     Intent intent = new Intent();
-                    intent.setClass(getActivity(), MainActivity.class);
+                    intent.setClass(getActivity(), LRLoginActivity.class);
                     intent.putExtra("back","my");
                     intent.putIntegerArrayListExtra("type",type);
                     intent.putExtra("userId",user.getUserId());
@@ -217,6 +221,19 @@ public class MyFragment extends Fragment {
                     break;
             }
         }
+    }
+    /**
+     * 保存账号和密码到SharedPreferences中
+     */
+    private void saveRegisterInfo(String phoneStr, String phone) {
+        //"loginInfo" ：文件名；mode_private SharedPreferences sp = getSharedPreferences( );
+        SharedPreferences sp = getActivity().getSharedPreferences("loginInfo", MODE_MULTI_PROCESS);
+        //获取编译器
+        SharedPreferences.Editor editor = sp.edit();
+        //以用户名为key，密码为value 保存在SharedPreferences中
+        editor.putString(phoneStr, phone);
+        //提交修改
+        editor.commit();
     }
 //    public void setNoteGridView(GridView gridView){
 //        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

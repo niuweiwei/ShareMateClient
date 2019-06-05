@@ -1,12 +1,14 @@
 package cn.edu.hebtu.software.sharemateclient.Activity;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -127,5 +129,23 @@ public class MainActivity extends AppCompatActivity {
         followView.setOnClickListener(listener);
         messageView.setOnClickListener(listener);
         myView.setOnClickListener(listener);
+    }
+
+    /**
+     * 点击手机返回键，返回到主页面
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            Intent intent = new Intent();// 创建Intent对象
+            intent.setAction(Intent.ACTION_MAIN);// 设置Intent动作
+            intent.addCategory(Intent.CATEGORY_HOME);// 设置Intent种类
+            startActivity(intent);// 将Intent传递给Activity
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

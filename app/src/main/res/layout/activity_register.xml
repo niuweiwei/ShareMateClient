@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/root">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/iv_back"
@@ -13,17 +12,14 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/back" />
 
-    <!--<ImageView-->
-    <!--android:layout_width="80dp"-->
-    <!--android:layout_height="80dp" -->
-    <!--android:background="@drawable/photo"-->
-    <!--android:layout_marginTop="20dp"-->
-    <!--android:layout_gravity="center"/>-->
     <LinearLayout
+        android:id="@+id/linear_name"
         android:layout_width="182dp"
         android:layout_height="wrap_content"
+        android:layout_below="@id/iv_back"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp">
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true">
 
         <ImageView
             android:layout_width="20dp"
@@ -38,22 +34,36 @@
             android:layout_marginLeft="20dp"
             android:background="@null"
             android:hint="请输入用户名"
-            android:textSize="@dimen/TextSize_5"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:textSize="@dimen/TextSize_5" />
     </LinearLayout>
+    <TextView
+        android:id="@+id/error_name"
+        android:layout_below="@id/iv_back"
+        android:layout_toRightOf="@id/linear_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:textColor="@color/warmRed"/>
 
     <View
+        android:id="@+id/view_name"
         android:layout_width="201dp"
         android:layout_height="0.5dp"
+        android:layout_below="@id/linear_name"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
-        android:background="@color/colorView" />
+        android:background="@color/colorView"
+        android:layout_centerHorizontal="true"/>
 
     <LinearLayout
+        android:id="@+id/linear_password"
         android:layout_width="182dp"
         android:layout_height="wrap_content"
+        android:layout_below="@id/view_name"
         android:layout_gravity="center"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true">
 
         <ImageView
             android:layout_width="20dp"
@@ -69,22 +79,35 @@
             android:background="@null"
             android:hint="请输入密码"
             android:password="true"
-            android:textSize="@dimen/TextSize_5"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:textSize="@dimen/TextSize_5" />
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/error_password"
+        android:layout_below="@id/linear_name"
+        android:layout_toRightOf="@id/linear_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/warmRed"/>
     <View
+        android:id="@+id/view_password"
         android:layout_width="201dp"
         android:layout_height="0.5dp"
+        android:layout_below="@id/linear_password"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
-        android:background="@color/colorView" />
+        android:background="@color/colorView"
+        android:layout_centerHorizontal="true"/>
 
     <LinearLayout
+        android:id="@+id/linear_confirm_pswd"
         android:layout_width="182dp"
         android:layout_height="wrap_content"
+        android:layout_below="@id/view_password"
         android:layout_gravity="center"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true">
 
         <ImageView
             android:layout_width="20dp"
@@ -98,24 +121,38 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:background="@null"
-            android:password="true"
             android:hint="确认密码"
-            android:textSize="@dimen/TextSize_5"
-            android:singleLine="true"/>
+            android:password="true"
+            android:singleLine="true"
+            android:textSize="@dimen/TextSize_5" />
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/error_confirm_pwsd"
+        android:layout_below="@id/view_password"
+        android:layout_toRightOf="@id/linear_confirm_pswd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/warmRed"/>
     <View
+        android:id="@+id/view_confirm_pwsd"
         android:layout_width="201dp"
         android:layout_height="0.5dp"
+        android:layout_below="@id/linear_confirm_pswd"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
-        android:background="@color/colorView" />
+        android:background="@color/colorView"
+        android:layout_centerHorizontal="true"/>
+
     <LinearLayout
+        android:id="@+id/linear_phone"
         android:layout_width="182dp"
         android:layout_height="wrap_content"
+        android:layout_below="@id/view_confirm_pwsd"
         android:layout_gravity="center"
         android:layout_marginTop="15dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true">
 
         <ImageView
             android:layout_width="20dp"
@@ -130,22 +167,35 @@
             android:layout_marginLeft="20dp"
             android:background="@null"
             android:hint="请输入联系方式"
-            android:textSize="@dimen/TextSize_5"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:textSize="@dimen/TextSize_5" />
     </LinearLayout>
-
-    <View
-        android:layout_width="201dp"
-        android:layout_height="0.5dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:background="@color/colorView" />
-
-    <LinearLayout
-        android:layout_width="182dp"
+    <TextView
+        android:id="@+id/error_phone"
+        android:layout_below="@id/view_confirm_pwsd"
+        android:layout_toRightOf="@id/linear_phone"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:layout_gravity="center">
+        android:textColor="@color/warmRed"/>
+    <View
+        android:id="@+id/view_phone"
+        android:layout_width="201dp"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/linear_phone"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorView"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:id="@+id/linear_code"
+        android:layout_width="182dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view_phone"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true">
 
 
         <EditText
@@ -153,66 +203,38 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:background="@null"
-            android:hint="请输入验证码"
-            android:textSize="@dimen/TextSize_5"
-            android:singleLine="true"/>
+            android:hint="输入验证码"
+            android:singleLine="true"
+            android:textSize="@dimen/TextSize_5" />
 
         <ImageView
             android:id="@+id/iv_showCode"
             android:layout_width="70dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
             android:background="@drawable/image_code" />
     </LinearLayout>
 
-    <View
-        android:layout_width="201dp"
-        android:layout_height="0.5dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:background="@color/colorView" />
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="182dp"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:layout_marginTop="15dp">-->
-
-    <!--<EditText-->
-    <!--android:id="@+id/code"-->
-    <!--android:layout_width="75dp"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:background="@null"-->
-    <!--android:textSize="@dimen/TextSize_5"-->
-    <!--android:singleLine="true"/>-->
-
-    <!--<Button-->
-    <!--android:id="@+id/get_verify_code"-->
-    <!--android:layout_width="90dp"-->
-    <!--android:layout_height="30dp"-->
-    <!--android:layout_marginLeft="15dp"-->
-    <!--android:background="@drawable/get_verify_code"-->
-    <!--android:text="获取验证码"-->
-    <!--android:textColor="@color/white"-->
-    <!--android:textSize="@dimen/TextSize_6"/>-->
-    <!--</LinearLayout>-->
-
-    <View
-        android:layout_width="201dp"
-        android:layout_height="0.5dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:background="@color/colorView" />
+    <!--<View-->
+        <!--android:id="@+id/view_code"-->
+        <!--android:layout_width="201dp"-->
+        <!--android:layout_height="0.5dp"-->
+        <!--android:layout_below="@id/linear_code"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:background="@color/colorView"-->
+        <!--android:layout_centerHorizontal="true"/>-->
 
     <Button
         android:id="@+id/btn_true"
         android:layout_width="250dp"
         android:layout_height="40dp"
+        android:layout_below="@id/linear_code"
         android:layout_gravity="center"
         android:layout_marginTop="40dp"
         android:background="@drawable/button_style"
         android:text="确定"
         android:textColor="@color/white"
-        android:textSize="@dimen/TextSize_4" />
-</LinearLayout>
+        android:textSize="@dimen/TextSize_4"
+        android:layout_centerHorizontal="true"/>
+</RelativeLayout>

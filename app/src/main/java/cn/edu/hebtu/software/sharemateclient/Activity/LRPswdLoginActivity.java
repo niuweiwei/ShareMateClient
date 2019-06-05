@@ -1,6 +1,7 @@
 package cn.edu.hebtu.software.sharemateclient.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,12 +36,12 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 public class LRPswdLoginActivity extends AppCompatActivity {
+    private TextView error;
     private TextView tvSpinner;
     private Button btnSpinner;
     private ImageView back;
     private Button btnLogin;
     private TextView forgetPswd;
-    private TextView codeLogin;
     private EditText etPhone;
     private String phone;
     private EditText etPassword;
@@ -48,72 +50,36 @@ public class LRPswdLoginActivity extends AppCompatActivity {
     private boolean resultPhone;
     private boolean resultPassword;
     private String path;
+    private RelativeLayout root;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pswd_login);
         path = getResources().getString(R.string.server_path);
         findViews();
-        back.setOnClickListener(new backClickListener());
-        btnLogin.setOnClickListener(new ButtonClickListener());
-        forgetPswd.setOnClickListener(new forgetPswdClickListener());
-//        codeLogin.setOnClickListener(new codeLoginClickListener());
-        btnSpinner.setOnClickListener(new SpinnerClickListener());
-        tvSpinner.setOnClickListener(new SpinnerClickListener());
-        etPhone.setOnFocusChangeListener(new FocusChangeListener());
-        etPassword.setOnFocusChangeListener(new FocusChangeListener());
+        setListeners();
     }
     private void findViews(){
         back = findViewById(R.id.iv_back);
         btnLogin = findViewById(R.id.btn_login);
         forgetPswd = findViewById(R.id.tv_forget_password);
-//        codeLogin = findViewById(R.id.tv_code_login);
         btnSpinner = findViewById(R.id.btn_spinner);
         tvSpinner = findViewById(R.id.tv_spinner);
         etPhone = findViewById(R.id.et_phone);
         etPassword = findViewById(R.id.et_password);
+        error = findViewById(R.id.error);
+        root = findViewById(R.id.root);
     }
-
-    /**
-     * 根据手机号和密码判断该用户是否存在
-     */
-    private class FocusChangeListener implements View.OnFocusChangeListener{
-
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            switch (v.getId()){
-                case R.id.et_phone:
-                    if (hasFocus){
-
-                    }else {
-                        phone = etPhone.getText().toString();
-                        Log.e("phone",phone);
-                        //判断手机号码格式,11位数字
-                        resultPhone = TelephoneUtils.isPhone(phone);
-                        if (resultPhone == true){
-                            user.setUserPhone(phone);
-                        }else {
-                            Toast.makeText(LRPswdLoginActivity.this,"请输入正确的手机号码",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    break;
-                case R.id.et_password:
-                    if (hasFocus){
-
-                    }else {
-                        password = etPassword.getText().toString();
-                        Log.e("password",password);
-                        //判断密码格式,8-16位数字和字母
-                        resultPassword = PasswordUtils.isPassword(password);
-                        if (resultPassword == true){
-                            user.setUserPassword(password);
-                        }else {
-                            Toast.makeText(LRPswdLoginActivity.this,"请输入正确的密码",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    break;
-            }
-        }
+    private void setListeners(){
+        //返回按钮
+        back.setOnClickListener(new backClickListener());
+        //登录按钮
+        btnLogin.setOnClickListener(new ButtonClickListener());
+        //忘记密码
+        forgetPswd.setOnClickListener(new forgetPswdClickListener());
+        //下拉菜单
+        btnSpinner.setOnClickListener(new SpinnerClickListener());
+        tvSpinner.setOnClickListener(new SpinnerClickListener());
     }
     //选择地区和地区代码
     private class SpinnerClickListener implements View.OnClickListener{
@@ -124,7 +90,6 @@ public class LRPswdLoginActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode)
@@ -152,19 +117,37 @@ public class LRPswdLoginActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+    //忘记密码
+    private class forgetPswdClickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(LRPswdLoginActivity.this,LRForgetPwsdActivity.class);
+            startActivity(intent);
+        }
+    }
     //点击登录按钮
     private class ButtonClickListener implements View.OnClickListener{
 
         @Override
         public void onClick(View v) {
-            btnLogin.setFocusable(true);//设置可以获取焦点，但不一定获得
-            btnLogin.setFocusableInTouchMode(true);
-            btnLogin.requestFocus();//要获取焦点
-            if (!phone.equals("") && !password.equals("")){
-                PhonePswdLoginUtil phonePswdLoginUtil = new PhonePswdLoginUtil();
-                phonePswdLoginUtil.execute(user);
-            }else {
-                Toast.makeText(LRPswdLoginActivity.this,"请输入手机号或密码",Toast.LENGTH_SHORT).show();
+            phone = etPhone.getText().toString().trim();
+            password = etPassword.getText().toString().trim();
+            Log.e("phone&password",phone+"  "+password);
+            resultPhone = TelephoneUtils.isPhone(phone);
+            resultPassword = PasswordUtils.isPassword(password);
+            if (phone != null && !phone.equals("") && password != null && !password.equals("")) {
+                if (resultPhone == true && resultPassword == true) {
+                    user.setUserPhone(phone);
+                    user.setUserPassword(password);
+                    saveRegisterInfo("phoneStr", phone);
+                    PhonePswdLoginUtil phonePswdLoginUtil = new PhonePswdLoginUtil();
+                    phonePswdLoginUtil.execute(user);
+                } else {
+                    error.setText("手机号或密码格式不正确");
+                }
+            }else{
+                error.setText("手机号或密码不能为空");
             }
         }
     }
@@ -220,28 +203,44 @@ public class LRPswdLoginActivity extends AppCompatActivity {
         protected void onPostExecute(Object o) {
             List<Object> objectList = (List<Object>)o;
             Log.e("onPostExecute",objectList.toString());
-            String result =  (String)objectList.get(1);
-            Log.e("result", result);
-            if (result.equals("该用户存在")) {
+            String msg = (String)objectList.get(1);
+            Log.e("msg", msg);
+            if (msg.equals("该用户存在")) {
                 int userId = (Integer)objectList.get(2);
                 Log.e("userId",userId+"");
+
                 Intent intent = new Intent(LRPswdLoginActivity.this, MainActivity.class);
                 intent.putExtra("userId", userId);
                 intent.putIntegerArrayListExtra("type",(ArrayList<Integer>)objectList.get(0));
                 intent.putExtra("flag","main");
                 startActivity(intent);
-            } else if (result.equals("该用户不存在")) {
-                Toast.makeText(LRPswdLoginActivity.this, "该用户不存在", Toast.LENGTH_SHORT).show();
+            }
+            if (msg.equals("该用户不存在")) {
+                Log.e("error1",msg);
+                error.setText(msg);
+            }
+            if(msg.equals("密码输入错误")){
+                Log.e("error2",msg);
+                error.setText(msg);
             }
         }
     }
-    //忘记密码
-    private class forgetPswdClickListener implements View.OnClickListener{
-
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(LRPswdLoginActivity.this,LRForgetPwsdActivity.class);
-            startActivity(intent);
-        }
+    /**
+     * 保存账号和密码到SharedPreferences中
+     */
+    private void saveRegisterInfo(String phoneStr, String phone) {
+        //"loginInfo" ：文件名；mode_private SharedPreferences sp = getSharedPreferences( );
+        //MODE_PRIVATE:代表私有访问模式,在Android 2.3及以前这个访问模式是可以跨进程的,之后的版本这个模式就只能访问同一进程下的数据.
+        //MODE_MULTI_PROCESS:在Android 2.3及以前，这个标志位都是默认开启的，允许多个进程访问同一个SharedPrecferences对象。而以后的Android版本，必须通过明确的将MODE_MULTI_PROCESS这个值传递给mode参数，才能开启多进程访问。
+        //MODE_WORLD_READABLE: 表示当前文件可以被其他应用读取
+        //MODE_WORLD_WRITEABLE: 表示当前文件可以被其他应用写入
+        //MODE_APPEND: 追加方式存储
+        SharedPreferences sp = getSharedPreferences("loginInfo", MODE_MULTI_PROCESS);
+        //获取编译器
+        SharedPreferences.Editor editor = sp.edit();
+        //以用户名为key，密码为value 保存在SharedPreferences中
+        editor.putString(phoneStr, phone);
+        //提交修改
+        editor.commit();
     }
 }

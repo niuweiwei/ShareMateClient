@@ -1,6 +1,7 @@
 package cn.edu.hebtu.software.sharemateclient.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -41,18 +43,19 @@ public class LRRegisterActivity extends AppCompatActivity {
     private String userPassword;
     private String userPhone;
     private String confirmPawd;
-    private UserBean user;
+    private UserBean user = new UserBean();
     private String path;
     private OkHttpClient okHttpClient;
+    //输入错误时提示文字
+    private TextView erName,erPassword,erConfirmPwsd,erPhone;
+    private boolean resultName,resultPwsd,resultPhone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         path = getResources().getString(R.string.server_path);
         findViews();
-        back.setOnClickListener(new backClickListener());
-        ivCode.setOnClickListener(new idtfCodeClickListener());
-        judgeForm();
+        setListeners();
     }
     private void findViews() {
         back = findViewById(R.id.iv_back);
@@ -63,93 +66,99 @@ public class LRRegisterActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.et_password);
         etPhone = findViewById(R.id.et_phone);
         etConfirmPawd = findViewById(R.id.et_confirm_password);
+        erConfirmPwsd = findViewById(R.id.error_confirm_pwsd);
+        erName = findViewById(R.id.error_name);
+        erPassword = findViewById(R.id.error_password);
+        erPhone = findViewById(R.id.error_phone);
     }
+    private void setListeners(){
+        back.setOnClickListener(new backClickListener());
+        ivCode.setOnClickListener(new idtfCodeClickListener());
+        btnTrue.setOnClickListener(new ButtonClickListener());
+    }
+
     /**
-     * 判断输入的数据格式是否正确
+     * 点击返回
      */
-    private void judgeForm() {
-        user = new UserBean();
-        etUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
+    private class backClickListener implements View.OnClickListener {
 
-                } else {
-                    userName = etUsername.getText().toString();
-                    //判断用户名格式,限16个字符，支持中英文、数字、减号或下划线
-                    boolean resultName = UsernameUtils.isName(userName);
-                    Log.e("userName",userName);
-                    Log.e("resultName",resultName+"");
-                    if (resultName == false) {
-                        Toast.makeText(LRRegisterActivity.this,"请输入16个字符以内的用户名，支持中英文、数字、减号或下划线",
-                                Toast.LENGTH_SHORT).show();
-//                        etUsername.setError("有错误信息");
-                    } else {
-                        user.setUserName(userName);
-                    }
-                }
-            }
-        });
-        etPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-
-                } else {
-                    userPassword = etPassword.getText().toString();
-                    //判断密码格式,8-16位数字和字母
-                    boolean resultPassword = PasswordUtils.isPassword(userPassword);
-                    Log.e("userPassword",userPassword);
-                    Log.e("resultPassword",resultPassword+"");
-                    if (resultPassword == false) {
-                        Toast.makeText(LRRegisterActivity.this, "请输入8-16位由数字和字母组成的密码",
-                                Toast.LENGTH_SHORT).show();
-//                        etPassword.setError("密码错误");
-                    } else {
-                        user.setUserPassword(userPassword);
-                    }
-                }
-            }
-        });
-        etPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-
-                } else {
-                    userPhone = etPhone.getText().toString();
-                    //判断手机号码格式,11位数字
-                    boolean resultPhone = TelephoneUtils.isPhone(userPhone);
-                    Log.e("userPhone",userPhone);
-                    Log.e("resultPhone",resultPhone+"");
-                    if (resultPhone == false) {
-                        Toast.makeText(LRRegisterActivity.this, "请输入正确格式的手机号",
-                                Toast.LENGTH_SHORT).show();
-//                        etPhone.setError("手机号码错误");
-                    } else {
-                        user.setUserPhone(userPhone);
-                    }
-                }
-            }
-        });
-        etConfirmPawd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-
-                } else {
-                    confirmPawd = etConfirmPawd.getText().toString();
-                    Log.e("confirmPawd",confirmPawd);
-                    if (userPassword.equals(confirmPawd)) {
-                        btnTrue.setOnClickListener(new ButtonClickListener());
-                    } else {
-                        Toast.makeText(LRRegisterActivity.this, "两次密码输入不一样", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(LRRegisterActivity.this, LRLoginActivity.class);
+            startActivity(intent);
+        }
     }
+
+    /**
+     * 点击确定按钮
+     */
+    private class ButtonClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            //清除错误信息
+            erConfirmPwsd.setText(null);
+            erPhone.setText(null);
+            erPassword.setText(null);
+            erName.setText(null);
+            //获取输入信息
+            String ImageCode = etCode.getText().toString().toLowerCase();
+            userName = etUsername.getText().toString().trim();
+            userPassword = etPassword.getText().toString().trim();
+            confirmPawd = etConfirmPawd.getText().toString().trim();
+            userPhone = etPhone.getText().toString().trim();
+            Log.e("message", userName+" "+userPassword+" "+confirmPawd+" "+userPhone);
+            //判断
+            if (ImageCode.equals(realCode)) {
+//                Toast.makeText(LRRegisterActivity.this, ImageCode + "验证码正确", Toast.LENGTH_SHORT).show();
+
+                if (!userName.equals("")&&!userPassword.equals("")&&!userPhone.equals("")){
+                    resultName = UsernameUtils.isName(userName);
+                    resultPhone = TelephoneUtils.isPhone(userPhone);
+                    resultPwsd = PasswordUtils.isPassword(userPassword);
+                    if (resultName == true){
+                        user.setUserName(userName);
+                    }else{
+                        erName.setText("请输入10个字符以内的用户名，支持中英文、数字、减号或下划线");
+                    }
+                    if (resultPwsd == true){
+                        if (confirmPawd.equals(userPassword)){
+                            user.setUserPassword(userPassword);
+                        }else{
+                            erConfirmPwsd.setText("两次密码不一致");
+                        }
+                    }else {
+                        erPassword.setText("请输入8-16位由数字和字母组成的密码");
+                    }
+                    if (resultPhone == true){
+                        user.setUserPhone(userPhone);
+                    }else {
+                        erPhone.setText("请输入正确格式的手机号");
+                    }
+                    Log.e("user",user.getUserName()+" "+user.getUserPassword()+" "+user.getUserPhone());
+                    RegisterUtil registerUtil = new RegisterUtil();
+                    registerUtil.execute(user);
+                }else{
+                    Toast.makeText(LRRegisterActivity.this, ImageCode + "输入信息不能为空", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(LRRegisterActivity.this, ImageCode + "验证码错误", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * 生成随机验证码图片
+     */
+    private class idtfCodeClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            ivCode.setImageBitmap(IdentifyingCode.getInstance().createBitmap());
+            realCode = IdentifyingCode.getInstance().getCode().toLowerCase();
+        }
+    }
+
     /**
      * 异步任务
      */
@@ -185,63 +194,14 @@ public class LRRegisterActivity extends AppCompatActivity {
                 Log.e("RegisterUtil", "文字上传成功");
                 Intent intent = new Intent(LRRegisterActivity.this, LRStartActivity.class);
                 startActivity(intent);
-            }else if (result.equals("该用户已经注册")){
+            }
+            if (result.equals("该用户已经注册")){
                 Toast.makeText(LRRegisterActivity.this,"该用户已注册",Toast.LENGTH_SHORT).show();
-            }else if (result.equals("注册失败")){
+            }
+            if (result.equals("注册失败")){
                 Toast.makeText(LRRegisterActivity.this,"注册失败",Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    /**
-     * 点击返回
-     */
-    private class backClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(LRRegisterActivity.this, LRLoginActivity.class);
-            startActivity(intent);
-        }
-    }
-
-    /**
-     * 点击确定按钮
-     */
-    private class ButtonClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            String ImageCode = etCode.getText().toString().toLowerCase();
-            if (ImageCode.equals(realCode)) {
-//                Toast.makeText(LRRegisterActivity.this, ImageCode + "验证码正确", Toast.LENGTH_SHORT).show();
-
-                //上传数据
-                btnTrue.setFocusable(true);//设置可以获取焦点，但不一定获得
-                btnTrue.setFocusableInTouchMode(true);
-                btnTrue.requestFocus();//要获取焦点
-                if (!userName.equals("") && !userPassword.equals("") && !userPhone.equals("")) {
-                    RegisterUtil registerUtil = new RegisterUtil();
-                    registerUtil.execute(user);
-                    Log.e("LRRegisterActivity", "上传数据");
-                } else {
-                    Toast.makeText(LRRegisterActivity.this, "请输入信息", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(LRRegisterActivity.this, ImageCode + "验证码错误", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    /**
-     * 生成随机验证码图片
-     */
-    private class idtfCodeClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            ivCode.setImageBitmap(IdentifyingCode.getInstance().createBitmap());
-            realCode = IdentifyingCode.getInstance().getCode().toLowerCase();
-        }
-    }
 }

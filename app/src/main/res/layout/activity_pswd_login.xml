@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/relativelayout">
+    android:id="@+id/root">
 
     <ImageView
         android:id="@+id/iv_back"
@@ -98,13 +98,21 @@
         android:layout_below="@id/linear_password"
         android:layout_centerHorizontal="true"
         android:background="@color/colorView" />
+    <TextView
+        android:id="@+id/error"
+        android:layout_below="@id/view2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/warmRed"
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"/>
     <Button
         android:id="@+id/btn_login"
         android:layout_width="250dp"
         android:layout_height="40dp"
-        android:layout_below="@id/view2"
+        android:layout_below="@id/error"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/button_style"
         android:text="登录"
         android:textColor="@color/white"
@@ -135,83 +143,83 @@
     </LinearLayout>
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="80dp"
-        android:text="— 第三方登录 —"
-        android:textSize="@dimen/TextSize_5" />
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="80dp"-->
+        <!--android:text="— 第三方登录 —"-->
+        <!--android:textSize="@dimen/TextSize_5" />-->
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp">
+    <!--<LinearLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="20dp">-->
 
-        <LinearLayout
-            android:id="@+id/wechat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/wechat"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content">-->
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/wechat" />
+            <!--<ImageView-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:background="@drawable/wechat" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
-                android:text="微信"
-                android:textColor="@color/three"
-                android:textSize="@dimen/TextSize_5" />
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginLeft="8dp"-->
+                <!--android:text="微信"-->
+                <!--android:textColor="@color/three"-->
+                <!--android:textSize="@dimen/TextSize_5" />-->
+        <!--</LinearLayout>-->
 
-        <LinearLayout
-            android:id="@+id/qq"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/qq"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="50dp"-->
+            <!--android:layout_marginRight="50dp">-->
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/qq" />
+            <!--<ImageView-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:background="@drawable/qq" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
-                android:text="QQ"
-                android:textColor="@color/three"
-                android:textSize="@dimen/TextSize_5" />
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginLeft="8dp"-->
+                <!--android:text="QQ"-->
+                <!--android:textColor="@color/three"-->
+                <!--android:textSize="@dimen/TextSize_5" />-->
+        <!--</LinearLayout>-->
 
-        <LinearLayout
-            android:id="@+id/weibo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/weibo"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content">-->
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/weibo" />
+            <!--<ImageView-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:background="@drawable/weibo" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
-                android:text="微博"
-                android:textColor="@color/three"
-                android:textSize="@dimen/TextSize_5" />
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginLeft="8dp"-->
+                <!--android:text="微博"-->
+                <!--android:textColor="@color/three"-->
+                <!--android:textSize="@dimen/TextSize_5" />-->
+        <!--</LinearLayout>-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 </RelativeLayout>

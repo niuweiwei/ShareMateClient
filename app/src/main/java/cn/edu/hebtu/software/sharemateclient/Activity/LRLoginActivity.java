@@ -1,11 +1,17 @@
 package cn.edu.hebtu.software.sharemateclient.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,8 +22,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.edu.hebtu.software.sharemateclient.Bean.UserBean;
+import cn.edu.hebtu.software.sharemateclient.Fragment.FollowFragment;
+import cn.edu.hebtu.software.sharemateclient.Fragment.HomeFragment;
+import cn.edu.hebtu.software.sharemateclient.Fragment.MessageFragment;
+import cn.edu.hebtu.software.sharemateclient.Fragment.MyFragment;
 import cn.edu.hebtu.software.sharemateclient.R;
 import cn.edu.hebtu.software.sharemateclient.tools.TelephoneUtils;
 import okhttp3.Call;
@@ -26,28 +38,38 @@ import okhttp3.Request;
 
 public class LRLoginActivity extends AppCompatActivity {
 
-    private TextView tvSpinner;
-    private Button btnSpinner;
-    private TextView pswdLogin;
-    private Button btnTrue;
-    private TextView register;
+    private TextView tvSpinner, pswdLogin, register;
+    private Button btnSpinner, btnTrue;
     private EditText etPhone;
-    private String phone;
+    private String phone, path;
     private UserBean user = new UserBean();
-    private boolean resultPhone;
-    private LoginUtil loginUtil;
-    private String path;
     private OkHttpClient okHttpClient;
+    private boolean isLogin = false, resultPhone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        findViews();
-        setListener();
-        path = getResources().getString(R.string.server_path);
-
+            setContentView(R.layout.activity_login);
+            findViews();
+            setListener();
+            path = getResources().getString(R.string.server_path);
     }
-    private void findViews(){
+
+    /**
+     * 保存账号和密码到SharedPreferences中
+     */
+    private void saveRegisterInfo(String phoneStr, String phone) {
+        //"loginInfo" ：文件名；mode_private SharedPreferences sp = getSharedPreferences( );
+        SharedPreferences sp = getSharedPreferences("loginInfo", MODE_MULTI_PROCESS);
+        //获取编译器
+        SharedPreferences.Editor editor = sp.edit();
+        //以用户名为key，密码为value 保存在SharedPreferences中
+        editor.putString(phoneStr, phone);
+        //提交修改
+        editor.commit();
+    }
+
+    private void findViews() {
         pswdLogin = findViewById(R.id.pswd_login);
         register = findViewById(R.id.register);
         btnTrue = findViewById(R.id.btn_true);
@@ -55,26 +77,27 @@ public class LRLoginActivity extends AppCompatActivity {
         btnSpinner = findViewById(R.id.btn_spinner);
         etPhone = findViewById(R.id.et_phone);
     }
-    private void setListener(){
+
+    private void setListener() {
         pswdLogin.setOnClickListener(new pswdClickListener());
         btnTrue.setOnClickListener(new trueClickListener());
         register.setOnClickListener(new registerClickListener());
         tvSpinner.setOnClickListener(new SpinnerClickListener());
         btnSpinner.setOnClickListener(new SpinnerClickListener());
-//        etPhone.setOnFocusChangeListener(new FocusChangeListener());
     }
 
     /**
      * 选择地区和地区代码
      */
-    private class SpinnerClickListener implements View.OnClickListener{
+    private class SpinnerClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(LRLoginActivity.this,LRCountryActivity.class);
+            Intent intent = new Intent(LRLoginActivity.this, LRCountryActivity.class);
             startActivityForResult(intent, 12);
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
@@ -94,11 +117,11 @@ public class LRLoginActivity extends AppCompatActivity {
     /**
      * 点击密码登录
      */
-    private class pswdClickListener implements View.OnClickListener{
+    private class pswdClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(LRLoginActivity.this,LRPswdLoginActivity.class);
+            Intent intent = new Intent(LRLoginActivity.this, LRPswdLoginActivity.class);
             startActivity(intent);
         }
     }
@@ -106,28 +129,30 @@ public class LRLoginActivity extends AppCompatActivity {
     /**
      * 点击确定按钮
      */
-    private class trueClickListener implements View.OnClickListener{
+    private class trueClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
             phone = etPhone.getText().toString();
-            Log.e("phone",phone);
-            if (!"".equals(phone)){
+            Log.e("phone", phone);
+            if (!"".equals(phone)) {
                 //判断手机号码格式,11位数字
                 resultPhone = TelephoneUtils.isPhone(phone);
-                if (resultPhone == true){
+                if (resultPhone == true) {
                     user.setUserPhone(phone);
-                    loginUtil = new LoginUtil();
+                    saveRegisterInfo("phoneStr", phone);
+                    LoginUtil loginUtil = new LoginUtil();
                     loginUtil.execute(user);
-                }else {
+                } else {
                     Toast.makeText(LRLoginActivity.this, "请输入正确格式的手机号",
                             Toast.LENGTH_SHORT).show();
                 }
-            }else {
-                Toast.makeText(LRLoginActivity.this,"请输入手机号码",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(LRLoginActivity.this, "请输入手机号码", Toast.LENGTH_SHORT).show();
             }
         }
     }
+
     /**
      * 异步任务
      */
@@ -135,18 +160,18 @@ public class LRLoginActivity extends AppCompatActivity {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            Log.e("LoginUtil","异步任务");
+            Log.e("LoginUtil", "异步任务");
             UserBean user = (UserBean) objects[0];
             String userPhone = user.getUserPhone();
-            String url = path +"/user/login?userPhone="+userPhone;
+            String url = path + "/user/login?userPhone=" + userPhone;
             okHttpClient = new OkHttpClient();
             Request request = new Request.Builder().url(url).build();
             Call call = okHttpClient.newCall(request);
             String result = null;
-            JSONObject jsonObject=null;
+            JSONObject jsonObject = null;
             try {
                 result = call.execute().body().string();
-                Log.e("LoginResult---",result);
+                Log.e("LoginResult---", result);
                 jsonObject = new JSONObject(result);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -162,16 +187,16 @@ public class LRLoginActivity extends AppCompatActivity {
             String result;
             try {
                 result = back.getString("msg");
-                Log.e("result",result);
-                if (result.equals("用户存在")){
+                Log.e("result", result);
+                if (result.equals("用户存在")) {
                     int userId = back.getInt("userId");
                     String userPhone = back.getString("userPhone");
-                    Intent intent = new Intent(LRLoginActivity.this,LRInputCodeActivity.class);
-                    intent.putExtra("userId",userId);
-                    intent.putExtra("userPhone",userPhone);
+                    Intent intent = new Intent(LRLoginActivity.this, LRInputCodeActivity.class);
+                    intent.putExtra("userId", userId);
+                    intent.putExtra("userPhone", userPhone);
                     startActivity(intent);
-                }else{
-                    Toast.makeText(LRLoginActivity.this,"该用户不存在",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(LRLoginActivity.this, "该用户不存在", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -182,11 +207,11 @@ public class LRLoginActivity extends AppCompatActivity {
     /**
      * 注册
      */
-    private class registerClickListener implements View.OnClickListener{
+    private class registerClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(LRLoginActivity.this,LRRegisterActivity.class);
+            Intent intent = new Intent(LRLoginActivity.this, LRRegisterActivity.class);
             startActivity(intent);
         }
     }

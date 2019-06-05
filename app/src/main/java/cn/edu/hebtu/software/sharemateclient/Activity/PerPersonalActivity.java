@@ -74,7 +74,6 @@ public class PerPersonalActivity extends AppCompatActivity {
     private ArrayList<Integer> type;
     private String path;
     private UserBean user;
-    private String sign;
     private String sex;
     private String birth;
     private TextView finish;
@@ -140,6 +139,7 @@ public class PerPersonalActivity extends AppCompatActivity {
         } else {
             tv_introduce.setText(user.getUserIntroduce().substring(0, 6) + "...");
         }
+        //完成
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
