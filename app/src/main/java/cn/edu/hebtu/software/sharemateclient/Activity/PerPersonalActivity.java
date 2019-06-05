@@ -76,7 +76,7 @@ public class PerPersonalActivity extends AppCompatActivity {
     private UserBean user;
     private String sex;
     private String birth;
-    private TextView finish;
+    private TextView finish;//完成
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
