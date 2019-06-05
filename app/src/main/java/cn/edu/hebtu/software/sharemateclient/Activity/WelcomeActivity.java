@@ -51,9 +51,6 @@ public class WelcomeActivity extends AppCompatActivity {
                     Log.e("userPhone",user.getUserPhone());
                     LoginUtil loginUtil = new LoginUtil();
                     loginUtil.execute(user);
-//                    Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
-//                    startActivity(intent);
-//                    WelcomeActivity.this.finish();
                 }else {
                     Intent intent = new Intent(WelcomeActivity.this,LRLoginActivity.class);
                     startActivity(intent);
