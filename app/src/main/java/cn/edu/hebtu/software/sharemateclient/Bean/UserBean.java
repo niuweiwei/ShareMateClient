@@ -14,15 +14,22 @@ public class UserBean implements Serializable {
     private String userSex;
     private String userAddress;
     private String userBirth;
-    private String userIntroduce;
+    private String userIntro;
     private Bitmap userImage;
     private String userPhotoPath;
     private int followCount;
     private int fanCount;
     private int likeCount;
     private int noteCount;
-    private boolean states;
+    private boolean status;
 
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
     public UserBean() {
     }
@@ -48,7 +55,7 @@ public class UserBean implements Serializable {
         this.userSex = userSex;
         this.userAddress = userAddress;
         this.userBirth = userBirth;
-        this.userIntroduce = userIntroduce;
+        this.userIntro = userIntroduce;
     }
 
     public String getUserPassword() {
@@ -99,9 +106,9 @@ public class UserBean implements Serializable {
 
     public void setUserBirth(String userBirth) {this.userBirth = userBirth;}
 
-    public String getUserIntroduce() {return userIntroduce;}
+    public String getUserIntro() {return userIntro;}
 
-    public void setUserIntroduce(String userIntroduce) {this.userIntroduce = userIntroduce;}
+    public void setUserIntro(String userIntroduce) {this.userIntro = userIntroduce;}
 
     public String getUserPhotoPath() {
         return userPhotoPath;
@@ -151,11 +158,4 @@ public class UserBean implements Serializable {
         this.noteCount = noteCount;
     }
 
-    public boolean isStates() {
-        return states;
-    }
-
-    public void setStates(boolean states) {
-        this.states = states;
-    }
 }

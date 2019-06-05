@@ -37,6 +37,7 @@ import java.util.Map;
 
 import cn.edu.hebtu.software.sharemateclient.Adapter.CustomAdapter;
 import cn.edu.hebtu.software.sharemateclient.Bean.NoteBean;
+import cn.edu.hebtu.software.sharemateclient.Bean.UserBean;
 import cn.edu.hebtu.software.sharemateclient.R;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -48,7 +49,7 @@ public class FollowFragment extends Fragment{
     private List<NoteBean> notes=new ArrayList<NoteBean>();
     private ListView listView;
     private CustomAdapter customAdapter = null;
-    private int userId;
+    private UserBean user;
     private OkHttpClient okHttpClient;
     private String U;
     @Nullable
@@ -58,7 +59,7 @@ public class FollowFragment extends Fragment{
         listView = view.findViewById(R.id.list);
         U=getResources().getString(R.string.server_path);
         okHttpClient = new OkHttpClient();
-        //getGuanzhuResouce();
+        user= (UserBean) getActivity().getIntent().getSerializableExtra("user");
         Log.e("okhttp","okhttp");
         listView=view.findViewById(R.id.list);
         guanzhuAsyncTask guanzhuAsyncTask=new guanzhuAsyncTask();
@@ -67,64 +68,13 @@ public class FollowFragment extends Fragment{
 
         return view;
     }
-
-//    //通过okhttp请求数据
-//    public void getGuanzhuResouce() {
-//
-//        new Thread(){
-//            public void run(){
-//                String userid="1";
-//                String u=U+"/note/allnotelist";
-//                Log.e("URL",u);
-//                Request request=new Request.Builder()
-//                        .url(u)
-//                        .build();
-//                Call call=okHttpClient.newCall(request);
-//                try {
-//                    String notejson=call.execute().body().string();
-//                    Log.e("notelist" ,notejson);
-//                    JSONObject noteObject=new JSONObject(notejson);
-//                    JSONArray jsonArray=noteObject.getJSONArray("notelist");
-//                    String notestr=jsonArray.toString();
-//                    Gson gson=new GsonBuilder().serializeNulls().setPrettyPrinting().create();
-//                    Type type=new TypeToken<List<NoteBean>>(){}.getType();
-//                    List<NoteBean> noteList=gson.fromJson(notestr,type);
-//                    Log.e("noteList",noteList.get(0).getNoteTitle());
-//                    for(int i=0;i<noteList.size();i++){
-//                            NoteBean noteBean=new NoteBean();
-//                            noteBean.setNoteId(noteList.get(i).getNoteId());
-//                            noteBean.setNoteImage(noteList.get(i).getNoteImage());
-//                            noteBean.setTitle(noteList.get(i).getTitle());
-//                            noteBean.setNoteDetail(noteList.get(i).getNoteDetail());
-//                            noteBean.setNoteLikeCount(noteList.get(i).getNoteLikeCount());
-//                            noteBean.setNoteCollectionCount(noteList.get(i).getNoteCollectionCount());
-//                            noteBean.setNoteCommentCount(noteList.get(i).getNoteCommentCount());
-//                            noteBean.setCommentdetial(noteList.get(i).getCommentdetial());
-//                            notes.add(noteBean);
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                Log.e("size",String.valueOf(notes.size()));
-//                for(int i=0;i<notes.size();i++)
-//                {
-//                    Log.e("zan",String.valueOf(notes.get(i).getNoteLikeCount()));
-//                    Log.e("id",String.valueOf(notes.get(i).getNoteId()));
-//                    Log.e("colloct",String.valueOf(notes.get(i).getNoteCollectionCount()));
-//
-//                }
-//            }
-//        }.start();
-//
-//    }
     class guanzhuAsyncTask extends AsyncTask{
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            String userid="1";
-            String u=U+"/note/allnotelist";
+           int userid=user.getUserId();
+            Log.e("userid",String.valueOf(userid));
+            String u=U+"/note/allnotelist?userid1="+userid;
             Log.e("URL",u);
             Request request=new Request.Builder()
                     .url(u)
@@ -175,7 +125,7 @@ public class FollowFragment extends Fragment{
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
 
-            customAdapter=new CustomAdapter(getContext(),R.layout.list_item,notes);
+            customAdapter=new CustomAdapter(getContext(),R.layout.list_item,notes,user);
             listView.setAdapter(customAdapter);
             Log.e("listview","liatview");
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

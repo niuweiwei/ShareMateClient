@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.hebtu.software.sharemateclient.Bean.NoteBean;
+import cn.edu.hebtu.software.sharemateclient.Bean.UserBean;
 import cn.edu.hebtu.software.sharemateclient.R;
 import cn.edu.hebtu.software.sharemateclient.tools.ImageTask;
 import cn.edu.hebtu.software.sharemateclient.tools.RoundImgView;
@@ -50,11 +51,13 @@ public class CustomAdapter extends BaseAdapter {
     private  AlertDialog.Builder builder;
     private String U= "http://10.7.89.124:8080/ShareMateServer";
     private OkHttpClient okHttpClient;
+    private UserBean user;
 
-    public CustomAdapter(Context context, int itemLaout,List<NoteBean> notes) {
+    public CustomAdapter(Context context, int itemLaout,List<NoteBean> notes,UserBean user) {
         this.context = context;
         this.itemLayout = itemLaout;
         this.notes = notes;
+        this.user=user;
     }
 
     @Override
@@ -243,6 +246,9 @@ public class CustomAdapter extends BaseAdapter {
                 }.start();
             }
         });
+        ImageView user_icon2=convertView.findViewById(R.id.user_icon2);
+        String usericon=U+"/"+user.getUserPhoto();
+        Glide.with(context).load(usericon).into(user_icon2);
         return convertView;
     }
 

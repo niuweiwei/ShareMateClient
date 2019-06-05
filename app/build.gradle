@@ -52,7 +52,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
     //Gson
-     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.5'
     //添加okhttp的框架依赖
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     //添加SmartRefreshLayout依赖
@@ -68,4 +68,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('libs/BaiduLBS_Android.jar')
+    implementation files('libs/MobCommons-2018.1128.1916.jar')
+    implementation files('libs/MobTools-2018.1128.1916.jar')
+    implementation files('libs/SDKWrapper-2018.0801.1824.jar')
+    implementation files('libs/SMSSDK-3.2.1.jar')
 }

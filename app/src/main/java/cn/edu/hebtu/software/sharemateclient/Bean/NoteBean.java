@@ -34,6 +34,26 @@ public class NoteBean {
     private String commentdetial;
     private String userImage;
     private String userName;
+//嘉星-------------------------------------
+    private Type type;
+    private String noteDate;
+    //----------------------------------
+
+    public String getNoteDate() {
+        return noteDate;
+    }
+
+    public void setNoteDate(String noteDate) {
+        this.noteDate = noteDate;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
 
     public String getUserName() {
         return userName;

@@ -68,6 +68,14 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--嘉星-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
+        tools:ignore="ProtectedPermissions" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -89,19 +97,37 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="PXvUaZN5QR50NXlezLa3IRA8cv6OGFPW" />
 
-        <activity android:name=".Activity.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity android:name=".Activity.FabuActivity"/>
         <activity android:name=".Activity.AudioRecordActivity"/>
         <activity android:name=".Activity.PlaybackActivity"/>
         <activity android:name=".Activity.VideoDubActivity"/>
         <activity android:name=".Activity.VideoRecordActivity"/>
         <activity android:name=".Activity.VideoEditActivity"/>
+        <!--嘉星-->
+        <activity android:name=".Activity.MainActivity" />
+        <activity android:name=".Activity.PerPersonalActivity" />
+        <activity android:name=".Activity.PerFollowActivity" />
+        <activity android:name=".Activity.PerFanActivity" />
+        <activity android:name=".Activity.PerFriendActivity" />
+        <activity android:name=".Activity.PerNameActivity" />
+        <activity android:name=".Activity.PerAddressActivity" />
+        <activity android:name=".Activity.LRLoginActivity">
+
+        </activity>
+        <activity android:name=".Activity.LRCountryActivity" />
+        <activity android:name=".Activity.LRRegisterActivity" />
+        <activity android:name=".Activity.LRInputCodeActivity" />
+        <activity android:name=".Activity.LRPswdLoginActivity" />
+        <activity android:name=".Activity.LRStartActivity" />
+        <activity android:name=".Activity.LRSelectInterestActivity" />
+        <activity android:name=".Activity.LRForgetPwsdActivity" />
+        <activity android:name=".Activity.WelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
