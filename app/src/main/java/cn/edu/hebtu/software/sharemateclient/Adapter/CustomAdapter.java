@@ -17,6 +17,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -35,15 +38,17 @@ import cn.edu.hebtu.software.sharemateclient.R;
 import cn.edu.hebtu.software.sharemateclient.tools.ImageTask;
 import cn.edu.hebtu.software.sharemateclient.tools.RoundImgView;
 import okhttp3.Call;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 
 public class CustomAdapter extends BaseAdapter {
     private Context context;
     private int itemLayout;
     private List<NoteBean> notes =new ArrayList<>();
     private  AlertDialog.Builder builder;
-    private String U= "http://192.168.0.109:8080/ShareMateServer";
+    private String U= "http://10.7.89.124:8080/ShareMateServer";
     private OkHttpClient okHttpClient;
 
     public CustomAdapter(Context context, int itemLaout,List<NoteBean> notes) {
@@ -73,11 +78,16 @@ public class CustomAdapter extends BaseAdapter {
             LayoutInflater layoutInflater=LayoutInflater.from(context);
             convertView=layoutInflater.inflate(itemLayout,null);
         }
+        TextView user_name=convertView.findViewById(R.id.user_name);
+        user_name.setText(notes.get(position).getUserName());
         ImageView iv_photo=convertView.findViewById(R.id.iv_photo);
         String photoPath = U + "/"+notes.get(position).getNoteImage();
         Log.e("photoPath",photoPath);
         Glide.with(context).load(photoPath).into(iv_photo);
         ImageView user_icon=convertView.findViewById(R.id.user_icon);
+        String userphoto=U + "/"+notes.get(position).getUserImage();
+        Log.e("userphoto",userphoto);
+        Glide.with(context).load(userphoto).into(user_icon);
         user_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,26 +118,31 @@ public class CustomAdapter extends BaseAdapter {
 //        final AlertDialog dialog = builder.create();
 //        dialog.setCanceledOnTouchOutside(false);
 //        dialog.show();
+
+
         TextView ivtext=convertView.findViewById(R.id.note_alltext);
         ivtext.setText(notes.get(position).getNoteDetail());
-        TextView z_count=convertView.findViewById(R.id.z_count);
-        z_count.setText(String.valueOf(notes.get(position).getZancount()));
+        final  TextView z_count=convertView.findViewById(R.id.z_count);
+        z_count.setText(String.valueOf(notes.get(position).getNoteLikeCount()));
         final Button dianzan=convertView.findViewById(R.id.dianzan);
         dianzan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dianzan.setBackgroundResource(R.drawable.like);
+                z_count.setText(String.valueOf(notes.get(position).getNoteLikeCount()+1));
                 //更新数据库
                new Thread(){
                    @Override
                    public void run() {
                        super.run();
-                       int noteid=notes.get(position).getNoId();
+                       int noteid=notes.get(position).getNoteId();
                        int userid=1;
                        Log.e("noteid",String.valueOf(noteid));
+                       String url=U+"/note/zancount?noteid="+noteid+"&userid="+userid;
+                       Log.e("fr",url);
                        okHttpClient = new OkHttpClient();
                        Request request=new Request.Builder()
-                               .url(U+"/note/zancount?noteid="+noteid+"&userid="+userid)
+                               .url(url)
                                .build();
                        Call call=okHttpClient.newCall(request);
                        try {
@@ -136,24 +151,25 @@ public class CustomAdapter extends BaseAdapter {
                            e.printStackTrace();
                        }
                    }
-               };
+               }.start();
 
 
             }
         });
-        TextView c_count=convertView.findViewById(R.id.c_count);
-        c_count.setText(String.valueOf(notes.get(position).getCollectcount()));
+        final TextView c_count=convertView.findViewById(R.id.c_count);
+        c_count.setText(String.valueOf(notes.get(position).getNoteCollectionCount()));
         final Button shoucang=convertView.findViewById(R.id.shoucang);
         shoucang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 shoucang.setBackgroundResource(R.drawable.xingxing2);
+                c_count.setText(String.valueOf(notes.get(position).getNoteCollectionCount()+1));
                 //更行数据库
               new Thread(){
                   @Override
                   public void run() {
                       super.run();
-                      int noteid=notes.get(position).getNoId();
+                      int noteid=notes.get(position).getNoteId();
                       int userid=1;
                       okHttpClient = new OkHttpClient();
                       Request request=new Request.Builder()
@@ -166,16 +182,65 @@ public class CustomAdapter extends BaseAdapter {
                           e.printStackTrace();
                       }
                   }
-              };
+              }.start();
             }
         });
-        TextView p_count=convertView.findViewById(R.id.p_count);
-        p_count.setText(String .valueOf(notes.get(position).getPingluncount()));
+        final TextView p_count=convertView.findViewById(R.id.p_count);
+        p_count.setText(String .valueOf(notes.get(position).getNoteCommentCount()));
         final Button pinglun=convertView.findViewById(R.id.pinglun);
        pinglun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+            }
+        });
+       final TextView p_count2=convertView.findViewById(R.id.all_count);
+       p_count2.setText("共"+String .valueOf(notes.get(position).getNoteCommentCount())+"条评论");
+       final TextView pinglun1=convertView.findViewById(R.id.pinglun1);
+       pinglun1.setText(notes.get(position).getCommentdetial());
+       //发布评论
+        final EditText fb=convertView.findViewById(R.id.fb);
+
+        Button fabu=convertView.findViewById(R.id.fabu);
+        fabu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String pintlunfabu= (String) fb.getText().toString();
+                p_count2.setText("共"+String .valueOf(notes.get(position).getNoteCommentCount()+1)+"条评论");
+                p_count.setText(String .valueOf(notes.get(position).getNoteCommentCount()+1));
+                final int userId=1;
+                pinglun1.setText(pintlunfabu);
+                final JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("noteid", String.valueOf(notes.get(position).getNoteId()));
+                    jsonObject.put("userid", String.valueOf(userId));
+                    jsonObject.put("pinglunfabu",pintlunfabu);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.e("fr", jsonObject.toString());
+                okHttpClient = new OkHttpClient();
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        String url=U+"/note/addcomment";
+                        RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain;charset=utf-8"),
+                                jsonObject.toString());
+                        Log.e("fr",jsonObject.toString());
+                        Request request = new Request.Builder()
+                                .post(requestBody)
+                                .url(url).build();
+                        Call call = okHttpClient.newCall(request);
+                        Log.e("fr","开始执行");
+                        try {
+                            call.execute();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }.start();
             }
         });
         return convertView;

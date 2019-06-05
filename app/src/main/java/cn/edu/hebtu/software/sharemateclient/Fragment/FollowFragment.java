@@ -1,5 +1,6 @@
 package cn.edu.hebtu.software.sharemateclient.Fragment;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
@@ -57,71 +58,132 @@ public class FollowFragment extends Fragment{
         listView = view.findViewById(R.id.list);
         U=getResources().getString(R.string.server_path);
         okHttpClient = new OkHttpClient();
-        getGuanzhuResouce();
+        //getGuanzhuResouce();
         Log.e("okhttp","okhttp");
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         listView=view.findViewById(R.id.list);
-//        NoteBean notebean =new NoteBean();
-//        notebean.setTitle("123");
-//        notebean.setZancount(5);
-//        notebean.setNoteDetail("123456");
-//        notes.add(notebean);
-        customAdapter=new CustomAdapter(getContext(),R.layout.list_item,notes);
-        listView.setAdapter(customAdapter);
-        Log.e("listview","liatview");
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //转跳至详情页面
-            }
-        });
+        guanzhuAsyncTask guanzhuAsyncTask=new guanzhuAsyncTask();
+        guanzhuAsyncTask.execute();
+
+
         return view;
     }
 
-    //通过okhttp请求数据
-    public void getGuanzhuResouce(){
-        new Thread(){
-            public void run(){
-                String userid="1";
-                String u=U+"/note/allnotelist";
-                Log.e("URL",u);
-                Request request=new Request.Builder()
-                        .url(u)
-                        .build();
-                Call call=okHttpClient.newCall(request);
-                try {
-                    String notejson=call.execute().body().string();
-                    Log.e("notelist" ,notejson);
-                    JSONObject noteObject=new JSONObject(notejson);
-                    JSONArray jsonArray=noteObject.getJSONArray("notelist");
-                    String notestr=jsonArray.toString();
-                    Gson gson=new GsonBuilder().serializeNulls().setPrettyPrinting().create();
-                    Type type=new TypeToken<List<NoteBean>>(){}.getType();
-                    List<NoteBean> noteList=gson.fromJson(notestr,type);
-                    Log.e("noteList",noteList.get(0).getNoteTitle());
-                    for(int i=0;i<noteList.size();i++){
-                            NoteBean noteBean=new NoteBean();
-                            noteBean.setNoteImage(noteList.get(i).getNoteImage());
-                            noteBean.setTitle(noteList.get(i).getTitle());
-                            noteBean.setNoteDetail(noteList.get(i).getNoteDetail());
-                            noteBean.setZancount(noteList.get(i).getZancount());
-                            noteBean.setCollectcount(noteList.get(i).getCollectcount());
-                            noteBean.setPingluncount(noteList.get(i).getPingluncount());
-                            notes.add(noteBean);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.e("size",String.valueOf(notes.size()));
-            }
-        }.start();
+//    //通过okhttp请求数据
+//    public void getGuanzhuResouce() {
+//
+//        new Thread(){
+//            public void run(){
+//                String userid="1";
+//                String u=U+"/note/allnotelist";
+//                Log.e("URL",u);
+//                Request request=new Request.Builder()
+//                        .url(u)
+//                        .build();
+//                Call call=okHttpClient.newCall(request);
+//                try {
+//                    String notejson=call.execute().body().string();
+//                    Log.e("notelist" ,notejson);
+//                    JSONObject noteObject=new JSONObject(notejson);
+//                    JSONArray jsonArray=noteObject.getJSONArray("notelist");
+//                    String notestr=jsonArray.toString();
+//                    Gson gson=new GsonBuilder().serializeNulls().setPrettyPrinting().create();
+//                    Type type=new TypeToken<List<NoteBean>>(){}.getType();
+//                    List<NoteBean> noteList=gson.fromJson(notestr,type);
+//                    Log.e("noteList",noteList.get(0).getNoteTitle());
+//                    for(int i=0;i<noteList.size();i++){
+//                            NoteBean noteBean=new NoteBean();
+//                            noteBean.setNoteId(noteList.get(i).getNoteId());
+//                            noteBean.setNoteImage(noteList.get(i).getNoteImage());
+//                            noteBean.setTitle(noteList.get(i).getTitle());
+//                            noteBean.setNoteDetail(noteList.get(i).getNoteDetail());
+//                            noteBean.setNoteLikeCount(noteList.get(i).getNoteLikeCount());
+//                            noteBean.setNoteCollectionCount(noteList.get(i).getNoteCollectionCount());
+//                            noteBean.setNoteCommentCount(noteList.get(i).getNoteCommentCount());
+//                            noteBean.setCommentdetial(noteList.get(i).getCommentdetial());
+//                            notes.add(noteBean);
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//                Log.e("size",String.valueOf(notes.size()));
+//                for(int i=0;i<notes.size();i++)
+//                {
+//                    Log.e("zan",String.valueOf(notes.get(i).getNoteLikeCount()));
+//                    Log.e("id",String.valueOf(notes.get(i).getNoteId()));
+//                    Log.e("colloct",String.valueOf(notes.get(i).getNoteCollectionCount()));
+//
+//                }
+//            }
+//        }.start();
+//
+//    }
+    class guanzhuAsyncTask extends AsyncTask{
 
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            String userid="1";
+            String u=U+"/note/allnotelist";
+            Log.e("URL",u);
+            Request request=new Request.Builder()
+                    .url(u)
+                    .build();
+            Call call=okHttpClient.newCall(request);
+            try {
+                String notejson=call.execute().body().string();
+                Log.e("notelist" ,notejson);
+                JSONObject noteObject=new JSONObject(notejson);
+                JSONArray jsonArray=noteObject.getJSONArray("notelist");
+                String notestr=jsonArray.toString();
+                Gson gson=new GsonBuilder().serializeNulls().setPrettyPrinting().create();
+                Type type=new TypeToken<List<NoteBean>>(){}.getType();
+                List<NoteBean> noteList=gson.fromJson(notestr,type);
+                Log.e("noteList",noteList.get(0).getNoteTitle());
+                for(int i=0;i<noteList.size();i++){
+                    NoteBean noteBean=new NoteBean();
+                    noteBean.setNoteId(noteList.get(i).getNoteId());
+                    noteBean.setNoteImage(noteList.get(i).getNoteImage());
+                    noteBean.setTitle(noteList.get(i).getTitle());
+                    noteBean.setNoteDetail(noteList.get(i).getNoteDetail());
+                    noteBean.setNoteLikeCount(noteList.get(i).getNoteLikeCount());
+                    noteBean.setNoteCollectionCount(noteList.get(i).getNoteCollectionCount());
+                    noteBean.setNoteCommentCount(noteList.get(i).getNoteCommentCount());
+                    noteBean.setCommentdetial(noteList.get(i).getCommentdetial());
+                    noteBean.setUserImage(noteList.get(i).getUserImage());
+                    noteBean.setUserName(noteList.get(i).getUserName());
+                    notes.add(noteBean);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.e("size",String.valueOf(notes.size()));
+            for(int i=0;i<notes.size();i++)
+            {
+                Log.e("zan",String.valueOf(notes.get(i).getNoteLikeCount()));
+                Log.e("id",String.valueOf(notes.get(i).getNoteId()));
+                Log.e("colloct",String.valueOf(notes.get(i).getNoteCollectionCount()));
+
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+
+            customAdapter=new CustomAdapter(getContext(),R.layout.list_item,notes);
+            listView.setAdapter(customAdapter);
+            Log.e("listview","liatview");
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    //转跳至详情页面
+                }
+            });
+        }
     }
 }

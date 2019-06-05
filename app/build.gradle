@@ -39,7 +39,15 @@ android {
 
 
 dependencies {
-
+    //短视频
+    implementation 'com.qiniu:qiniu-android-sdk:7.3.11'
+    implementation files('libs/pldroid-shortvideo-2.1.0.jar')
+    implementation files('libs/pldroid-player-2.1.5.jar')
+    implementation files('libs/EasyAR.jar')
+    implementation files('libs/EasyAR3D.jar')
+    implementation 'com.android.support:design:28.0.0'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
     //glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'

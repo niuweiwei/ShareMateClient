@@ -2,24 +2,25 @@ package cn.edu.hebtu.software.sharemateclient.Bean;
 
 import android.graphics.Bitmap;
 
+import org.w3c.dom.Comment;
+
 import java.util.List;;
 import cn.edu.hebtu.software.sharemateclient.R;
 
 public class NoteBean {
-    private int noId;
+    private int noteId;
     private String noPhoto;
     private String title;
     private String noteImage;
     private String noteDetail,noteTitle;
     private UserBean user;
     private String noteTime;
-    private List<CommentBean> comment;
-    private int zancount,sharecount,collectcount,pingluncount;
+    private int noteLikeCount,sharecount,noteCollectionCount,noteCommentCount;
 
     private String noteImagePath;
 
     private Bitmap noteImage1;
-    private CommentBean commentBean;
+    private Comment comment;
     private String zancount1;
     private String commentDetail = "";
     private int zan=R.drawable.xin;
@@ -30,6 +31,34 @@ public class NoteBean {
     private int isfollow;//1表示关注了该用户 -1表示未关注该用户
     private UserBean userContent;
     private int typeid;
+    private String commentdetial;
+    private String userImage;
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    public String getCommentdetial() {
+        return commentdetial;
+    }
+
+    public void setCommentdetial(String commentdetial) {
+        this.commentdetial = commentdetial;
+    }
+
     public NoteBean() {
     }
 
@@ -40,30 +69,30 @@ public class NoteBean {
         this.typeid = typeid;
     }
 
-    public NoteBean(String noteImage, String noteDetail, String noteTitle, UserBean user, String noteTime, int zancount, int sharecount, int collectcount, int pingluncount) {
+    public NoteBean(String noteImage, String noteDetail, String noteTitle, UserBean user, String noteTime, int noteLikeCount, int sharecount, int noteCollectionCount, int noteCommentCount) {
         this.noteImage = noteImage;
         this.noteDetail = noteDetail;
         this.noteTitle = noteTitle;
         this.user = user;
         this.noteTime = noteTime;
-        this.zancount = zancount;
+        this.noteLikeCount = noteLikeCount;
         this.sharecount = sharecount;
-        this.collectcount = collectcount;
-        this.pingluncount = pingluncount;
+        this.noteCollectionCount = noteCollectionCount;
+        this.noteCommentCount = noteCommentCount;
     }
     public NoteBean(String noteImage, String noteDetail, String noteTitle,
-                    UserBean user, String noteTime, List<CommentBean> comment,
-                    int zancount, int sharecount, int collectcount, int pingluncount) {
+                    UserBean user, String noteTime, CommentBean Commenet,
+                    int zancount, int sharecount, int noteCollectionCount, int noteCommentCount) {
         this.noteImage = noteImage;
         this.noteDetail = noteDetail;
         this.noteTitle = noteTitle;
         this.user = user;
         this.noteTime = noteTime;
         this.comment = comment;
-        this.zancount = zancount;
+        this.noteLikeCount = zancount;
         this.sharecount = sharecount;
-        this.collectcount = collectcount;
-        this.pingluncount = pingluncount;
+        this.noteCollectionCount = noteCollectionCount;
+        this.noteCommentCount = noteCommentCount;
     }
     public NoteBean(String noPhoto, String title) {
         this.noPhoto = noPhoto;
@@ -94,12 +123,12 @@ public class NoteBean {
         this.title = content;
     }
 
-    public int getNoId() {
-        return noId;
+    public int getNoteId() {
+        return noteId;
     }
 
-    public void setNoId(int noId) {
-        this.noId = noId;
+    public void setNoteId(int noId) {
+        this.noteId = noId;
     }
 
     public String getNoteImage() {
@@ -142,20 +171,14 @@ public class NoteBean {
         this.noteTime = noteTime;
     }
 
-    public List<CommentBean> getComment() {
-        return comment;
+
+
+    public int getNoteLikeCount() {
+        return noteLikeCount;
     }
 
-    public void setComment(List<CommentBean> comment) {
-        this.comment = comment;
-    }
-
-    public int getZancount() {
-        return zancount;
-    }
-
-    public void setZancount(int zancount) {
-        this.zancount = zancount;
+    public void setNoteLikeCount(int zancount) {
+        this.noteLikeCount = zancount;
     }
 
     public int getSharecount() {
@@ -166,20 +189,20 @@ public class NoteBean {
         this.sharecount = sharecount;
     }
 
-    public int getCollectcount() {
-        return collectcount;
+    public int getNoteCollectionCount() {
+        return noteCollectionCount;
     }
 
-    public void setCollectcount(int collectcount) {
-        this.collectcount = collectcount;
+    public void setNoteCollectionCount(int noteCollectionCount) {
+        this.noteCollectionCount = noteCollectionCount;
     }
 
-    public int getPingluncount() {
-        return pingluncount;
+    public int getNoteCommentCount() {
+        return noteCommentCount;
     }
 
-    public void setPingluncount(int pingluncount) {
-        this.pingluncount = pingluncount;
+    public void setNoteCommentCount(int noteCommentCount) {
+        this.noteCommentCount = noteCommentCount;
     }
 
     public String getNoteImagePath() {
@@ -198,12 +221,12 @@ public class NoteBean {
         this.noteImage1 = noteImage1;
     }
 
-    public CommentBean getCommentBean() {
-        return commentBean;
+    public Comment getComment() {
+        return comment;
     }
 
-    public void setCommentBean(CommentBean commentBean) {
-        this.commentBean = commentBean;
+    public void setComment(Comment commentBean) {
+        this.comment = commentBean;
     }
 
     public String getZancount1() {

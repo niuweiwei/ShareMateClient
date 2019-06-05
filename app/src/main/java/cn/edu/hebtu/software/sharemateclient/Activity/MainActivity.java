@@ -20,11 +20,23 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.qiniu.pili.droid.shortvideo.PLAudioEncodeSetting;
+import com.qiniu.pili.droid.shortvideo.PLCameraSetting;
+import com.qiniu.pili.droid.shortvideo.PLFaceBeautySetting;
+import com.qiniu.pili.droid.shortvideo.PLMicrophoneSetting;
+import com.qiniu.pili.droid.shortvideo.PLRecordSetting;
+import com.qiniu.pili.droid.shortvideo.PLRecordStateListener;
+import com.qiniu.pili.droid.shortvideo.PLShortAudioRecorder;
+import com.qiniu.pili.droid.shortvideo.PLShortVideoRecorder;
+import com.qiniu.pili.droid.shortvideo.PLVideoEncodeSetting;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -59,6 +71,14 @@ public class MainActivity extends AppCompatActivity {
     private PopupWindow window=null;
     private Button sharebutton;
     private RelativeLayout root = null;
+    //短视频
+    public static final String ENCODING_MODE = "EncodingMode";
+
+    public static final String AUDIO_CHANNEL_NUM = "AudioChannelNum";
+//    private Spinner mEncodingModeLevelSpinner;
+//    private Spinner mAudioChannelNumSpinner;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +89,14 @@ public class MainActivity extends AppCompatActivity {
         followView = findViewById(R.id.tv_follow);
         messageView = findViewById(R.id.tv_message);
         myView = findViewById(R.id.tv_my);
+//        mEncodingModeLevelSpinner = (Spinner) findViewById(R.id.EncodingModeLevelSpinner);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, RecordSettings.ENCODING_MODE_LEVEL_TIPS_ARRAY);
+//        mEncodingModeLevelSpinner.setAdapter(adapter);
+//        mEncodingModeLevelSpinner.setSelection(0);
+//        mAudioChannelNumSpinner = (Spinner) findViewById(R.id.AudioChannelNumSpinner);
+//        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, RecordSettings.AUDIO_CHANNEL_NUM_TIPS_ARRAY);
+//        mAudioChannelNumSpinner.setAdapter(adapter);
+//        mAudioChannelNumSpinner.setSelection(0);
 
 
 
@@ -216,8 +244,23 @@ public class MainActivity extends AppCompatActivity {
                     startActivityForResult(intent1, 2);
                     break;
                 case R.id.btn_radio:
-                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                    startActivityForResult(intent, 3);
+
+                    //Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                   // startActivityForResult(intent, 3);
+                    Intent intent = new Intent(MainActivity.this, VideoRecordActivity.class);
+                    intent.putExtra(VideoRecordActivity.PREVIEW_SIZE_RATIO, "4:3");
+
+                    intent.putExtra(VideoRecordActivity.PREVIEW_SIZE_LEVEL, "720P");
+
+                    intent.putExtra(VideoRecordActivity.ENCODING_MODE,"单声道");
+
+                    intent.putExtra(VideoRecordActivity.ENCODING_SIZE_LEVEL, "480*480");
+
+                    intent.putExtra(VideoRecordActivity.ENCODING_BITRATE_LEVEL, "1000kbps");
+
+                    intent.putExtra(VideoRecordActivity.AUDIO_CHANNEL_NUM,"HW");
+                    startActivity(intent);
+
                 case R.id.btn_cancel:
                     window.dismiss();
                     break;
@@ -303,62 +346,66 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent1);
                     break;
                 case 3:
-                        Uri uri = data.getData();
-                        ContentResolver cr = this.getContentResolver();
-                        String Path=null;
-                        /** 数据库查询操作。
-                         * 第一个参数 uri：为要查询的数据库+表的名称。
-                         * 第二个参数 projection ： 要查询的列。
-                         * 第三个参数 selection ： 查询的条件，相当于SQL where。
-                         * 第三个参数 selectionArgs ： 查询条件的参数，相当于 ？。
-                         * 第四个参数 sortOrder ： 结果排序。
-                         */
-                        assert uri != null;
-                        Cursor cursor1= cr.query(uri, null, null, null, null);
-                        if (cursor1 != null) {
-                            if (cursor1.moveToFirst()) {
-                                // 视频ID:MediaStore.Audio.Media._ID1
-                                int videoId = cursor1.getInt(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media._ID));
-                                // 视频名称：MediaStre.Audio.Media.TITLE
-                                String title = cursor1.getString(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
-                                // 视频路径：MediaStore.Audio.Media.DATA
-                                String path = cursor1.getString(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
-                                Path=path;
-                                // 视频时长：MediaStore.Audio.Media.DURATION
-                                int duration = cursor1.getInt(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
-                                // 视频大小：MediaStore.Audio.Media.SIZE
-                                long size = cursor1.getLong(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
-                                Log.e("size ", size + "");
-                                // 视频缩略图路径：MediaStore.Images.Media.DATA
-                                String imagePath = cursor1.getString(cursor1.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+//                        Uri uri = data.getData();
+//                        ContentResolver cr = this.getContentResolver();
+//                        String Path=null;
+//                        /** 数据库查询操作。
+//                         * 第一个参数 uri：为要查询的数据库+表的名称。
+//                         * 第二个参数 projection ： 要查询的列。
+//                         * 第三个参数 selection ： 查询的条件，相当于SQL where。
+//                         * 第三个参数 selectionArgs ： 查询条件的参数，相当于 ？。
+//                         * 第四个参数 sortOrder ： 结果排序。
+//                         */
+//                        assert uri != null;
+//                        Cursor cursor1= cr.query(uri, null, null, null, null);
+//                        if (cursor1 != null) {
+//                            if (cursor1.moveToFirst()) {
+//                                // 视频ID:MediaStore.Audio.Media._ID1
+//                                int videoId = cursor1.getInt(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media._ID));
+//                                // 视频名称：MediaStre.Audio.Media.TITLE
+//                                String title = cursor1.getString(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
+//                                // 视频路径：MediaStore.Audio.Media.DATA
+//                                String path = cursor1.getString(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+//                                Path=path;
+//                                // 视频时长：MediaStore.Audio.Media.DURATION
+//                                int duration = cursor1.getInt(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
+//                                // 视频大小：MediaStore.Audio.Media.SIZE
+//                                long size = cursor1.getLong(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
+//                                Log.e("size ", size + "");
+//                                // 视频缩略图路径：MediaStore.Images.Media.DATA
+//                                String imagePath = cursor1.getString(cursor1.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+//
+//                                // 缩略图ID:MediaStore.Audio.Media._ID
+//                                int imageId = cursor1.getInt(cursor1.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
+//                                // 方法一 Thumbnails 利用createVideoThumbnail 通过路径得到缩略图，保持为视频的默认比例1
+//                                // 第一个参数为 ContentResolver，第二个参数为视频缩略图ID， 第三个参数kind有两种为：MICRO_KIND和MINI_KIND 字面意思理解为微型和迷你两种缩略模式，前者分辨率更低一些。
+//                                Bitmap bitmap1 = MediaStore.Video.Thumbnails.getThumbnail(cr, imageId, MediaStore.Video.Thumbnails.MICRO_KIND, null);
+//                                // 方法二 ThumbnailUtils 利用createVideoThumbnail 通过路径得到缩略图，保持为视频的默认比例
+//                                // 第一个参数为 视频/缩略图的位置，第二个依旧是分辨率相关的kind
+//                                Bitmap bitmap2 = ThumbnailUtils.createVideoThumbnail(imagePath, MediaStore.Video.Thumbnails.MICRO_KIND);
+//                                // 如果追求更好的话可以利用 ThumbnailUtils.extractThumbnail 把缩略图转化为的制定大小
+//                                if (duration > 11000) {
+//                                    Toast.makeText(getApplicationContext(), "视频时长已超过10秒，请重新选择", Toast.LENGTH_SHORT).show();
+//                                    return;
+//                                }
+//                            }
+//                            cursor1.close();
+//                            Intent intent2=new Intent();
+//                            intent2.putExtra("videopath", Path);
+//                            Log.e("PICFILE", Path);
+//                            intent2.putExtra("code", "3");
+////                    intent1.putExtra("userId",userId);
+////                    intent1.putExtra("type",type);
+//                            intent2.setClass(MainActivity.this, FabuActivity.class);
+//                            startActivity(intent2);
 
-                                // 缩略图ID:MediaStore.Audio.Media._ID
-                                int imageId = cursor1.getInt(cursor1.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
-                                // 方法一 Thumbnails 利用createVideoThumbnail 通过路径得到缩略图，保持为视频的默认比例1
-                                // 第一个参数为 ContentResolver，第二个参数为视频缩略图ID， 第三个参数kind有两种为：MICRO_KIND和MINI_KIND 字面意思理解为微型和迷你两种缩略模式，前者分辨率更低一些。
-                                Bitmap bitmap1 = MediaStore.Video.Thumbnails.getThumbnail(cr, imageId, MediaStore.Video.Thumbnails.MICRO_KIND, null);
-                                // 方法二 ThumbnailUtils 利用createVideoThumbnail 通过路径得到缩略图，保持为视频的默认比例
-                                // 第一个参数为 视频/缩略图的位置，第二个依旧是分辨率相关的kind
-                                Bitmap bitmap2 = ThumbnailUtils.createVideoThumbnail(imagePath, MediaStore.Video.Thumbnails.MICRO_KIND);
-                                // 如果追求更好的话可以利用 ThumbnailUtils.extractThumbnail 把缩略图转化为的制定大小
-                                if (duration > 11000) {
-                                    Toast.makeText(getApplicationContext(), "视频时长已超过10秒，请重新选择", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                            }
-                            cursor1.close();
-                            Intent intent2=new Intent();
-                            intent2.putExtra("videopath", Path);
-                            Log.e("PICFILE", Path);
-                            intent2.putExtra("code", "3");
-//                    intent1.putExtra("userId",userId);
-//                    intent1.putExtra("type",type);
-                            intent2.setClass(MainActivity.this, FabuActivity.class);
-                            startActivity(intent2);
+
+                    //七牛短视频
+
 
                         }
             }
         }
     }
 
-}
+
