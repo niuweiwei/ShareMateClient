@@ -12,6 +12,7 @@ public class Comment {
 	private int noteId;
 	private List<Reply> replyList=new ArrayList<>();
 	private boolean like;
+
 	public Comment() {
 		super();
 	}
@@ -33,7 +34,6 @@ public class Comment {
 	public void setCommentDate(String commentDate) {
 		this.commentDate = commentDate;
 	}
-	
 	public User getUser() {
 		return user;
 	}

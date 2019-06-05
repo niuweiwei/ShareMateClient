@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 
 import cn.edu.hebtu.software.sharemateclient.Fragment.RecommendIndexFrag;
 
-public class ViewPagerAdpter extends FragmentStatePagerAdapter {
+public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private Context context;
     private String tabTitles[] = {"推荐" ,"美食","旅行","美妆","动漫","运动","科技"};
     private RecommendIndexFrag frag;
     public FragmentManager fm;
-    public ViewPagerAdpter(FragmentManager fm, Context context) {
+    public ViewPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.fm=fm;
         this.context = context;
@@ -25,7 +25,7 @@ public class ViewPagerAdpter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Log.e("position",position+"点击了"+tabTitles[position]);
+        //传入position作为笔记类型判断，初始化RecommendIndexFrag呈现笔记列表
         return RecommendIndexFrag.newInstance(position);
     }
 

@@ -1,10 +1,8 @@
 package cn.edu.hebtu.software.sharemateclient.Adapter;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,30 +12,23 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.pili.pldroid.player.PLOnCompletionListener;
 import com.pili.pldroid.player.widget.PLVideoView;
 
-
 import java.io.IOException;
 import java.util.List;
 
-import cn.edu.hebtu.software.sharemateclient.Activity.MainActivity;
 import cn.edu.hebtu.software.sharemateclient.Entity.Note;
 import cn.edu.hebtu.software.sharemateclient.R;
-import cn.edu.hebtu.software.sharemateclient.util.MediaController;
-import cn.edu.hebtu.software.sharemateclient.util.Utils;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static android.support.constraint.Constraints.TAG;
-
-public class GridViewAdapter extends BaseAdapter{
+public class NearbyViewAdapter extends BaseAdapter{
     private Context context;
     private int itemLayout;
     private List<Note> notes;
@@ -46,7 +37,7 @@ public class GridViewAdapter extends BaseAdapter{
     private OkHttpClient okHttpClient = new OkHttpClient();
     private PickTask pickTask;
 
-    public GridViewAdapter(Context context, int itemLayout, List<Note> notes,int userId) {
+    public NearbyViewAdapter(Context context, int itemLayout, List<Note> notes,int userId) {
         this.context = context;
         this.itemLayout = itemLayout;
         this.notes = notes;
@@ -83,18 +74,19 @@ public class GridViewAdapter extends BaseAdapter{
             viewHolder.userName = convertView.findViewById(R.id.userName);
             viewHolder.pick = convertView.findViewById(R.id.pick);
             viewHolder.likeCount = convertView.findViewById(R.id.likeCount);
+            viewHolder.address = convertView.findViewById(R.id.address);
             convertView.setTag(viewHolder);//缓存数据
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
         U = context.getResources().getString(R.string.url);
-        //判断是图片笔记还是视频笔记
-        final ViewHolder finalViewHolder1 = viewHolder;
-        if(notes.get(position).getNoteImage()==null){
+        if(notes.get(position).getNoteVideo()!=null){
             String noteVideoUrl = notes.get(position).getNoteVideo();
             final Uri videoUri = Uri.parse(noteVideoUrl);
+            Log.e("noteVedioUri",videoUri+"");
             viewHolder.noteVideo.setLooping(false);
             viewHolder.noteVideo.setVideoURI(videoUri);
+            final ViewHolder finalViewHolder1 = viewHolder;
             viewHolder.noteVideo.setOnCompletionListener(new PLOnCompletionListener() {
                 @Override
                 public void onCompletion() {
@@ -108,9 +100,6 @@ public class GridViewAdapter extends BaseAdapter{
                     finalViewHolder1.noteVideo.start();
                 }
             });
-         }
-        if(notes.get(position).getNoteVideo()==null){
-            Log.e("00","3");
         }
         String noteImgUrl = U+notes.get(position).getNoteImage();
         Glide.with(context)
@@ -125,11 +114,13 @@ public class GridViewAdapter extends BaseAdapter{
         viewHolder.noteTitle.setText(notes.get(position).getNoteTitle());
         viewHolder.userName.setText(notes.get(position).getUser().getUserName());
         viewHolder.likeCount.setText(notes.get(position).getLikeCount()+"");
+        viewHolder.address.setText(notes.get(position).getNoteAddress().substring(9));
         if(notes.get(position).isLike()){
             viewHolder.pick.setBackgroundResource(R.mipmap.picked);
         }else{
             viewHolder.pick.setBackgroundResource(R.mipmap.pick);
         }
+//        final ViewHolder finalViewHolder = viewHolder;
         viewHolder.pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,8 +146,13 @@ public class GridViewAdapter extends BaseAdapter{
                 }
             }
         });
+
+
+
         return convertView;
     }
+
+
 
     //定义为内部类VIewHolder
     class ViewHolder{
@@ -166,7 +162,7 @@ public class GridViewAdapter extends BaseAdapter{
         TextView userName;
         PLVideoView noteVideo;
         Button pick,startBtn;
-        TextView likeCount;
+        TextView likeCount,address;
     }
 
     //点赞和取消赞触发的进程
@@ -176,11 +172,16 @@ public class GridViewAdapter extends BaseAdapter{
         protected Object doInBackground(Object[] objects) {
             int noteId = (int)objects[0];
             boolean like = (boolean)objects[1];
+            //1.创建OKHttpClient对象(已创建)
+            // 2.创建Request对象
+            Log.e("isLike",like+"");
             String url = U+"/note/pick/"+noteId+"?userId="+userId+"&like="+like;
             Request request = new Request.Builder()
                     .url(url)
                     .build();
+            // 3.创建Call对象
             Call call = okHttpClient.newCall(request);
+            // 4.提交请求，返回响应
             try {
                 Response response = call.execute();
                 String rel = response.body().string();
@@ -196,5 +197,8 @@ public class GridViewAdapter extends BaseAdapter{
             notifyDataSetChanged();
         }
     }
+
+
+
 
 }

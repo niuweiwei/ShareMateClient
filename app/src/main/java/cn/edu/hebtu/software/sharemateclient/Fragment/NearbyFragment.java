@@ -35,6 +35,7 @@ import java.util.List;
 
 import cn.edu.hebtu.software.sharemateclient.Activity.NoteDetailActivity;
 import cn.edu.hebtu.software.sharemateclient.Adapter.GridViewAdapter;
+import cn.edu.hebtu.software.sharemateclient.Adapter.NearbyViewAdapter;
 import cn.edu.hebtu.software.sharemateclient.Entity.Note;
 import cn.edu.hebtu.software.sharemateclient.Entity.User;
 import cn.edu.hebtu.software.sharemateclient.R;
@@ -44,7 +45,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NearbyFragment extends Fragment {
-    private GridViewAdapter gridViewAdapter=null;
+    private NearbyViewAdapter gridViewAdapter=null;
     private List<Note> notes = new ArrayList<Note>();
     private GridView gridView;
     private SmartRefreshLayout srl;
@@ -58,6 +59,8 @@ public class NearbyFragment extends Fragment {
     private int typeId=1;
     private int currentPage;
     private int pages;
+    private String address;
+    private LocationClient locationClient;
 
     @Nullable
     @Override
@@ -115,9 +118,9 @@ public class NearbyFragment extends Fragment {
         protected Object doInBackground(Object[] objects) {
             //1.创建OKHttpClient对象(已创建)
             // 2.创建Request对象
-            Log.e("contentUserAddress",contentUser.getUserAddress());
+            Log.e("contentUserAddress",address);
             String url = U+"/note/nearby/"+currentPage+
-                    "?address="+contentUser.getUserAddress()+"&userId="+userId;
+                    "?address="+address+"&userId="+userId;
             Request request = new Request.Builder()
                     .url(url)
                     .build();
@@ -145,6 +148,7 @@ public class NearbyFragment extends Fragment {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            locationClient.stop();
             setGrid();
         }
     }
@@ -152,7 +156,8 @@ public class NearbyFragment extends Fragment {
     //    gridView事件
     private void setGrid(){
         // 创建Adapter对象
-        gridViewAdapter = new GridViewAdapter(getActivity(),R.layout.item_recomgrid,notes);
+        gridViewAdapter = new NearbyViewAdapter(getActivity(),
+                R.layout.item_nearbygrid,notes,userId);
         // 设置Adapter
         gridView.setAdapter(gridViewAdapter);
         //gridItem点击事件监听  跳转至笔记详情页面
@@ -258,7 +263,7 @@ public class NearbyFragment extends Fragment {
     //展示位置
     private void initLocationOption() {
         //定位服务的客户端。宿主程序在客户端声明此类，并调用，目前只支持在主线程中启动
-        LocationClient locationClient = new LocationClient(getContext().getApplicationContext());
+        locationClient = new LocationClient(getContext().getApplicationContext());
         //声明LocationClient类实例并配置定位参数
         LocationClientOption locationOption = new LocationClientOption();
         MyLocationListener myLocationListener = new MyLocationListener();
@@ -300,11 +305,9 @@ public class NearbyFragment extends Fragment {
             //以下只列举部分获取经纬度相关（常用）的结果信息
             //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
             //获取位置
-//            a = location.getCity();
-            contentUser.setUserAddress(location.getCity());
+            address = location.getAddrStr();
+            Log.e("contentgetUser",address);
             listTask.execute();
-
-
         }
     }
 }

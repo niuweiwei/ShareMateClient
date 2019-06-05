@@ -1,6 +1,5 @@
 package cn.edu.hebtu.software.sharemateclient.Activity;
 
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -11,24 +10,24 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
-import com.baidu.location.BDAbstractLocationListener;
-import com.baidu.location.BDLocation;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.pili.pldroid.player.widget.PLVideoTextureView;
-import com.pili.pldroid.player.widget.PLVideoView;
-
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.edu.hebtu.software.sharemateclient.Entity.User;
 import cn.edu.hebtu.software.sharemateclient.Fragment.FollowFragment;
 import cn.edu.hebtu.software.sharemateclient.Fragment.HomeFragment;
 import cn.edu.hebtu.software.sharemateclient.Fragment.MessageFragment;
 import cn.edu.hebtu.software.sharemateclient.Fragment.MyFragment;
-import cn.edu.hebtu.software.sharemateclient.Fragment.NearbyFragment;
 import cn.edu.hebtu.software.sharemateclient.R;
-import cn.edu.hebtu.software.sharemateclient.util.MediaController;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //初始化控件
         findViews();
         //默认显示首页
         showFragment(indexFragment);
@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         setClickListener();
     }
 
+    //初始化控件
     private void findViews(){
         indexView = findViewById(R.id.tv_index);
         followView = findViewById(R.id.tv_follow);
@@ -62,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         myView = findViewById(R.id.tv_my);
         manager = getSupportFragmentManager();
         contentUser = (User)getIntent().getSerializableExtra("user");
-
     }
 
     //显示出指定的页面
@@ -121,6 +121,4 @@ public class MainActivity extends AppCompatActivity {
         messageView.setOnClickListener(listener);
         myView.setOnClickListener(listener);
     }
-
-
 }

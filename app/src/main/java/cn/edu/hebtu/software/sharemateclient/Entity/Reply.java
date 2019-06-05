@@ -1,20 +1,18 @@
 package cn.edu.hebtu.software.sharemateclient.Entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Reply {
-	
-   private int replyId;
-   private int commentId;
-   private int reReplyId;
-   private int userId;
-   private String replyDetail;
-   private String replyTime;
-   private User user;
-   private User replyedUser ;
+
+	private int replyId;
+	private int commentId;
+	private int reReplyId;
+	private int userId;
+	private String replyDetail;
+	private String replyTime;
+	private User user;
+	private User replyedUser ;
 	private boolean like;
-   public Reply() {
+
+    public Reply() {
 	super();
    }
 

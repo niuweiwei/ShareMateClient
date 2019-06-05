@@ -33,13 +33,14 @@ public class ReplyListAdapter extends BaseAdapter {
     private int itemLayout;
     private List<Reply> replys;
     private String U;
-    private int userId = 17;
+    private int userId;
     private OkHttpClient okHttpClient = new OkHttpClient();
     private PickTask pickTask;
-    public ReplyListAdapter(Context context, int itemLayout, List<Reply> replys) {
+    public ReplyListAdapter(Context context, int itemLayout, List<Reply> replys,int userId) {
         this.context = context;
         this.itemLayout = itemLayout;
         this.replys = replys;
+        this.userId = userId;
     }
 
     @Override

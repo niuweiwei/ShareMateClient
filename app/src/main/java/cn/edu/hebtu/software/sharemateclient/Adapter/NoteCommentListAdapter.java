@@ -38,16 +38,17 @@ public class NoteCommentListAdapter extends BaseAdapter implements View.OnClickL
     private List<Reply> replys = new ArrayList<>();
     private String U;
     private Callback mCallback;
-    private int userId = 17;
+    private int userId;
     private OkHttpClient okHttpClient = new OkHttpClient();
     private PickTask pickTask;
 
     public NoteCommentListAdapter(Context context, int itemLayout,
-                                  List<Comment> comments, Callback mCallback) {
+                      List<Comment> comments, Callback mCallback,int userId) {
         this.context = context;
         this.itemLayout = itemLayout;
         this.comments = comments;
         this.mCallback = mCallback;
+        this.userId = userId;
     }
 
     @Override
@@ -99,7 +100,7 @@ public class NoteCommentListAdapter extends BaseAdapter implements View.OnClickL
             viewHolder.pickBtn.setBackgroundResource(R.mipmap.pick);
         }
         replys = comments.get(position).getReplyList();
-        replyListAdapter = new ReplyListAdapter(context,R.layout.item_reply,replys);
+        replyListAdapter = new ReplyListAdapter(context,R.layout.item_reply,replys,userId);
         viewHolder.replyListView.setAdapter(replyListAdapter);
         replyListAdapter.notifyDataSetChanged();
         //设置ListView的自定义高度
@@ -107,8 +108,6 @@ public class NoteCommentListAdapter extends BaseAdapter implements View.OnClickL
         //ListView绑定监听器在Activity响应事件
         viewHolder.replyListView.setOnItemClickListener(this);
         viewHolder.replyListView.setTag(position);
-
-        final ViewHolder finalViewHolder = viewHolder;
         viewHolder.pickBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

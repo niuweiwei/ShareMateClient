@@ -78,7 +78,6 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
     private EditText commentEdit;
     private ButtonOnclickListener listener;
     private Note note;
-    private String U;
     private User contentUser;
     private int userId;
     private int noteId,commentId,reReplyId;
@@ -88,7 +87,7 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
     private List<Comment> comments;
     private CommentListTask commentListTask;
     private int commentType,commentPosition,commentPosition2,replyPostion;
-
+    private String U;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,20 +130,19 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
         pickBtn.setOnClickListener(listener);
         collectBtn.setOnClickListener(listener);
         send.setOnClickListener(listener);
-        commentType = 0;
+        commentType = 0;//type=0表示评论
+        U =getResources().getString(R.string.url);
+        //评论的Edit点击事件
         commentEdit.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 commentType =0;
-                Log.e("点击了评论2","editText");
                 Button button = findViewById(id.send);
                 button.setVisibility(View.VISIBLE);
                 showSoftInputFromWindow(commentEdit);
-                Toast.makeText(getApplicationContext(),"点击评论",Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
-        U ="http://10.7.89.23:8080/ShareMateServer/";
     }
 
     // 初始化布局
@@ -157,14 +155,17 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
         pickCount.setText(note.getLikeCount()+"");
         commentCount.setText("共 "+note.getCommentCount()+" 条评论");
         comments = new ArrayList<>();
+        //判断并设置点赞布局
         if(note.isLike()){
             pickBtn.setBackgroundResource(mipmap.picked);
         }else {
             pickBtn.setBackgroundResource(mipmap.pick);
         }
         if(note.isCollect()){
+            Log.e("isCollect",note.isCollect()+"");
             collectBtn.setBackgroundResource(mipmap.collectedbtn);
         }else {
+            Log.e("noCollect",note.isCollect()+"");
             collectBtn.setBackgroundResource(mipmap.collectbtn);
         }
         if(note.isFollow()){
@@ -172,6 +173,7 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
         }else {
             followBtn.setBackgroundResource(mipmap.followbtn);
         }
+        //判断是图片笔记还是视频笔记
         if(note.getNoteImage()==null){
             String noteVideoUrl =note.getNoteVideo();
             final Uri videoUri = Uri.parse(noteVideoUrl);
@@ -193,17 +195,20 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
                 }
             });
         }else{
+            noteVideo.setVisibility(View.GONE);
             String noteImgUrl = U+note.getNoteImage();
             Glide.with(this)
                     .load(noteImgUrl)
                     .into(noteImage);
         }
+        //设置用户头像
         String userIconUrl = U+note.getUser().getUserPhoto();
         RequestOptions options = new RequestOptions().circleCrop();
         Glide.with(this)
                 .load(userIconUrl)
                 .apply(options)
                 .into(userIcon);
+        //设置点击空白处软键盘隐藏，editText失去焦点
         View view = findViewById(id.layout);
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -222,6 +227,7 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
         });
     }
 
+    //显示软键盘
     public void showSoftInputFromWindow(EditText editText){
         editText.setFocusable(true);
         editText.setFocusableInTouchMode(true);
@@ -232,41 +238,38 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
         inputManager.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
     }
 
+    // 回复的回复的Edit点击回调事件
     @Override
     public void click(View v, int p,int c) {
-        commentType=2;commentPosition2= c;replyPostion = p;
+        commentType=2;//type=2表示回复的回复
+        commentPosition2= c;//评论的位置
+        replyPostion = p;//回复的位置
         reReplyId = comments.get(c).getReplyList().get(p).getReplyId();
         Button button = findViewById(id.send);
         button.setVisibility(View.VISIBLE);
         showSoftInputFromWindow(commentEdit);
     }
 
+    //callback的回调事件
     @Override
     public void click(View v) {
     }
 
-
-    //请求数据并初始化数组
+    //请求数据并初始化数组获取笔记的所有评论
     private class CommentListTask extends AsyncTask {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            Log.e("getComment",userId+""+noteId);
             String url = U+"comment/getComment/"+noteId+"?userId="+userId;
             Request request = new Request.Builder()
                     .url(url)
                     .build();
             Call call = okHttpClient.newCall(request);
             try {
-                Log.e("getComment","1");
                 Response response = call.execute();
-                Log.e("getComment","2");
                 String rel = response.body().string();
-                Log.e("getComment","3");
                 JSONObject noteObject = new JSONObject(rel);
-                Log.e("getComment","4");
                 String array = noteObject.getJSONArray("commentList").toString();
-                Log.e("getComment",array+"");
                 Gson gson = new Gson();
                 Type noteListType = new TypeToken<ArrayList<Comment>>(){}.getType();
                 comments = gson.fromJson(array, noteListType);
@@ -288,13 +291,14 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
     //设置commentListView
     private void setList(){
         commentAdapter = new NoteCommentListAdapter(this,
-                layout.item_note_comment,comments,this);
+                layout.item_note_comment,comments,this,userId);
         commentListView.setAdapter(commentAdapter);
         setListViewHeight();
+        //评论的回复的edit事件
         commentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                commentType =1;
+                commentType =1;//type=1代表评论的回复
                 commentPosition= position;
                 commentId = comments.get(position).getCommentId();
                 Button button = findViewById(R.id.send);
@@ -303,7 +307,6 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
             }
         });
     }
-
 
     //设置按钮点击监听器
     private class ButtonOnclickListener implements View.OnClickListener{
@@ -373,6 +376,7 @@ public class NoteDetailActivity extends AppCompatActivity implements NoteComment
                         collectTask(nId,collect);
                     }
                     break;
+                //点击发送按钮发送评论或回复
                 case id.send:
                     //获取评论或回复的内容
                     String text = commentEdit.getText().toString().trim();

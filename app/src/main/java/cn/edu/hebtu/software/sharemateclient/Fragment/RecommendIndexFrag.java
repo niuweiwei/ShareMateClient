@@ -7,13 +7,11 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -30,6 +28,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.edu.hebtu.software.sharemateclient.Activity.MainActivity;
 import cn.edu.hebtu.software.sharemateclient.Activity.NoteDetailActivity;
 import cn.edu.hebtu.software.sharemateclient.Adapter.GridViewAdapter;
 import cn.edu.hebtu.software.sharemateclient.Entity.Note;
@@ -88,16 +87,14 @@ public class RecommendIndexFrag extends Fragment{
         gridView = view.findViewById(R.id.root);
         listTask = new ListTask();
         srl=view.findViewById(R.id.srl);
-        //待修改
-        contentUser = contentUser = new User(17,"狗蛋","gou",
-                "images/userPhotos/17.jpg","女","15852160982",
-                "上海市", "1985-09-04","做梦都想发家致富");
+        //获取当前用户
+        contentUser = (User)getActivity().getIntent().getSerializableExtra("user");
         userId = contentUser.getUserId();
     }
 
     //    刷新
     private void refreshData(){
-        //请空note列表
+        //清空note列表
         notes.clear();
         //开启进程重新获取数据
         listTask = new ListTask();
@@ -125,7 +122,8 @@ public class RecommendIndexFrag extends Fragment{
         protected Object doInBackground(Object[] objects) {
             //1.创建OKHttpClient对象(已创建)
             // 2.创建Request对象
-            String url = U+"/note/recommend/"+currentPage+"?typeId="+typeId+"&userId="+userId;
+            String url = U+"/note/recommend/"+currentPage+
+                    "?typeId="+ typeId+"&userId="+userId;
             Request request = new Request.Builder()
                     .url(url)
                     .build();
@@ -160,7 +158,8 @@ public class RecommendIndexFrag extends Fragment{
     //    gridView事件
     private void setGrid(){
         // 创建Adapter对象
-        gridViewAdapter = new GridViewAdapter(getActivity(),R.layout.item_recomgrid,notes);
+        gridViewAdapter = new GridViewAdapter(getActivity(),
+                R.layout.item_recomgrid,notes,userId);
         // 设置Adapter
         gridView.setAdapter(gridViewAdapter);
         //gridItem点击事件监听  跳转至笔记详情页面
@@ -172,7 +171,6 @@ public class RecommendIndexFrag extends Fragment{
                 Note note = notes.get(position);
                 intent.putExtra("note",note);
                 intent.putExtra("contentUser",contentUser);
-//                Log.e("noteinfo",note.getNoteImage());
                 startActivity(intent);
             }
         });
@@ -214,8 +212,8 @@ public class RecommendIndexFrag extends Fragment{
         protected Object doInBackground(Object[] objects) {
             //1.创建OKHttpClient对象(已创建)
             // 2.创建Request对象
-            String url = U+"/note/recommend/"+currentPage+"?typeId="+typeId+"&userId="+userId;
-
+            String url = U+"/note/recommend/"+currentPage+
+                    "?typeId="+typeId+"&userId="+userId;
             Request request = new Request.Builder()
                     .url(url)
                     .build();

@@ -28,7 +28,10 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_home,null);
+        //在首页的Fragment里面设置推荐页和附近页两个fragment
+        //初始化tabHost
         initTabHost();
+        //给tabHost设置点击切换相关监听事件
         setTabHostChanged();
         return view;
     }

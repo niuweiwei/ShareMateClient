@@ -11,6 +11,7 @@ public class Note implements Serializable{
 	private String noteDetail;
 	private String noteImage;
 	private String noteDate;
+	private String noteAddress;
 	private int typeId;
 	private User user;
 	private int likeCount,collectCount,commentCount;
@@ -126,4 +127,11 @@ public class Note implements Serializable{
 		this.commentCount = commentCount;
 	}
 
+	public String getNoteAddress() {
+		return noteAddress;
+	}
+
+	public void setNoteAddress(String noteAddress) {
+		this.noteAddress = noteAddress;
+	}
 }
