@@ -27,12 +27,13 @@
         <item name="android:layout_weight">1</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:textColor">@color/deepGray</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
 
     <!--每一个fragment的 title 样式-->
     <style name="title">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/white</item>

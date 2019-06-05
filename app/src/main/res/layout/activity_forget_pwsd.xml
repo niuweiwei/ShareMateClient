@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/back" />
+
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_back"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="验证手机号码"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/TextSize_1" />
+
+    <LinearLayout
+        android:id="@+id/linear_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp">
+
+        <!--<Spinner-->
+        <!--android:id="@+id/spinner"-->
+        <!--android:layout_width="60dp"-->
+        <!--android:layout_height="wrap_content" />-->
+
+        <LinearLayout
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+86"
+                android:textSize="@dimen/TextSize_2"/>
+            <Button
+                android:id="@+id/btn_spinner"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/spinner"/>
+        </LinearLayout>
+        <EditText
+            android:id="@+id/et_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textview"
+            android:background="@null"
+            android:hint="请输入手机号码"
+            android:textSize="@dimen/TextSize_2" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="250dp"
+        android:layout_height="0.15dp"
+        android:layout_below="@id/linear_phone"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorView" />
+
+    <Button
+        android:id="@+id/btn_true"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/button_style"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="@dimen/TextSize_4" />
+
+</RelativeLayout>
