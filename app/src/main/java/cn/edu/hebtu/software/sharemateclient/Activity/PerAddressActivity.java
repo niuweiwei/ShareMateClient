@@ -31,7 +31,7 @@ public class PerAddressActivity extends AppCompatActivity {
         if(titleText.getText().equals("常住地")){
             editText.setText(userBean.getUserAddress());
         }else{
-            editText.setText(userBean.getUserIntroduce());
+            editText.setText(userBean.getUserIntro());
         }
 
         ImageView imageView = findViewById(R.id.back);
@@ -51,7 +51,7 @@ public class PerAddressActivity extends AppCompatActivity {
                     if(titleText.getText().equals("常住地")){
                         userBean.setUserAddress(editText.getText().toString());
                     }else{
-                        userBean.setUserIntroduce(editText.getText().toString());
+                        userBean.setUserIntro(editText.getText().toString());
                     }
                     Intent intent = new Intent();
                     intent.putExtra("responseUser",userBean);

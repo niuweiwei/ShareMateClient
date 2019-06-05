@@ -77,7 +77,7 @@ public class PerFanActivity extends AppCompatActivity {
                     fan.setUserId(userObject.getInt("userId"));
                     fan.setUserName(userObject.getString("userName"));
                     fan.setUserPhotoPath(path+"/"+userObject.getString("userPhoto"));
-                    fan.setUserIntroduce(userObject.getString("userIntro"));
+                    fan.setUserIntro(userObject.getString("userIntro"));
                     fan.setStatus(userObject.getBoolean("status"));
                     Log.e("status",userObject.getBoolean("status")+"");
                     fan.setNoteCount(userObject.getInt("noteCount"));

@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.edu.hebtu.software.sharemateclient.Bean.UserBean;
 import cn.edu.hebtu.software.sharemateclient.R;
 import cn.edu.hebtu.software.sharemateclient.tools.VerifyCodeView;
 import cn.smssdk.EventHandler;
@@ -34,7 +35,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public class LRInputCodeActivity extends AppCompatActivity {
-    private int userId;
+    private UserBean user;
     private String userPhone;
     private String code;
     private boolean flag;//操作是否成功
@@ -54,10 +55,10 @@ public class LRInputCodeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_input_code);
         path = getResources().getString(R.string.server_path);
         findViews();
-        userId = getIntent().getIntExtra("userId",0);
+        user = (UserBean) getIntent().getSerializableExtra("user");
 
         time = new TimeCount(30000, 1000);
-        userPhone = getIntent().getStringExtra("userPhone");
+        userPhone = user.getUserPhone();
         SMSSDK.getVerificationCode("86", userPhone);// 发送验证码给号码的 phoneNum 的手机
         Log.e("phoneNum",userPhone);
         MobSDK.init(LRInputCodeActivity.this,AppKey,AppSecret);
@@ -170,7 +171,7 @@ public class LRInputCodeActivity extends AppCompatActivity {
                 if (isCode == true){
                     //跳到首页
                     InputCodeUtil inputCodeUtil = new InputCodeUtil();
-                    inputCodeUtil.execute(userId);
+                    inputCodeUtil.execute(user.getUserId());
 
                 }
             }else {
@@ -217,7 +218,7 @@ public class LRInputCodeActivity extends AppCompatActivity {
         protected void onPostExecute(Object o) {
             ArrayList<Integer> type=(ArrayList<Integer>)o;
             Intent intent = new Intent(LRInputCodeActivity.this,MainActivity.class);
-            intent.putExtra("userId",userId);
+            intent.putExtra("user",user);
             intent.putIntegerArrayListExtra("type",type);
             intent.putExtra("flag","main");
             startActivity(intent);

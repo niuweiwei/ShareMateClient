@@ -179,11 +179,12 @@ public class LRStartActivity extends AppCompatActivity {
                 String result = call.execute().body().string();
                 Log.e("Register2",result);
                 JSONObject object = new JSONObject(result);
-                String msg = object.getString("msg");
-                int userId = object.getInt("userId");
-                if(msg.equals("更新成功")){
+                String str = object.getString("user");
+                Gson gson1 = new Gson();
+                UserBean u = gson1.fromJson(str,UserBean.class);
+                if(u != null){
                     Intent intent = new Intent(LRStartActivity.this,LRSelectInterestActivity.class);
-                    intent.putExtra("userId",userId);
+                    intent.putExtra("user",u);
                     startActivity(intent);
                 }
             } catch (IOException e) {

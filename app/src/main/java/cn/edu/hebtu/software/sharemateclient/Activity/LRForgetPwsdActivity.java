@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -134,39 +136,32 @@ public class LRForgetPwsdActivity extends AppCompatActivity {
             Request request = new Request.Builder().url(url).build();
             Call call = okHttpClient.newCall(request);
             String result = null;
-            JSONObject jsonObject=null;
+            UserBean u = null;
             try {
                 result = call.execute().body().string();
                 Log.e("ForgetPasswordUtil---",result);
-                jsonObject = new JSONObject(result);
+                JSONObject object = new JSONObject(result);
+                String str = object.getString("user");
+                Gson gson = new Gson();
+                u = gson.fromJson(str,UserBean.class);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return jsonObject;
+            return u;
         }
 
         @Override
         protected void onPostExecute(Object o) {
-            JSONObject back = (JSONObject) o;
-            String result;
-            try {
-                result = back.getString("msg");
-                Log.e("result",result);
-                if (result.equals("用户存在")){
-                    int userId = back.getInt("userId");
-                    String userPhone = back.getString("userPhone");
+            UserBean u = (UserBean) o;
+                if (u!=null){
                     Intent intent = new Intent(LRForgetPwsdActivity.this,LRInputCodeActivity.class);
-                    intent.putExtra("userId",userId);
-                    intent.putExtra("userPhone",userPhone);
+                    intent.putExtra("user",u);
                     startActivity(intent);
                 }else{
                     Toast.makeText(LRForgetPwsdActivity.this,"该用户不存在",Toast.LENGTH_SHORT).show();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
-        }
     }
 }

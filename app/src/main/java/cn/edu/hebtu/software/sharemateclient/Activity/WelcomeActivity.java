@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +18,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -84,24 +88,21 @@ public class WelcomeActivity extends AppCompatActivity {
             Request request = new Request.Builder().url(url).build();
             Call call = okHttpClient.newCall(request);
             String result = null;
-            List<Integer> typeList = new ArrayList<>();
+            ArrayList<Integer> typeList=new ArrayList<>();
             List<Object> objectList = new ArrayList<>();
-            int userId = 0;
-            String msg="";
+            UserBean u = null;
             try {
                 result = call.execute().body().string();
                 Log.e("isLoginResult---", result);
-                JSONArray array = new JSONArray(result);
-                for (int i=0;i<array.length();i++){
-                    JSONObject object = array.getJSONObject(i);
-                    msg = object.getString("msg");
-                    int typeId = object.getInt("typeId");
-                    userId = object.getInt("userId");
-                    typeList.add(typeId);
-                }
+                JSONObject jsonObject = new JSONObject(result);
+                JSONObject mapObject = jsonObject.getJSONObject("map");
+                String typeStr =  mapObject.get("typeList").toString();
+                Gson gson = new Gson();
+                typeList = gson.fromJson(typeStr,new TypeToken<List<Integer>>(){}.getType());
+                String uStr = mapObject.get("user").toString();
+                u = gson.fromJson(uStr,UserBean.class);
                 objectList.add(typeList);
-                objectList.add(userId);
-                objectList.add(msg);
+                objectList.add(u);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -114,12 +115,10 @@ public class WelcomeActivity extends AppCompatActivity {
         protected void onPostExecute(Object o) {
             List<Object> objectList = (List<Object>) o;
             ArrayList<Integer> typeList = (ArrayList<Integer>) objectList.get(0);
-            int userId = (int) objectList.get(1);
-            String result = (String) objectList.get(2);
-            Log.e("result", result);
-            if (result.equals("该用户存在")) {
+            UserBean u = (UserBean) objectList.get(1);
+            if (u != null) {
                 Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                intent.putExtra("userId", userId);
+                intent.putExtra("user", u);
                 intent.putIntegerArrayListExtra("type", typeList);
                 startActivity(intent);
                 WelcomeActivity.this.finish();

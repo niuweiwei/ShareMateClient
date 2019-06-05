@@ -13,6 +13,7 @@ import android.widget.CompoundButton;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import cn.edu.hebtu.software.sharemateclient.Bean.UserBean;
 import cn.edu.hebtu.software.sharemateclient.R;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -22,7 +23,7 @@ public class LRSelectInterestActivity extends AppCompatActivity {
     private Button button;
     private CheckBox cbBeauty, cbTravel, cbSport, cbFood, cbScience, cbAnime;
     private int typeId;
-    private int userId;
+    private UserBean user;
     private String remark;
     private ArrayList<Integer> type = new ArrayList<>();
     private String path;
@@ -32,7 +33,7 @@ public class LRSelectInterestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_interest);
         path = getResources().getString(R.string.server_path);
         findViews();
-        userId = getIntent().getIntExtra("userId", 0);
+        user = (UserBean) getIntent().getSerializableExtra("user");
         button.setOnClickListener(new ButtonClickListener());
         cbBeauty.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -43,13 +44,13 @@ public class LRSelectInterestActivity extends AppCompatActivity {
                     remark = "add";
                     type.add(3);
                     SelectInterestUtil selectInterest = new SelectInterestUtil();
-                    selectInterest.execute(userId, typeId,remark);
+                    selectInterest.execute(user.getUserId(), typeId,remark);
                 }else{
                     remark = "delete";
                     int i = type.indexOf(3);
                     type.remove(i);
                     SelectInterestUtil selectInterest = new SelectInterestUtil();
-                    selectInterest.execute(userId, typeId,remark);
+                    selectInterest.execute(user.getUserId(), typeId,remark);
                 }
             }
         });
@@ -62,13 +63,13 @@ public class LRSelectInterestActivity extends AppCompatActivity {
                     remark = "add";
                     type.add(2);
                     SelectInterestUtil selectInterest = new SelectInterestUtil();
-                    selectInterest.execute(userId, typeId,remark);
+                    selectInterest.execute(user.getUserId(), typeId,remark);
                 }else {
                     remark = "delete";
                     int i = type.indexOf(2);
                     type.remove(i);
                     SelectInterestUtil selectInterest = new SelectInterestUtil();
-                    selectInterest.execute(userId, typeId,remark);
+                    selectInterest.execute(user.getUserId(), typeId,remark);
                 }
             }
         });
@@ -81,13 +82,13 @@ public class LRSelectInterestActivity extends AppCompatActivity {
                     remark = "add";
                     type.add(5);
                     SelectInterestUtil selectInterest = new SelectInterestUtil();
-                    selectInterest.execute(userId, typeId,remark);
+                    selectInterest.execute(user.getUserId(), typeId,remark);
                 }else {
                     remark = "delete";
                     int i = type.indexOf(5);
                     type.remove(i);
                     SelectInterestUtil selectInterest = new SelectInterestUtil();
-                    selectInterest.execute(userId, typeId,remark);
+                    selectInterest.execute(user.getUserId(), typeId,remark);
                 }
             }
         });
@@ -100,13 +101,13 @@ public class LRSelectInterestActivity extends AppCompatActivity {
                     remark = "add";
                     type.add(1);
                     SelectInterestUtil selectInterest = new SelectInterestUtil();
-                    selectInterest.execute(userId, typeId,remark);
+                    selectInterest.execute(user.getUserId(), typeId,remark);
                 }else {
                     remark = "delete";
                     int i = type.indexOf(1);
                     type.remove(i);
                     SelectInterestUtil selectInterest = new SelectInterestUtil();
-                    selectInterest.execute(userId, typeId,remark);
+                    selectInterest.execute(user.getUserId(), typeId,remark);
                 }
             }
         });
@@ -119,13 +120,13 @@ public class LRSelectInterestActivity extends AppCompatActivity {
                     remark = "add";
                     type.add(6);
                     SelectInterestUtil selectInterest = new SelectInterestUtil();
-                    selectInterest.execute(userId, typeId,remark);
+                    selectInterest.execute(user.getUserId(), typeId,remark);
                 }else {
                     remark = "delete";
                     int i = type.indexOf(6);
                     type.remove(i);
                     SelectInterestUtil selectInterest = new SelectInterestUtil();
-                    selectInterest.execute(userId, typeId,remark);
+                    selectInterest.execute(user.getUserId(), typeId,remark);
                 }
             }
         });
@@ -138,13 +139,13 @@ public class LRSelectInterestActivity extends AppCompatActivity {
                     remark = "add";
                     type.add(4);
                     SelectInterestUtil selectInterest = new SelectInterestUtil();
-                    selectInterest.execute(userId, typeId,remark);
+                    selectInterest.execute(user.getUserId(), typeId,remark);
                 }else {
                     remark = "delete";
                     int i = type.indexOf(4);
                     type.remove(i);
                     SelectInterestUtil selectInterest = new SelectInterestUtil();
-                    selectInterest.execute(userId, typeId,remark);
+                    selectInterest.execute(user.getUserId(), typeId,remark);
                 }
             }
         });
@@ -168,7 +169,7 @@ public class LRSelectInterestActivity extends AppCompatActivity {
         public void onClick(View v) {
             Log.e("type",type+"");
             Intent intent = new Intent(LRSelectInterestActivity.this,MainActivity.class);
-            intent.putExtra("userId",userId);
+            intent.putExtra("user",user);
             intent.putIntegerArrayListExtra("type",type);
             startActivity(intent);
         }

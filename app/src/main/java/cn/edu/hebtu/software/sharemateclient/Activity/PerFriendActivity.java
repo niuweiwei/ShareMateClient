@@ -86,10 +86,10 @@ public class PerFriendActivity extends AppCompatActivity {
         followCount.setText(""+user.getFollowCount());
         fanCount.setText(""+user.getFanCount());
         likeCount.setText(""+user.getLikeCount());
-        if (user.getUserIntroduce() == null || user.getUserIntroduce().length() < 20) {
-            introView.setText(user.getUserIntroduce());
+        if (user.getUserIntro() == null || user.getUserIntro().length() < 20) {
+            introView.setText(user.getUserIntro());
         } else {
-            introView.setText(user.getUserIntroduce().substring(0, 20) + ".....");
+            introView.setText(user.getUserIntro().substring(0, 20) + ".....");
         }
         String photoPath = user.getUserPhotoPath();
         RequestOptions mRequestOptions = RequestOptions.circleCropTransform()

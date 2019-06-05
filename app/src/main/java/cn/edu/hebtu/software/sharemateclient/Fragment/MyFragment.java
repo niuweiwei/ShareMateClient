@@ -72,7 +72,7 @@ public class MyFragment extends Fragment {
     private ImageView logout;//退出登录
     private Button btnPersonal;//个人资料
     private OnClickListener listener;
-    private UserBean user = new UserBean();
+    private UserBean user;
     private NoteAdapter noteAdapter;
     private List<NoteBean> collectionList = new ArrayList<>();
     private List<NoteBean> noteList = new ArrayList<>();
@@ -86,11 +86,10 @@ public class MyFragment extends Fragment {
         //监听器绑定
         setListener();
         path = getResources().getString(R.string.server_path);
-        userId=getActivity().getIntent().getIntExtra("userId",0);
+        user= (UserBean) getActivity().getIntent().getSerializableExtra("user");
         type=getActivity().getIntent().getIntegerArrayListExtra("type");
-        //得到user的详情
-        GetUserDetail getUserDetail = new GetUserDetail();
-        getUserDetail.execute(userId);
+        //设置user信息
+        setUserInfo(user);
         //取出Note笔记
         GetNote getNote = new GetNote();
         getNote.execute(user);
@@ -107,6 +106,23 @@ public class MyFragment extends Fragment {
         GetLikeCount getLikeCount = new GetLikeCount();
         getLikeCount.execute(user);
         return view;
+    }
+
+    public void setUserInfo(UserBean user){
+        nameText.setText(user.getUserName());
+        String userId = String.format("%06d",user.getUserId());//格式化为至少6位十进制整数
+        idText.setText("ShareMate号:" + userId);
+        if (user.getUserIntro() == null || user.getUserIntro().length() < 20) {
+            introText.setText(user.getUserIntro());
+        } else {
+            introText.setText(user.getUserIntro().substring(0, 20) + ".....");//Substring(截取子串的起始位置,子串长度)
+        }
+        Log.e("photoPath---",path+user.getUserPhoto());
+        String photoPath = path+"/"+user.getUserPhoto();
+        RequestOptions mRequestOptions = RequestOptions.circleCropTransform()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true);
+        Glide.with(getActivity()).load(photoPath).apply(mRequestOptions).into(headImg);
     }
 
     /**
@@ -260,60 +276,6 @@ public class MyFragment extends Fragment {
 //            }
 //        });
 //    }
-    /**
-     * 异步任务——获取UserBean对象
-     */
-    public class GetUserDetail extends AsyncTask{
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            String url = path + "/user/findUserByUserId?userId="+objects[0];
-            //1.创建OKHttpClient对象
-            okHttpClient = new OkHttpClient();
-            //2.创建Request对象
-            Request request = new Request.Builder().url(url).build();
-            //3.创建Call对象
-            Call call = okHttpClient.newCall(request);
-            //4.提交请求并返回相应
-            try {
-                String result = call.execute().body().string();
-                Log.e("UserResult---",result);
-                Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
-                UserBean userJson = gson.fromJson(result,UserBean.class);
-                user.setUserId(userJson.getUserId());
-                user.setUserName(userJson.getUserName());
-                user.setUserPassword(userJson.getUserPassword());
-                user.setUserSex(userJson.getUserSex());
-                user.setUserPhoto(userJson.getUserPhoto());
-                user.setUserPhone(userJson.getUserPhone());
-                user.setUserAddress(userJson.getUserAddress());
-                user.setUserBirth(userJson.getUserBirth());
-                user.setUserIntroduce(userJson.getUserIntroduce());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            nameText.setText(user.getUserName());
-            String userId = String.format("%06d",user.getUserId());//格式化为至少6位十进制整数
-            idText.setText("ShareMate号:" + userId);
-            if (user.getUserIntroduce() == null || user.getUserIntroduce().length() < 20) {
-                introText.setText(user.getUserIntroduce());
-            } else {
-                introText.setText(user.getUserIntroduce().substring(0, 20) + ".....");//Substring(截取子串的起始位置,子串长度)
-            }
-            Log.e("photoPath---",path+user.getUserPhoto());
-            String photoPath = path+"/"+user.getUserPhoto();
-            RequestOptions mRequestOptions = RequestOptions.circleCropTransform()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true);
-            Glide.with(getActivity()).load(photoPath).apply(mRequestOptions).into(headImg);
-        }
-    }
 
     /**
      * 异步任务——从数据库取笔记

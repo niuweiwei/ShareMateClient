@@ -23,6 +23,14 @@ public class UserBean implements Serializable {
     private boolean status;
     private String userPhotoPath;
 
+    public String getUserIntro() {
+        return userIntro;
+    }
+
+    public void setUserIntro(String userIntro) {
+        this.userIntro = userIntro;
+    }
+
     public String getUserPhotoPath() {
         return userPhotoPath;
     }
@@ -143,9 +151,5 @@ public class UserBean implements Serializable {
     public String getUserBirth() {return userBirth;}
 
     public void setUserBirth(String userBirth) {this.userBirth = userBirth;}
-
-    public String getUserIntroduce() {return userIntro;}
-
-    public void setUserIntroduce(String userIntroduce) {this.userIntro = userIntroduce;}
 
 }

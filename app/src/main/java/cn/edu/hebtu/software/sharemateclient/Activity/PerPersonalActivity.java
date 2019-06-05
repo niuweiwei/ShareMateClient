@@ -29,11 +29,18 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.UUID;
 
 import cn.edu.hebtu.software.sharemateclient.Bean.UserBean;
 import cn.edu.hebtu.software.sharemateclient.R;
@@ -50,7 +57,7 @@ import okhttp3.RequestBody;
  */
 public class PerPersonalActivity extends AppCompatActivity {
     //相机拍摄的头像文件(本次演示存放在SD卡根目录下)
-    private static final File USER_ICON = new File(Environment.getExternalStorageDirectory() + "/CoolImage/", System.currentTimeMillis()+".jpg");
+    private static final File file = new File(Environment.getExternalStorageDirectory() + "/CoolImage/", System.currentTimeMillis()+".jpg");
     //请求识别码(分别为本地相册、相机、图片裁剪)
     private static final int CODE_PHOTO_REQUEST = 1;
     private static final int CODE_CAMERA_REQUEST = 2;
@@ -77,6 +84,7 @@ public class PerPersonalActivity extends AppCompatActivity {
     private String sex;
     private String birth;
     private TextView finish;//完成
+    private boolean update = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,20 +137,21 @@ public class PerPersonalActivity extends AppCompatActivity {
         String userId = String.format("%06d",user.getUserId());
         tv_id.setText(userId);
         tv_name.setText(user.getUserName());
-        String photoPath = path+"/"+user.getUserPhoto();
+        final String photoPath = path+"/"+user.getUserPhoto();
         RequestOptions mRequestOptions = RequestOptions.circleCropTransform()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true);
         Glide.with(this).load(photoPath).apply(mRequestOptions).into(iv_head);
-        if (user.getUserIntroduce() == null || user.getUserIntroduce().length() < 7) {
-            tv_introduce.setText(user.getUserIntroduce());
+        if (user.getUserIntro() == null || user.getUserIntro().length() < 7) {
+            tv_introduce.setText(user.getUserIntro());
         } else {
-            tv_introduce.setText(user.getUserIntroduce().substring(0, 6) + "...");
+            tv_introduce.setText(user.getUserIntro().substring(0, 6) + "...");
         }
         //完成
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 UpdateUser updateUser = new UpdateUser();
                 updateUser.execute(user);
             }
@@ -154,9 +163,11 @@ public class PerPersonalActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.head://修改头像
+                    update = true;
                     showPopupWindow();
                     break;
                 case R.id.ly_head://修改头像
+                    update = true;
                     showPopupWindow();
                     break;
                 case R.id.ly_name:
@@ -320,7 +331,7 @@ public class PerPersonalActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
                 // 下面这句指定调用相机拍照后的照片存储的路径
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(USER_ICON));
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                 startActivityForResult(intent, CODE_CAMERA_REQUEST);
                 popupWindow.dismiss();
             }
@@ -346,8 +357,8 @@ public class PerPersonalActivity extends AppCompatActivity {
         }
         switch (requestCode) {
             case CODE_CAMERA_REQUEST://相机返回值
-                if (USER_ICON.exists()) {
-                    photoClip(Uri.fromFile(USER_ICON));
+                if (file.exists()) {
+                    photoClip(Uri.fromFile(file));
                 }
                 break;
             case CODE_PHOTO_REQUEST://相册返回值
@@ -437,6 +448,78 @@ public class PerPersonalActivity extends AppCompatActivity {
                 }else {
                     Log.e("update","更新用户信息失败");
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            Log.e("update",update+"");
+            if (update == true) {
+                PhotoUtil photoUtil = new PhotoUtil();
+                photoUtil.execute(user.getUserId(),file.getPath());
+            }
+        }
+    }
+
+    public class PhotoUtil extends AsyncTask{
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            Log.e("photoUtil","photoUtil");
+            String BOUNDARY = UUID.randomUUID().toString();
+            String PREFIX = "--", LINE_END = "\r\n";
+            String CONTENT_TYPE = "multipart/form-data";
+            int userId = (int) objects[0];
+            File file = new File((String) objects[1]);
+            try {
+                String pathUrl = path+"/user/updatePhoto?userId="+userId;
+                Log.e("path",pathUrl);
+                URL url = new URL(pathUrl);
+                Log.e("url",url.getPath());
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setDoInput(true); // 允许输入流
+                con.setDoOutput(true); // 允许输出流
+                con.setUseCaches(false); // 不允许使用缓存
+                con.setRequestMethod("POST"); // 请求方式
+                con.setRequestProperty("connection", "keep-alive");
+                con.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
+                con.setRequestProperty("Charset", "UTF-8");
+                Log.e("con","con");
+                DataOutputStream dos = new DataOutputStream(con.getOutputStream());
+                StringBuffer sb = new StringBuffer();
+                sb.append(PREFIX);
+                sb.append(BOUNDARY);
+                sb.append(LINE_END);
+                sb.append("Content-Disposition: form-data; name=\"img\"; filename=\""
+                        + file.getName() + "\"" + LINE_END);
+                sb.append("Content-Type: application/octet-stream; charset=utf-8" + LINE_END);
+                sb.append(LINE_END);
+                Log.e("sb","sb");
+                dos.write(sb.toString().getBytes());
+                Log.e("is","is");
+                InputStream is = new FileInputStream(file);
+                byte[] bytes = new byte[1024];
+                int len = 0;
+                while ((len = is.read(bytes)) != -1) {
+                    dos.write(bytes, 0, len);
+                }
+                is.close();
+                dos.write(LINE_END.getBytes());
+                Log.e("dos","dos");
+                byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END)
+                        .getBytes();
+                dos.write(end_data);
+                dos.flush();
+                int res = con.getResponseCode();
+                if (res == 200) {
+                    Log.e("test","上传成功");
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,7 +25,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.edu.hebtu.software.sharemateclient.Bean.UserBean;
 import cn.edu.hebtu.software.sharemateclient.R;
@@ -171,26 +175,23 @@ public class LRPswdLoginActivity extends AppCompatActivity {
             Call call = okHttpClient.newCall(request);
 
             String result=null;
-            List<Integer> typeList=null;
+            List<Integer> typeList=new ArrayList<>();
             String msg="";
-            int userId=0;
+            UserBean u = null;
             List<Object> objectList=new ArrayList<>();
             try {
                 result = call.execute().body().string();
                 Log.e("PwsdResult--",result);
-                typeList=new ArrayList<>();
-                JSONArray jsonArray= new JSONArray(result);
-                Log.e("jsonArray",jsonArray.toString());
-                for (int i=0;i<jsonArray.length();i++){
-                    JSONObject obj=jsonArray.getJSONObject(i);
-                    int typeId=obj.getInt("typeId");
-                    typeList.add(typeId);
-                    msg=obj.getString("msg");
-                    userId=obj.getInt("userId");
-                }
+                JSONObject jsonObject = new JSONObject(result);
+                JSONObject mapObject = jsonObject.getJSONObject("map");
+                String typeStr =  mapObject.get("typeList").toString();
+                typeList = gson.fromJson(typeStr,new TypeToken<List<Integer>>(){}.getType());
+                String uStr = mapObject.get("user").toString();
+                u = gson.fromJson(uStr,UserBean.class);
+                msg = (String) mapObject.get("msg");
                 objectList.add(typeList);
+                objectList.add(u);
                 objectList.add(msg);
-                objectList.add(userId);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -203,14 +204,13 @@ public class LRPswdLoginActivity extends AppCompatActivity {
         protected void onPostExecute(Object o) {
             List<Object> objectList = (List<Object>)o;
             Log.e("onPostExecute",objectList.toString());
-            String msg = (String)objectList.get(1);
-            Log.e("msg", msg);
+            UserBean u = (UserBean) objectList.get(1);
+            String msg = (String) objectList.get(2);
             if (msg.equals("该用户存在")) {
-                int userId = (Integer)objectList.get(2);
-                Log.e("userId",userId+"");
+                Log.e("userId",u.getUserId()+"");
 
                 Intent intent = new Intent(LRPswdLoginActivity.this, MainActivity.class);
-                intent.putExtra("userId", userId);
+                intent.putExtra("user", u);
                 intent.putIntegerArrayListExtra("type",(ArrayList<Integer>)objectList.get(0));
                 intent.putExtra("flag","main");
                 startActivity(intent);

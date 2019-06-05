@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -169,38 +171,34 @@ public class LRLoginActivity extends AppCompatActivity {
             Call call = okHttpClient.newCall(request);
             String result = null;
             JSONObject jsonObject = null;
+            UserBean u = null;
             try {
                 result = call.execute().body().string();
                 Log.e("LoginResult---", result);
-                jsonObject = new JSONObject(result);
+                JSONObject object = new JSONObject(result);
+                String str = object.getString("user");
+                Gson gson = new Gson();
+                u = gson.fromJson(str,UserBean.class);
+                Log.e("u",u.getUserPhone());
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return jsonObject;
+            return u;
         }
 
         @Override
         protected void onPostExecute(Object o) {
-            JSONObject back = (JSONObject) o;
-            String result;
-            try {
-                result = back.getString("msg");
-                Log.e("result", result);
-                if (result.equals("用户存在")) {
-                    int userId = back.getInt("userId");
-                    String userPhone = back.getString("userPhone");
-                    Intent intent = new Intent(LRLoginActivity.this, LRInputCodeActivity.class);
-                    intent.putExtra("userId", userId);
-                    intent.putExtra("userPhone", userPhone);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(LRLoginActivity.this, "该用户不存在", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            UserBean u = (UserBean) o;
+            if (u != null) {
+                Intent intent = new Intent(LRLoginActivity.this, LRInputCodeActivity.class);
+                intent.putExtra("user", u);
+                startActivity(intent);
+            } else {
+                Log.e("login","该用户不存在");
             }
+
         }
     }
 

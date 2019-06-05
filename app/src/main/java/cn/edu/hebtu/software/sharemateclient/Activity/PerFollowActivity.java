@@ -80,7 +80,7 @@ public class PerFollowActivity extends AppCompatActivity {
                     friend.setUserId(userObject.getInt("userId"));
                     friend.setUserName(userObject.getString("userName"));
                     friend.setUserPhotoPath(path+"/"+userObject.getString("userPhoto"));
-                    friend.setUserIntroduce(userObject.getString("userIntro"));
+                    friend.setUserIntro(userObject.getString("userIntro"));
                     friend.setFanCount(userObject.getInt("fanCount"));
                     friend.setLikeCount(userObject.getInt("likesCount"));
                     friend.setFollowCount(userObject.getInt("followCount"));

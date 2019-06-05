@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.edu.hebtu.software.sharemateclient.Bean.UserBean;
 import cn.edu.hebtu.software.sharemateclient.Fragment.FollowFragment;
 import cn.edu.hebtu.software.sharemateclient.Fragment.HomeFragment;
 import cn.edu.hebtu.software.sharemateclient.Fragment.MessageFragment;
@@ -34,15 +35,15 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager manager ;
     private Fragment currentFragment = new Fragment();
     private List<TextView> views = new ArrayList<>();
-    private int userId;
+    private UserBean user;
     private ArrayList<Integer> type = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        userId=getIntent().getIntExtra("userId",0);
+        user= (UserBean) getIntent().getSerializableExtra("user");
         type=getIntent().getIntegerArrayListExtra("type");
-        Log.e("MainActivity",userId+"  "+type);
+        Log.e("MainActivity",user.getUserId()+"  "+type);
         indexView = findViewById(R.id.tv_index);
         followView = findViewById(R.id.tv_follow);
         messageView = findViewById(R.id.tv_message);
