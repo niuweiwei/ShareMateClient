@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:descendantFocusability="blocksDescendants"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,66 +23,93 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:layout_centerVertical="true"
                 android:id="@+id/user_icon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/a1" />
 
             <TextView
+                android:layout_centerVertical="true"
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="35dp"
                 android:text="小明先森"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                style="@style/userName"
+                android:textSize="16sp"
+                />
 
             <Button
+                android:clickable="true"
+                android:focusable="false"
                 android:id="@+id/guannzhu"
+                android:layout_centerVertical="true"
                 android:layout_width="65dp"
-                android:layout_height="30dp"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/cancelfollowedbutton_style"
+                android:background="@drawable/followbutton_style"
                 android:text="已关注"
-                android:textSize="16sp" />
+                android:textColor="@color/warmRed"
+                android:textSize="14sp" />
         </RelativeLayout>
-
+        <LinearLayout
+            android:layout_below="@id/user"
+            android:id="@+id/video"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="430dp">
         <ImageView
             android:id="@+id/iv_photo"
-            android:layout_width="412dp"
-            android:layout_height="200dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/user"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/a1"/>
-
+            android:layout_marginTop="10dp"/>
+        <RelativeLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.pili.pldroid.player.widget.PLVideoView
+                android:id="@+id/noteVideo"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <Button
+                android:visibility="gone"
+                android:id="@+id/startBtn"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="50dp"
+                android:background="@mipmap/start"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+        </RelativeLayout>
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/iv_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/iv_photo"
+            android:layout_below="@+id/video"
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="10dp"
             android:orientation="vertical">
-
             <TextView
                 android:id="@+id/note_alltext"
-                style="@style/notetext"
+                style="@style/noteText"
+                android:lineSpacingExtra="5sp"
                 android:layout_marginTop="10dp" />
-
-
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
-
                 <Button
                     android:id="@+id/title"
                     android:layout_width="150dp"
                     android:layout_height="25dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="-5dp"
                     android:background="@drawable/titleback"
                     android:ellipsize="end"
                     android:maxEms="6"
@@ -128,6 +156,8 @@
                         android:orientation="horizontal">
 
                         <Button
+                            android:clickable="true"
+                            android:focusable="false"
                             android:id="@+id/shoucang"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
@@ -172,28 +202,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="0dp"
                 android:background="@drawable/backstyle"
                 android:orientation="vertical">
-
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/comment_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp" />
                 <TextView
                     android:id="@+id/pinglun1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="5dp"
                     android:text="小明：这么难吗" />
-
+                </LinearLayout>
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/pinglun2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="" />
-
                 <TextView
                     android:id="@+id/all_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_marginTop="5dp"
                     android:text="共3条评论"
                     android:textColor="@color/textcolor" />
@@ -203,7 +240,7 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -220,6 +257,7 @@
 
                     <EditText
                         android:id="@+id/fb"
+                        android:textSize="16sp"
                         android:layout_width="280dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -237,11 +275,12 @@
                     android:background="@color/white"
                     android:text="发送"
                     android:textColor="@color/brightBlue"
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
             </RelativeLayout>
 
             <TextView
                 android:id="@+id/time"
+                android:layout_marginLeft="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="昨天18:16"

@@ -4,147 +4,75 @@ import android.graphics.Bitmap;
 
 import org.w3c.dom.Comment;
 
+import java.io.Serializable;
 import java.util.List;;
 import cn.edu.hebtu.software.sharemateclient.R;
 
-public class NoteBean {
+public class NoteBean implements Serializable {
+    //薇薇
     private int noteId;
-    private String noPhoto;
-    private String title;
+    private String noteTitle;
+    private String noteDetail;
     private String noteImage;
-    private String noteDetail,noteTitle;
+    private String noteDate;
+    //笔记类型
+    private int typeId;
+    //笔记的发布者
     private UserBean user;
-    private String noteTime;
-    private int noteLikeCount,sharecount,noteCollectionCount,noteCommentCount;
 
+    //春柳
+    private String noteVideo;
+    private String noteAddress;
+    private int likeCount,collectCount,commentCount;
+    private boolean like;
+    private boolean collect;
+    private boolean follow;
+
+    //付娆
+    private String title;
+    private int noteLikeCount,noteCollectionCount,noteCommentCount;
     private String noteImagePath;
-
-    private Bitmap noteImage1;
-    private Comment comment;
-    private String zancount1;
-    private String commentDetail = "";
     private int zan=R.drawable.xin;
     private int col=R.drawable.xingxing;
     private int fol=R.drawable.cancelfollowedbutton_style;
-    private int islike=-1;
-    private int iscollect=-1;
-    private int isfollow;//1表示关注了该用户 -1表示未关注该用户
-    private UserBean userContent;
     private int typeid;
     private String commentdetial;
     private String userImage;
     private String userName;
+    private int zanTag;
+    private int collectTag;
+    private String commentUserImage;
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserImage() {
-        return userImage;
+    public String getCommentUserImage() {
+        return commentUserImage;
     }
 
-    public void setUserImage(String userImage) {
-        this.userImage = userImage;
+    public void setCommentUserImage(String commentUserImage) {
+        this.commentUserImage = commentUserImage;
     }
 
-    public String getCommentdetial() {
-        return commentdetial;
+    public int getZanTag() {
+        return zanTag;
     }
 
-    public void setCommentdetial(String commentdetial) {
-        this.commentdetial = commentdetial;
+    public void setZanTag(int zanTag) {
+        this.zanTag = zanTag;
     }
 
-    public NoteBean() {
+    public int getCollectTag() {
+        return collectTag;
     }
 
-    public NoteBean(String noteDetail, String noteTitle, UserBean user, int typeid) {
-        this.noteDetail = noteDetail;
-        this.noteTitle = noteTitle;
-        this.user = user;
-        this.typeid = typeid;
-    }
-
-    public NoteBean(String noteImage, String noteDetail, String noteTitle, UserBean user, String noteTime, int noteLikeCount, int sharecount, int noteCollectionCount, int noteCommentCount) {
-        this.noteImage = noteImage;
-        this.noteDetail = noteDetail;
-        this.noteTitle = noteTitle;
-        this.user = user;
-        this.noteTime = noteTime;
-        this.noteLikeCount = noteLikeCount;
-        this.sharecount = sharecount;
-        this.noteCollectionCount = noteCollectionCount;
-        this.noteCommentCount = noteCommentCount;
-    }
-    public NoteBean(String noteImage, String noteDetail, String noteTitle,
-                    UserBean user, String noteTime, CommentBean Commenet,
-                    int zancount, int sharecount, int noteCollectionCount, int noteCommentCount) {
-        this.noteImage = noteImage;
-        this.noteDetail = noteDetail;
-        this.noteTitle = noteTitle;
-        this.user = user;
-        this.noteTime = noteTime;
-        this.comment = comment;
-        this.noteLikeCount = zancount;
-        this.sharecount = sharecount;
-        this.noteCollectionCount = noteCollectionCount;
-        this.noteCommentCount = noteCommentCount;
-    }
-    public NoteBean(String noPhoto, String title) {
-        this.noPhoto = noPhoto;
-        this.title = title;
-    }
-
-    public int getTypeid() {
-        return typeid;
-    }
-
-    public void setTypeid(int typeid) {
-        this.typeid = typeid;
-    }
-
-    public String getNoPhoto() {
-        return noPhoto;
-    }
-
-    public void setNoPhoto(String noPhoto) {
-        this.noPhoto = noPhoto;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String content) {
-        this.title = content;
+    public void setCollectTag(int collectTag) {
+        this.collectTag = collectTag;
     }
 
     public int getNoteId() {
         return noteId;
     }
 
-    public void setNoteId(int noId) {
-        this.noteId = noId;
-    }
-
-    public String getNoteImage() {
-        return noteImage;
-    }
-
-    public void setNoteImage(String noteImage) {
-        this.noteImage = noteImage;
-    }
-
-    public String getNoteDetail() {
-        return noteDetail;
-    }
-
-    public void setNoteDetail(String noteDetail) {
-        this.noteDetail = noteDetail;
+    public void setNoteId(int noteId) {
+        this.noteId = noteId;
     }
 
     public String getNoteTitle() {
@@ -155,6 +83,38 @@ public class NoteBean {
         this.noteTitle = noteTitle;
     }
 
+    public String getNoteDetail() {
+        return noteDetail;
+    }
+
+    public void setNoteDetail(String noteDetail) {
+        this.noteDetail = noteDetail;
+    }
+
+    public String getNoteImage() {
+        return noteImage;
+    }
+
+    public void setNoteImage(String noteImage) {
+        this.noteImage = noteImage;
+    }
+
+    public String getNoteDate() {
+        return noteDate;
+    }
+
+    public void setNoteDate(String noteDate) {
+        this.noteDate = noteDate;
+    }
+
+    public int getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
+    }
+
     public UserBean getUser() {
         return user;
     }
@@ -163,30 +123,84 @@ public class NoteBean {
         this.user = user;
     }
 
-    public String getNoteTime() {
-        return noteTime;
+    public String getNoteVideo() {
+        return noteVideo;
     }
 
-    public void setNoteTime(String noteTime) {
-        this.noteTime = noteTime;
+    public void setNoteVideo(String noteVideo) {
+        this.noteVideo = noteVideo;
     }
 
+    public String getNoteAddress() {
+        return noteAddress;
+    }
 
+    public void setNoteAddress(String noteAddress) {
+        this.noteAddress = noteAddress;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public int getCollectCount() {
+        return collectCount;
+    }
+
+    public void setCollectCount(int collectCount) {
+        this.collectCount = collectCount;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public boolean isLike() {
+        return like;
+    }
+
+    public void setLike(boolean like) {
+        this.like = like;
+    }
+
+    public boolean isCollect() {
+        return collect;
+    }
+
+    public void setCollect(boolean collect) {
+        this.collect = collect;
+    }
+
+    public boolean isFollow() {
+        return follow;
+    }
+
+    public void setFollow(boolean follow) {
+        this.follow = follow;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public int getNoteLikeCount() {
         return noteLikeCount;
     }
 
-    public void setNoteLikeCount(int zancount) {
-        this.noteLikeCount = zancount;
-    }
-
-    public int getSharecount() {
-        return sharecount;
-    }
-
-    public void setSharecount(int sharecount) {
-        this.sharecount = sharecount;
+    public void setNoteLikeCount(int noteLikeCount) {
+        this.noteLikeCount = noteLikeCount;
     }
 
     public int getNoteCollectionCount() {
@@ -213,38 +227,6 @@ public class NoteBean {
         this.noteImagePath = noteImagePath;
     }
 
-    public Bitmap getNoteImage1() {
-        return noteImage1;
-    }
-
-    public void setNoteImage1(Bitmap noteImage1) {
-        this.noteImage1 = noteImage1;
-    }
-
-    public Comment getComment() {
-        return comment;
-    }
-
-    public void setComment(Comment commentBean) {
-        this.comment = commentBean;
-    }
-
-    public String getZancount1() {
-        return zancount1;
-    }
-
-    public void setZancount1(String zancount1) {
-        this.zancount1 = zancount1;
-    }
-
-    public String getCommentDetail() {
-        return commentDetail;
-    }
-
-    public void setCommentDetail(String commentDetail) {
-        this.commentDetail = commentDetail;
-    }
-
     public int getZan() {
         return zan;
     }
@@ -269,36 +251,35 @@ public class NoteBean {
         this.fol = fol;
     }
 
-    public int isIslike() {
-        return islike;
+    public int getTypeid() {
+        return typeid;
     }
 
-    public void setIslike(int islike) {
-        this.islike = islike;
+    public void setTypeid(int typeid) {
+        this.typeid = typeid;
     }
 
-    public int getIscollect() {
-        return iscollect;
+    public String getCommentdetial() {
+        return commentdetial;
     }
 
-    public void setIscollect(int iscollect) {
-        this.iscollect = iscollect;
+    public void setCommentdetial(String commentdetial) {
+        this.commentdetial = commentdetial;
     }
 
-    public int getIsfollow() {
-        return isfollow;
+    public String getUserImage() {
+        return userImage;
     }
 
-    public void setIsfollow(int isfollow) {
-        this.isfollow = isfollow;
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
     }
 
-    public UserBean getUserContent() {
-        return userContent;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserContent(UserBean userContent) {
-        this.userContent = userContent;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
-
 }

@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">ShareMate</string>
-    <string name="server_path">http://10.7.89.124:8080/ShareMateServer</string>
+    <string name="server_path">http://192.168.43.203:8080/ShareMateServer</string>
     <string name="upload">上传</string>
     <string name="cancel_upload">取消上传</string>
+    <string name="url">http://192.168.43.203:8080/ShareMateServer/</string>
 
     <!-- TuSdk -->
 

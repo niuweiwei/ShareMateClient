@@ -26,15 +26,16 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:textColor">@color/deepGray</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/darkGray</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
 
     <!--每一个fragment的 title 样式-->
     <style name="title">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center</item>
@@ -42,7 +43,7 @@
 
     <!--消息页面中文字的样式-->
     <style name="messageFont">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/inkGray</item>
     </style>
 
@@ -56,11 +57,11 @@
 
     <!--页面返回按钮的样式-->
     <style name="returnButtonStyle">
-        <item name="android:layout_height">30dp</item>
-        <item name="android:layout_width">30dp</item>
-        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:background">@drawable/back3</item>
+        <item name="android:background">@mipmap/backbtn</item>
     </style>
 
     <style name="notetext">
@@ -96,4 +97,80 @@
         <item name="android:textColor">@color/brightBlue</item>
     </style>
 
+
+
+    <!--选项卡 每个选项的样式-->
+
+
+
+
+    <!--笔记详细内容文字的样式-->
+
+
+
+    <style name="noteText">
+
+    <item name="android:layout_width">wrap_content</item>
+
+    <item name="android:layout_height">wrap_content</item>
+
+    <item name="android:textColor">@color/noteText</item>
+
+    <item name="android:textSize">16sp</item>
+
+</style>
+
+    <!--笔记title内容文字的样式-->
+
+
+
+    <style name="noteTitle">
+
+    <item name="android:layout_width">match_parent</item>
+
+    <item name="android:layout_height">wrap_content</item>
+
+    <item name="android:layout_marginLeft">0dp</item>
+
+    <item name="android:textColor">@color/noteTitle</item>
+
+    <item name="android:textSize">18sp</item>
+
+</style>
+
+    <!--笔记用户姓名文字的样式-->
+
+
+
+    <style name="userName">
+
+    <item name="android:layout_width">wrap_content</item>
+
+    <item name="android:layout_height">wrap_content</item>
+
+    <item name="android:layout_marginLeft">2dp</item>
+
+    <item name="android:layout_marginTop">10dp</item>
+
+    <item name="android:textColor">@color/userName</item>
+
+    <item name="android:maxEms">4</item>
+
+    <item name="android:maxLines">1</item>
+
+    <item name="android:ellipsize">end</item>
+
+    <item name="android:textSize">15sp</item>
+
+</style>
+
+    <!--推荐页tabLayout文字的样式-->
+
+
+
+    <style name="TabLayoutTextStyle">
+
+    <item name="android:textSize">25sp</item>
+
+    </style>
 </resources>

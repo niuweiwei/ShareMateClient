@@ -189,4 +189,16 @@
     <color name="lsq_alpha_black_B4">#B4000000</color>
 
     <color name="lsq_alpha_black_CO">#C0000000</color>
+
+
+
+
+    <!--选择地区-->
+
+
+    <color name="noteText">#b422292c</color>
+
+    <color name="noteTitle">#e022292c</color>
+
+    <color name="userName">#c022292c</color>
 </resources>

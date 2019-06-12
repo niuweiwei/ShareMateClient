@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -48,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cn.edu.hebtu.software.sharemateclient.Bean.UserBean;
 import cn.edu.hebtu.software.sharemateclient.Fragment.FollowFragment;
 import cn.edu.hebtu.software.sharemateclient.Fragment.HomeFragment;
 import cn.edu.hebtu.software.sharemateclient.Fragment.MessageFragment;
@@ -56,6 +58,8 @@ import cn.edu.hebtu.software.sharemateclient.R;
 
 public class MainActivity extends AppCompatActivity {
 
+    private UserBean user;
+    private ArrayList<Integer> type = new ArrayList<>();
     private TextView indexView;
     private TextView followView;
     private TextView messageView;
@@ -75,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String ENCODING_MODE = "EncodingMode";
 
     public static final String AUDIO_CHANNEL_NUM = "AudioChannelNum";
-//    private Spinner mEncodingModeLevelSpinner;
-//    private Spinner mAudioChannelNumSpinner;
 
 
 
@@ -85,27 +87,41 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        user= (UserBean) getIntent().getSerializableExtra("user");
+        type=getIntent().getIntegerArrayListExtra("type");
+        Log.e("MainActivity",user.getUserId()+"  "+type);
+
         indexView = findViewById(R.id.tv_index);
         followView = findViewById(R.id.tv_follow);
         messageView = findViewById(R.id.tv_message);
         myView = findViewById(R.id.tv_my);
-//        mEncodingModeLevelSpinner = (Spinner) findViewById(R.id.EncodingModeLevelSpinner);
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, RecordSettings.ENCODING_MODE_LEVEL_TIPS_ARRAY);
-//        mEncodingModeLevelSpinner.setAdapter(adapter);
-//        mEncodingModeLevelSpinner.setSelection(0);
-//        mAudioChannelNumSpinner = (Spinner) findViewById(R.id.AudioChannelNumSpinner);
-//        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, RecordSettings.AUDIO_CHANNEL_NUM_TIPS_ARRAY);
-//        mAudioChannelNumSpinner.setAdapter(adapter);
-//        mAudioChannelNumSpinner.setSelection(0);
-
-
-
         manager = getSupportFragmentManager();
+
         //默认显示首页
         showFragment(indexFragment);
+        indexView.setTextColor(getResources().getColor(R.color.inkGray));
+        indexView.setTextSize(20);
         //调用为每个选项绑定事件监听器的方法
         setClickListener();
 
+        //判断点击返回按钮到哪个fragment
+        if ("main".equals(getIntent().getStringExtra("flag"))){
+            indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+            indexView.setTextColor(getResources().getColor(R.color.inkGray));
+            showFragment(indexFragment);
+        }
+        if ("my".equals(getIntent().getStringExtra("flag"))){
+            showFragment(myFragment);
+            myView.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+            myView.setTextColor(getResources().getColor(R.color.inkGray));
+            indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+            indexView.setTextColor(getResources().getColor(R.color.darkGray));
+        }
+        //把每个选项卡添加到list里
+        views.add(indexView);
+        views.add(followView);
+        views.add(messageView);
+        views.add(myView);
 
         //实现发布的popupwindow
         root=findViewById(R.id.root);
@@ -122,6 +138,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        //vv----------------------------------
+
+        String fragmentType = getIntent().getStringExtra("flag");
+        if(fragmentType !=null){
+            Log.e("MainActivity",fragmentType);
+            if(fragmentType.equals("MessageFragment")){
+                showFragment(messageFragment);
+                indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                indexView.setTextColor(getResources().getColor(R.color.darkGray));
+                messageView.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+                messageView.setTextColor(getResources().getColor(R.color.inkGray));
+            }
+        }
+        //------------------------------------
 
     }
 
@@ -133,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         if(fragment != currentFragment)
             transaction.hide(currentFragment);
         //判断要展示的 fragment 是否被添加过
+        Log.e("MainActivity",fragment.isAdded()+"");
         if(!fragment.isAdded())
             transaction.add(R.id.content,fragment);
         transaction.show(fragment);
@@ -166,10 +197,10 @@ public class MainActivity extends AppCompatActivity {
                     TextView tmp = findViewById(v.getId());
                     if(tmp == view){
                         view.setTextColor(getResources().getColor(R.color.inkGray));
-                        view.setTextSize(TypedValue.COMPLEX_UNIT_SP,24);
+                        view.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
                     }else{
-                        view.setTextColor(getResources().getColor(R.color.deepGray));
-                        view.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
+                        view.setTextColor(getResources().getColor(R.color.darkGray));
+                        view.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
                     }
                 }
             }
@@ -259,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra(VideoRecordActivity.ENCODING_BITRATE_LEVEL, "1000kbps");
 
                     intent.putExtra(VideoRecordActivity.AUDIO_CHANNEL_NUM,"HW");
+                    intent.putExtra("user",user);
                     startActivity(intent);
 
                 case R.id.btn_cancel:
@@ -314,8 +346,7 @@ public class MainActivity extends AppCompatActivity {
                     String code = "1";
                     intent.putExtra("code", code);
                     intent.putExtra("lujing", file.getPath());///storage/emulated/0/DCIM/Camera/MT2018122121428.jpg
-//                    intent.putExtra("userId",userId);
-//                    intent.putExtra("type",type);
+                    intent.putExtra("user",user);
                     startActivity(intent);
                     break;
                 case 2:
@@ -340,72 +371,34 @@ public class MainActivity extends AppCompatActivity {
                     intent1.putExtra("pic1", picturePath);
                     Log.e("PICFILE", picturePath);
                     intent1.putExtra("code", code1);
-//                    intent1.putExtra("userId",userId);
-//                    intent1.putExtra("type",type);
+                    intent1.putExtra("user",user);
                     intent1.setClass(MainActivity.this, FabuActivity.class);
                     startActivity(intent1);
                     break;
-                case 3:
-//                        Uri uri = data.getData();
-//                        ContentResolver cr = this.getContentResolver();
-//                        String Path=null;
-//                        /** 数据库查询操作。
-//                         * 第一个参数 uri：为要查询的数据库+表的名称。
-//                         * 第二个参数 projection ： 要查询的列。
-//                         * 第三个参数 selection ： 查询的条件，相当于SQL where。
-//                         * 第三个参数 selectionArgs ： 查询条件的参数，相当于 ？。
-//                         * 第四个参数 sortOrder ： 结果排序。
-//                         */
-//                        assert uri != null;
-//                        Cursor cursor1= cr.query(uri, null, null, null, null);
-//                        if (cursor1 != null) {
-//                            if (cursor1.moveToFirst()) {
-//                                // 视频ID:MediaStore.Audio.Media._ID1
-//                                int videoId = cursor1.getInt(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media._ID));
-//                                // 视频名称：MediaStre.Audio.Media.TITLE
-//                                String title = cursor1.getString(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
-//                                // 视频路径：MediaStore.Audio.Media.DATA
-//                                String path = cursor1.getString(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
-//                                Path=path;
-//                                // 视频时长：MediaStore.Audio.Media.DURATION
-//                                int duration = cursor1.getInt(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
-//                                // 视频大小：MediaStore.Audio.Media.SIZE
-//                                long size = cursor1.getLong(cursor1.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
-//                                Log.e("size ", size + "");
-//                                // 视频缩略图路径：MediaStore.Images.Media.DATA
-//                                String imagePath = cursor1.getString(cursor1.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
-//
-//                                // 缩略图ID:MediaStore.Audio.Media._ID
-//                                int imageId = cursor1.getInt(cursor1.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
-//                                // 方法一 Thumbnails 利用createVideoThumbnail 通过路径得到缩略图，保持为视频的默认比例1
-//                                // 第一个参数为 ContentResolver，第二个参数为视频缩略图ID， 第三个参数kind有两种为：MICRO_KIND和MINI_KIND 字面意思理解为微型和迷你两种缩略模式，前者分辨率更低一些。
-//                                Bitmap bitmap1 = MediaStore.Video.Thumbnails.getThumbnail(cr, imageId, MediaStore.Video.Thumbnails.MICRO_KIND, null);
-//                                // 方法二 ThumbnailUtils 利用createVideoThumbnail 通过路径得到缩略图，保持为视频的默认比例
-//                                // 第一个参数为 视频/缩略图的位置，第二个依旧是分辨率相关的kind
-//                                Bitmap bitmap2 = ThumbnailUtils.createVideoThumbnail(imagePath, MediaStore.Video.Thumbnails.MICRO_KIND);
-//                                // 如果追求更好的话可以利用 ThumbnailUtils.extractThumbnail 把缩略图转化为的制定大小
-//                                if (duration > 11000) {
-//                                    Toast.makeText(getApplicationContext(), "视频时长已超过10秒，请重新选择", Toast.LENGTH_SHORT).show();
-//                                    return;
-//                                }
-//                            }
-//                            cursor1.close();
-//                            Intent intent2=new Intent();
-//                            intent2.putExtra("videopath", Path);
-//                            Log.e("PICFILE", Path);
-//                            intent2.putExtra("code", "3");
-////                    intent1.putExtra("userId",userId);
-////                    intent1.putExtra("type",type);
-//                            intent2.setClass(MainActivity.this, FabuActivity.class);
-//                            startActivity(intent2);
-
-
-                    //七牛短视频
-
-
-                        }
+                    }
             }
         }
+        //jiaxing-----------------------------------
+    /**
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            Intent intent = new Intent();// 鍒涘缓Intent瀵硅薄
+            intent.setAction(Intent.ACTION_MAIN);// 璁剧疆Intent鍔ㄤ綔
+            intent.addCategory(Intent.CATEGORY_HOME);// 璁剧疆Intent绉嶇被
+            startActivity(intent);// 灏咺ntent浼犻�掔粰Activity
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+    //----------------------------------------------
+    //vv-----------------------------------------------
+    //-------------------------------------------------
     }
 
 
