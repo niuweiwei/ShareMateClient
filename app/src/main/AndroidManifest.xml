@@ -155,7 +155,8 @@
         <activity android:name=".Activity.LRStartActivity"/>
         <activity android:name=".Activity.LRSelectInterestActivity"/>
         <activity android:name=".Activity.LRForgetPwsdActivity"/>
-        <activity android:name=".Activity.WelcomeActivity">
+        <activity android:name=".Activity.WelcomeActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

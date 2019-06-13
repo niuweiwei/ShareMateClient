@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         user= (UserBean) getIntent().getSerializableExtra("user");
         type=getIntent().getIntegerArrayListExtra("type");
-        Log.e("MainActivity",user.getUserId()+"  "+type);
+//        Log.e("MainActivity",user.getUserId()+"  "+type);
 
         indexView = findViewById(R.id.tv_index);
         followView = findViewById(R.id.tv_follow);
@@ -103,20 +103,46 @@ public class MainActivity extends AppCompatActivity {
         indexView.setTextSize(20);
         //调用为每个选项绑定事件监听器的方法
         setClickListener();
+        //vv----------------------------------
 
-        //判断点击返回按钮到哪个fragment
-        if ("main".equals(getIntent().getStringExtra("flag"))){
-            indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
-            indexView.setTextColor(getResources().getColor(R.color.inkGray));
-            showFragment(indexFragment);
+        String fragmentType = getIntent().getStringExtra("flag");
+        if(fragmentType !=null){
+            Log.e("MainActivity",fragmentType);
+            if(fragmentType.equals("MessageFragment")){
+                showFragment(messageFragment);
+                indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                indexView.setTextColor(getResources().getColor(R.color.darkGray));
+                followView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                followView.setTextColor(getResources().getColor(R.color.darkGray));
+                myView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                myView.setTextColor(getResources().getColor(R.color.darkGray));
+                messageView.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+                messageView.setTextColor(getResources().getColor(R.color.inkGray));
+            }
+            if (fragmentType.equals("main")){
+                showFragment(indexFragment);
+                indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+                indexView.setTextColor(getResources().getColor(R.color.inkGray));
+                myView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                myView.setTextColor(getResources().getColor(R.color.darkGray));
+                followView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                followView.setTextColor(getResources().getColor(R.color.darkGray));
+                messageView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                messageView.setTextColor(getResources().getColor(R.color.darkGray));
+            }
+            if (fragmentType.equals("my")){
+                showFragment(myFragment);
+                myView.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+                myView.setTextColor(getResources().getColor(R.color.inkGray));
+                indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                indexView.setTextColor(getResources().getColor(R.color.darkGray));
+                followView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                followView.setTextColor(getResources().getColor(R.color.darkGray));
+                messageView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                messageView.setTextColor(getResources().getColor(R.color.darkGray));
+            }
         }
-        if ("my".equals(getIntent().getStringExtra("flag"))){
-            showFragment(myFragment);
-            myView.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
-            myView.setTextColor(getResources().getColor(R.color.inkGray));
-            indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
-            indexView.setTextColor(getResources().getColor(R.color.darkGray));
-        }
+        //------------------------------------
         //把每个选项卡添加到list里
         views.add(indexView);
         views.add(followView);
@@ -138,20 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        //vv----------------------------------
 
-        String fragmentType = getIntent().getStringExtra("flag");
-        if(fragmentType !=null){
-            Log.e("MainActivity",fragmentType);
-            if(fragmentType.equals("MessageFragment")){
-                showFragment(messageFragment);
-                indexView.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
-                indexView.setTextColor(getResources().getColor(R.color.darkGray));
-                messageView.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
-                messageView.setTextColor(getResources().getColor(R.color.inkGray));
-            }
-        }
-        //------------------------------------
 
     }
 
