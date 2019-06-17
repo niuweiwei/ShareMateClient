@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#408C8C8C">
+
+    <RelativeLayout
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/btn_openAlbum"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:text="打开相册"
+                android:layout_gravity="center"
+                android:background="@drawable/button_head"/>
+            <View
+                android:layout_width="250dp"
+                android:layout_height="0.02dp"
+                android:background="@color/black"
+                android:layout_gravity="center"/>
+            <!--<Button-->
+                <!--android:id="@+id/btn_openCam"-->
+                <!--android:layout_width="250dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="打开相机"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:background="@drawable/button_head"/>-->
+            <!--<View-->
+                <!--android:layout_width="250dp"-->
+                <!--android:layout_height="0.02dp"-->
+                <!--android:background="@color/black"-->
+                <!--android:layout_gravity="center"/>-->
+            <Button
+                android:id="@+id/btn_cancle"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:text="取消"
+                android:layout_gravity="center"
+                android:background="@drawable/button_head"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</RelativeLayout>

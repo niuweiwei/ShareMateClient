@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            style="@style/topStyle">
+            <Button
+                android:id="@+id/btn_back"
+                style="@style/returnButtonStyle" />
+            <TextView
+                style="@style/title"
+                android:text="收到的评论" />
+        </LinearLayout>
+        <ListView
+            android:id="@+id/lv_comment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ListView>
+    </LinearLayout>
+    <RelativeLayout
+        android:background="@color/white"
+        android:id="@+id/rl_reply"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true">
+        <EditText
+            android:id="@+id/et_reply"
+            android:layout_centerVertical="true"
+            android:background="@drawable/reply_input_style"
+            android:paddingLeft="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_width="280dp"
+            android:layout_height="30dp"
+            android:textSize="16sp" />
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/brightBlue"
+            android:gravity="center"
+            android:text="发送"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:background="@null"/>
+    </RelativeLayout>
+</RelativeLayout>
